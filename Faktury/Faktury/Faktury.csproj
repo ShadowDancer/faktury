@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DCF23DC6-822F-4712-90F2-4C054E4663F2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Faktury</RootNamespace>
+    <AssemblyName>Faktury</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>Paste.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ListViewEx, Version=1.0.1753.24378, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ListViewEx.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.3.1.24483, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>.\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BackupManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Company.cs" />
+    <Compile Include="Classes\Date.cs" />
+    <Compile Include="Classes\Document.cs" />
+    <Compile Include="Classes\Good.cs" />
+    <Compile Include="Classes\MoneyData.cs" />
+    <Compile Include="DocumentProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DocumentProperties.Designer.cs">
+      <DependentUpon>DocumentProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListViewColumnSorter.cs" />
+    <Compile Include="Windows\LoadBackup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\LoadBackup.Designer.cs">
+      <DependentUpon>LoadBackup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SQLManager.cs" />
+    <Compile Include="Windows\SQLSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\SQLSettings.Designer.cs">
+      <DependentUpon>SQLSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DeviceBackupSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\DeviceBackupSettings.Designer.cs">
+      <DependentUpon>DeviceBackupSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\StatsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\StatsWindow.Designer.cs">
+      <DependentUpon>StatsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ServicesListWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ServicesListWindow.Designer.cs">
+      <DependentUpon>ServicesListWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\EditorSettings.cs" />
+    <Compile Include="Windows\CompanyListWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\CompanyListWindow.Designer.cs">
+      <DependentUpon>CompanyListWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Print Framework\NumberToWordConventer.cs" />
+    <Compile Include="Print Framework\Normal\IPrintPrimitive.cs" />
+    <Compile Include="Print Framework\Normal\Primitives\PrintRectangle.cs" />
+    <Compile Include="Print Framework\Normal\Primitives\PrintHorizontalLine.cs" />
+    <Compile Include="Print Framework\Normal\Primitives\PrintImage.cs" />
+    <Compile Include="Print Framework\Normal\Primitives\PrintText.cs" />
+    <Compile Include="Print Framework\Normal\Primitives\PrintLine.cs" />
+    <Compile Include="Print Framework\Vertical\IPrintPrimitiveVertical.cs" />
+    <Compile Include="Print Framework\IPrintable.cs" />
+    <Compile Include="Print Framework\Vertical\Primitives\PrintPrimitiveBlank.cs" />
+    <Compile Include="Print Framework\Vertical\Primitives\PrintPrimitiveText.cs" />
+    <Compile Include="Print Framework\PrinteEngine.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Print Framework\Vertical\Primitives\PrintPrimitiveLine.cs" />
+    <Compile Include="Print Framework\PrintElement.cs" />
+    <Compile Include="Print Framework\Vertical\Primitives\PrintPrimitiveImage.cs" />
+    <Compile Include="Windows\CompanyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\CompanyWindow.Designer.cs">
+      <DependentUpon>CompanyWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DocumentWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\DocumentWindow.Designer.cs">
+      <DependentUpon>DocumentWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DocumentProperties.resx">
+      <DependentUpon>DocumentProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Print Framework\PrinteEngine.resx">
+      <DependentUpon>PrinteEngine.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\LoadBackup.resx">
+      <DependentUpon>LoadBackup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\SQLSettings.resx">
+      <DependentUpon>SQLSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\CompanyListWindow.resx">
+      <DependentUpon>CompanyListWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\CompanyWindow.resx">
+      <DependentUpon>CompanyWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\DeviceBackupSettings.resx">
+      <DependentUpon>DeviceBackupSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\DocumentWindow.resx">
+      <DependentUpon>DocumentWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ServicesWindow.resx">
+      <DependentUpon>ServicesWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\DocumentListWindow.resx">
+      <DependentUpon>DocumentListWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ServicesListWindow.resx">
+      <DependentUpon>ServicesListWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OptionsWindow.resx">
+      <DependentUpon>OptionsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\StatsWindow.resx">
+      <DependentUpon>StatsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Windows\ServicesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ServicesWindow.Designer.cs">
+      <DependentUpon>ServicesWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DocumentListWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\DocumentListWindow.Designer.cs">
+      <DependentUpon>DocumentListWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OptionsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OptionsWindow.Designer.cs">
+      <DependentUpon>OptionsWindow.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Paste.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
