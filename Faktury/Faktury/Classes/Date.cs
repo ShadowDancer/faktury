@@ -9,16 +9,6 @@ namespace Faktury.Classes
     [Serializable]
     public class Date
     {
-        public static Date GetCurrentDate()
-        {
-            return new Date(DateTime.Now.Day.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Year.ToString());
-        }
-
-        public Date()
-        {
-
-        }
-
         public Date(string Day, string Month, string Year)
         {
             this.Day = Convert.ToInt32(Day);

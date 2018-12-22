@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Faktury</RootNamespace>
     <AssemblyName>Faktury</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Paste.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -27,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ListViewEx, Version=1.0.1753.24378, Culture=neutral">
@@ -61,21 +63,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackupManager.cs">
+    <Compile Include="Data\Xml\BackupManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Company.cs" />
     <Compile Include="Classes\Date.cs" />
     <Compile Include="Classes\Document.cs" />
-    <Compile Include="Classes\Good.cs" />
+    <Compile Include="Classes\Service.cs" />
     <Compile Include="Classes\MoneyData.cs" />
-    <Compile Include="DocumentProperties.cs">
+    <Compile Include="Windows\DocumentProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DocumentProperties.Designer.cs">
+    <Compile Include="Windows\DocumentProperties.Designer.cs">
       <DependentUpon>DocumentProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListViewColumnSorter.cs" />
+    <Compile Include="Windows\ListViewColumnSorter.cs" />
     <Compile Include="Windows\LoadBackup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,7 +109,7 @@
     <Compile Include="Windows\ServicesListWindow.Designer.cs">
       <DependentUpon>ServicesListWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Windows\EditorSettings.cs" />
+    <Compile Include="Classes\EditorSettings.cs" />
     <Compile Include="Windows\CompanyListWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,7 +147,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DocumentProperties.resx">
+    <EmbeddedResource Include="Windows\DocumentProperties.resx">
       <DependentUpon>DocumentProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Print Framework\PrinteEngine.resx">

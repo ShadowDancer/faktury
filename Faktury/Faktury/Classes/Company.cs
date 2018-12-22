@@ -5,37 +5,20 @@ namespace Faktury.Classes
 {
     public class Company
     {
-        public Company()
-        {
-            Name = "";
-            Owner = "";
-            Adress = "";
-            Street = "";
-            Nip = "";
-            Tag = "";
-            BankAccount = "";
-            BankSection = "";
-            PhoneNumber = "";
-            MobileNumber = "";
+        public string Name { get; set; } = "";
+        public string Owner { get; set; } = "";
+        public string Adress { get; set; } = "";
+        public string Street { get; set; } = "";
+        public string Nip { get; set; } = "";
+        public string Tag { get; set; } = "";
+        public bool Bank { get; set; } = false;
+        public string BankAccount { get; set; } = "";
+        public string BankSection { get; set; } = "";
+        public string PhoneNumber { get; set; } = "";
+        public string MobileNumber { get; set; } = "";
 
-            CreationDate = DateTime.Now;
-            ModificationDate = DateTime.Now;
-        }
-
-        public string Name { get; set; }
-        public string Owner { get; set; }
-        public string Adress { get; set; }
-        public string Street { get; set; }
-        public string Nip { get; set; }
-        public string Tag { get; set; }
-        public bool Bank { get; set; }
-        public string BankAccount { get; set; }
-        public string BankSection { get; set; }
-        public string PhoneNumber { get; set; }
-        public string MobileNumber { get; set; }
-
-        public DateTime CreationDate { get; set; }
-        public DateTime ModificationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime ModificationDate { get; set; } = DateTime.Now;
 
         public int ID;
 
@@ -152,7 +135,6 @@ namespace Faktury.Classes
             else NewCompany.ModificationDate = DateTime.Now;
 
             return NewCompany;
-
         }
     }
 }
