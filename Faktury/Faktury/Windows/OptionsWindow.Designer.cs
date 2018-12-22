@@ -264,16 +264,6 @@
             this.OpenDataDirectory.Description = "Otwórz folder z danymi";
             this.OpenDataDirectory.ShowNewFolderButton = false;
             // 
-            // BSQLSettings
-            // 
-            this.BSQLSettings.Location = new System.Drawing.Point(289, 96);
-            this.BSQLSettings.Name = "BSQLSettings";
-            this.BSQLSettings.Size = new System.Drawing.Size(118, 42);
-            this.BSQLSettings.TabIndex = 7;
-            this.BSQLSettings.Text = "Ustawienia bazy MySQL";
-            this.BSQLSettings.UseVisualStyleBackColor = true;
-            this.BSQLSettings.Click += new System.EventHandler(this.BSQLSettings_Click);
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.OptionsReset);

@@ -39,7 +39,6 @@ namespace Faktury.Windows
 
             public EditorSettings Settings = null;
             public BackupManager BackupManager = new BackupManager();
-            public SQLManager SQLManager = new SQLManager();
 
             public List<Classes.Company> Companies = new List<Faktury.Classes.Company>();
             public List<Classes.Document> Documents = new List<Faktury.Classes.Document>();
@@ -319,13 +318,7 @@ namespace Faktury.Windows
                 new BackupSettings().ShowDialog();
                 if (Settings.DeviceBackup)
                     MessageBox.Show("Włączono kopię na zewnętrznym nośniku - po upłynięciu wyznaczonego okresu zostanie wyświetlona proźba o włożenie nośinka.", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                //SQL
-                if (MessageBox.Show("W celu synchronizacji danych między komputerami i zabezpieczenia ich przed utratą możesz połączyć się z serwerem SQL. Połączyć teraz?", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    new SQLSettings().ShowDialog();
-                }
-
+                
                 //Finish
                 MessageBox.Show("Dziękuję za wybranie aplikacji Faktury. Naciśnij OK, aby zakończyć działanie kreatora.", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

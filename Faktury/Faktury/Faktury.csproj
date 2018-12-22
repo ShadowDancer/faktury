@@ -84,13 +84,6 @@
     <Compile Include="Windows\LoadBackup.Designer.cs">
       <DependentUpon>LoadBackup.cs</DependentUpon>
     </Compile>
-    <Compile Include="SQLManager.cs" />
-    <Compile Include="Windows\SQLSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Windows\SQLSettings.Designer.cs">
-      <DependentUpon>SQLSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Windows\DeviceBackupSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,9 +149,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\LoadBackup.resx">
       <DependentUpon>LoadBackup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Windows\SQLSettings.resx">
-      <DependentUpon>SQLSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\CompanyListWindow.resx">
       <DependentUpon>CompanyListWindow.cs</DependentUpon>

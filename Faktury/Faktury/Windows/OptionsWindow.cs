@@ -179,12 +179,7 @@ namespace Faktury.Windows
         {
             new BackupSettings().ShowDialog();
         }
-
-        private void BSQLSettings_Click(object sender, EventArgs e)
-        {
-            new SQLSettings().ShowDialog();
-        }
-
+        
         private void OptionsReset_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Na pewno?", "Przywróć ustawienia domyślne", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
