@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Faktury.Print_Framework
+﻿namespace Faktury.Print_Framework
 {
     /// <summary>
     /// All printable objects in applications should inherit this interface 

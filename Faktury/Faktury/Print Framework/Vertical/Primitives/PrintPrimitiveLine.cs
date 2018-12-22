@@ -1,64 +1,66 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Vertical.Primitives
 {
     public class PrintPrimitiveLine : IPrintPrimitiveVertical 
     {
-        Brush Brush;
-        LineAlignment Alignment;
-        
-        float Length = -1;
-        float Width = 0;
+        private readonly Brush _brush;
+        private readonly LineAlignment _alignment;
 
-        public PrintPrimitiveLine(Brush Brush, float Length, float Width, LineAlignment Alignment)
+        private readonly float _length;
+        private readonly float _width;
+
+        public PrintPrimitiveLine(Brush brush, float length, float width, LineAlignment alignment)
         {
-            this.Brush = Brush;
-            this.Length = Length;
-            this.Width = Width;
-            this.Alignment = Alignment;
+            _brush = brush;
+            _length = length;
+            _width = width;
+            _alignment = alignment;
 
-            if (Brush == null) Brush = PrintEngine.Instane.DefaultBrush;
+            if (brush == null)
+            {
+                _brush = PrintEngine.Instane.DefaultBrush;
+            }
         }
 
         public float CalculateHeight(PrintEngine engine, Graphics graphics)
         {
-            return 4 + Width;
+            return 4 + _width;
         }
 
-        public void Draw(PrintEngine engine, Graphics graphics, RectangleF ElementBounds)
+        public void Draw(PrintEngine engine, Graphics graphics, RectangleF elementBounds)
         {
 
-            Pen pen = new Pen(Brush, Width);
-            PointF[] Points = new PointF[2];
+            Pen pen = new Pen(_brush, _width);
+            PointF[] points = new PointF[2];
 
-            ElementBounds.Y = ElementBounds.Y + 2;
+            elementBounds.Y = elementBounds.Y + 2;
 
-                if (Length == -1)
+                if (_length == -1)
                 {
-                    Points[0] = new PointF(ElementBounds.X, ElementBounds.Y);
-                    Points[1] = new PointF(ElementBounds.Right, ElementBounds.Y);
+                    points[0] = new PointF(elementBounds.X, elementBounds.Y);
+                    points[1] = new PointF(elementBounds.Right, elementBounds.Y);
                 }
                 else
                 {
-                    if (Alignment == LineAlignment.Left)
+                    if (_alignment == LineAlignment.Left)
                     {
-                        Points[0] = new PointF(ElementBounds.X, ElementBounds.Y);
-                        Points[1] = new PointF(ElementBounds.X + Length, ElementBounds.Y);
+                        points[0] = new PointF(elementBounds.X, elementBounds.Y);
+                        points[1] = new PointF(elementBounds.X + _length, elementBounds.Y);
                     }
-                    if (Alignment == LineAlignment.Center)
+                    if (_alignment == LineAlignment.Center)
                     {
-                        Points[0] = new PointF(ElementBounds.X + (((ElementBounds.Width - ElementBounds.X) - Length) / 2), ElementBounds.Y);
-                        Points[1] = new PointF(ElementBounds.X - (((ElementBounds.Width - ElementBounds.X) - Length) / 2), ElementBounds.Y);
+                        points[0] = new PointF(elementBounds.X + (((elementBounds.Width - elementBounds.X) - _length) / 2), elementBounds.Y);
+                        points[1] = new PointF(elementBounds.X - (((elementBounds.Width - elementBounds.X) - _length) / 2), elementBounds.Y);
                     }
-                    if (Alignment == LineAlignment.Right)
+                    if (_alignment == LineAlignment.Right)
                     {
-                        Points[0] = new PointF(ElementBounds.Width - Length, ElementBounds.Y);
-                        Points[1] = new PointF(ElementBounds.Width, ElementBounds.Y);                    
+                        points[0] = new PointF(elementBounds.Width - _length, elementBounds.Y);
+                        points[1] = new PointF(elementBounds.Width, elementBounds.Y);                    
                     }
                 }
 
-            graphics.DrawLine(pen, Points[0],  Points[1]);
+            graphics.DrawLine(pen, points[0],  points[1]);
         }
 
     }

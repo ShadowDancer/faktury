@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing; 
+﻿using System.Drawing; 
 
 namespace Faktury.Print_Framework.Normal
 {
@@ -12,6 +11,8 @@ namespace Faktury.Print_Framework.Normal
         /// To override. This function should psyhically draw primitive
         /// </summary>
         /// <param name="engine"></param>
-        void Draw(PrintEngine engine, Graphics graphics, RectangleF PageBounds);
+        /// <param name="graphics"></param>
+        /// <param name="pageBounds"></param>
+        void Draw(PrintEngine engine, Graphics graphics, RectangleF pageBounds);
     } 
 }

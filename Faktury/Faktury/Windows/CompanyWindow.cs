@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 namespace Faktury.Windows
 {
@@ -23,15 +17,15 @@ namespace Faktury.Windows
         {
             if (Company == null)
             {
-                Company = new Faktury.Classes.Company();
+                Company = new Classes.Company();
                 Company.Name = "Nowa";
                 Company.Bank = false;
-                Company.ID = MainForm.Instance.GetNewCompanyID;
+                Company.Id = MainForm.Instance.GetNewCompanyId;
                 Company.CreationDate = DateTime.Now;
                 Company.ModificationDate = Company.CreationDate;
             }
 
-            TBAdress.Text = Company.Adress;
+            TBAdress.Text = Company.Address;
             TBAdress2.Text = Company.Street;
             TBBankAccount.Text = Company.BankAccount;
             TBBankSecion.Text = Company.BankSection;
@@ -50,7 +44,7 @@ namespace Faktury.Windows
         {
             if (TBTag.Text != "" || Company.Bank)
             {
-                Company.Adress = TBAdress.Text;
+                Company.Address = TBAdress.Text;
                 Company.Street = TBAdress2.Text;
                 Company.BankAccount = TBBankAccount.Text;
                 Company.BankSection = TBBankSecion.Text;
@@ -65,8 +59,8 @@ namespace Faktury.Windows
 
                 if (AddToCollection)
                 {
-                    Classes.Company Check = MainForm.Instance.Companies.Find(n => n.ID == Company.ID);
-                    if (Check == null)
+                    Classes.Company check = MainForm.Instance.Companies.Find(n => n.Id == Company.Id);
+                    if (check == null)
                         MainForm.Instance.Companies.Add(Company);
                 }
 

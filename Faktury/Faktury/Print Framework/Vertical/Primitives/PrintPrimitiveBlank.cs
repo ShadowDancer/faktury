@@ -1,26 +1,25 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Vertical.Primitives
 {
-    class PrintPrimitiveBlankLine : IPrintPrimitiveVertical 
+    internal class PrintPrimitiveBlankLine : IPrintPrimitiveVertical 
     {
-        float Height;
+        private readonly float _height;
 
-            public PrintPrimitiveBlankLine(float Height)
+            public PrintPrimitiveBlankLine(float height)
             {
-                this.Height = Height;
+                _height = height;
             }
             public PrintPrimitiveBlankLine()
             {
-                Height = PrintEngine.Instane.DefaultFont.Height;
+                _height = PrintEngine.Instane.DefaultFont.Height;
             }
 
             public float CalculateHeight(PrintEngine engine, Graphics graphics)
             {
-                return Height;
+                return _height;
             }
 
-            public void Draw(PrintEngine engine, Graphics graphics, RectangleF ElementBounds){ }
+            public void Draw(PrintEngine engine, Graphics graphics, RectangleF elementBounds){ }
     }
 }

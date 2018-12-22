@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -21,21 +15,21 @@ namespace Faktury.Windows
             MainForm.Instance.dokumentyToolStripMenuItem.Checked = false;
         }
 
-        private ListViewItem GetListViewItemFromDocument(Classes.Document Document)
+        private ListViewItem GetListViewItemFromDocument(Classes.Document document)
         {
-            ListViewItem NewItem = new ListViewItem(Document.Number.ToString());
-            NewItem.SubItems.Add(Document.Year.ToString());
-            NewItem.SubItems.Add(Document.Name);
-            Classes.Company CurrentCompany = MainForm.Instance.Companies.Find(n => n.ID == Document.CompanyID);
-            if (CurrentCompany != null)
+            ListViewItem newItem = new ListViewItem(document.Number.ToString());
+            newItem.SubItems.Add(document.Year.ToString());
+            newItem.SubItems.Add(document.Name);
+            Classes.Company currentCompany = MainForm.Instance.Companies.Find(n => n.Id == document.CompanyId);
+            if (currentCompany != null)
             {
-                NewItem.SubItems.Add(CurrentCompany.Tag);
-                NewItem.SubItems.Add(Document.IssueDate.ToString());
+                newItem.SubItems.Add(currentCompany.Tag);
+                newItem.SubItems.Add(document.IssueDate.ToString());
 
-                if (Document.Paid) NewItem.SubItems.Add("Tak");
-                else NewItem.SubItems.Add("Nie");
+                if (document.Paid) newItem.SubItems.Add("Tak");
+                else newItem.SubItems.Add("Nie");
 
-                return NewItem;
+                return newItem;
             }
             return null;
         }
@@ -48,37 +42,37 @@ namespace Faktury.Windows
         public void Reload()
         {
             LVDocuments.Items.Clear();
-            foreach (var CurrentDocument in MainForm.Instance.Documents)
+            foreach (var currentDocument in MainForm.Instance.Documents)
             {
                     //throw exception if something is wrong
                     if(cBYearFilter.Checked == true)
-                        if (CurrentDocument.Year != nUDYear.Value) continue;
+                        if (currentDocument.Year != nUDYear.Value) continue;
 
                     if (cBDateFilter.Checked == true)
                     {
-                        DateTime CheckDate = CurrentDocument.IssueDate;
+                        DateTime checkDate = currentDocument.IssueDate;
 
-                        if (RBYoungerThan.Checked && CheckDate.CompareTo(DTPDateFilter.Value) >= 0) continue;
-                        if (RBFromDay.Checked && CheckDate.CompareTo(DTPDateFilter.Value) != 0) continue;
-                        if (RBOlderThan.Checked && CheckDate.CompareTo(DTPDateFilter.Value) <= 0) continue;
+                        if (RBYoungerThan.Checked && checkDate.CompareTo(DTPDateFilter.Value) >= 0) continue;
+                        if (RBFromDay.Checked && checkDate.CompareTo(DTPDateFilter.Value) != 0) continue;
+                        if (RBOlderThan.Checked && checkDate.CompareTo(DTPDateFilter.Value) <= 0) continue;
                     }
 
                     if(CxBCompanyTagFilter.Checked == true)
-                        if (CurrentDocument.CompanyID != ((ComboBoxItem)CBCompanyTag.SelectedItem).ID) continue;
+                        if (currentDocument.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) continue;
 
                     if (CxBNameFilter.Checked == true)
-                        if (CurrentDocument.Name.ToLower().IndexOf(TBName.Text.ToLower()) == -1) continue;
+                        if (currentDocument.Name.ToLower().IndexOf(TBName.Text.ToLower()) == -1) continue;
 
                     if (CxBPaidFilter.Checked)
                     {
-                        if (CurrentDocument.Paid && !RBPaidFilter.Checked) continue;
-                        if (!CurrentDocument.Paid && RBPaidFilter.Checked) continue;
+                        if (currentDocument.Paid && !RBPaidFilter.Checked) continue;
+                        if (!currentDocument.Paid && RBPaidFilter.Checked) continue;
                     }
 
                     //if no exceptions add item
-                    ListViewItem NewItem = GetListViewItemFromDocument(CurrentDocument);
-                    if(NewItem != null)
-                        LVDocuments.Items.Add(NewItem);
+                    ListViewItem newItem = GetListViewItemFromDocument(currentDocument);
+                    if(newItem != null)
+                        LVDocuments.Items.Add(newItem);
             }
         }
 
@@ -96,10 +90,10 @@ namespace Faktury.Windows
         {
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
 
-            lvwColumnSorter = new ListViewColumnSorter();
-            lvwColumnSorter.SortByPrev = true;
-            lvwColumnSorter.ColumnToSort = 1;
-            LVDocuments.ListViewItemSorter = lvwColumnSorter;
+            _lvwColumnSorter = new ListViewColumnSorter();
+            _lvwColumnSorter.SortByPrev = true;
+            _lvwColumnSorter.ColumnToSort = 1;
+            LVDocuments.ListViewItemSorter = _lvwColumnSorter;
             LVDocuments.Sort();
 
             #region InitButtons
@@ -118,11 +112,11 @@ namespace Faktury.Windows
             //main filters values
             nUDYear.Value = MainForm.Instance.Settings.DocumentFilterYearValue;
             TBName.Text = MainForm.Instance.Settings.DocumentFilterNameValue;
-            foreach(ComboBoxItem Item in CBCompanyTag.Items)
+            foreach(ComboBoxItem item in CBCompanyTag.Items)
             {
-                if (Item.ID == MainForm.Instance.Settings.DocumentFilterCompanyValue)
+                if (item.Id == MainForm.Instance.Settings.DocumentFilterCompanyValue)
                 {
-                    CBCompanyTag.SelectedItem = Item;
+                    CBCompanyTag.SelectedItem = item;
                     break;
                 }
             }
@@ -220,7 +214,7 @@ namespace Faktury.Windows
 
         private void CBCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).ID;
+            MainForm.Instance.Settings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
             AutoReload();
         }
 
@@ -247,11 +241,11 @@ namespace Faktury.Windows
             {
                 if (MessageBox.Show("Na pewno chcesz usunąć wybrany(e) dokument(y)?", "Usuwanie dokumentów...", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
-                    foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                    foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                     {
                         try
                         {
-                            MainForm.Instance.Documents.Remove(MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text)));
+                            MainForm.Instance.Documents.Remove(MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -268,11 +262,11 @@ namespace Faktury.Windows
         {
             if (LVDocuments.SelectedItems.Count > 0)
             {
-                    foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                    foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                     {
                         try
                         {
-                            MainForm.Instance.OpenDocument(MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text)));
+                            MainForm.Instance.OpenDocument(MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -314,12 +308,12 @@ namespace Faktury.Windows
         {
             if (LVDocuments.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                 {
                     try
                     {
-                        Classes.Document Doc = MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text));
-                        Doc.Paid = true;
+                        Classes.Document doc = MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        doc.Paid = true;
                         Reload();
                     }
                     catch (Exception ex)
@@ -335,12 +329,12 @@ namespace Faktury.Windows
         {
             if (LVDocuments.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                 {
                     try
                     {
-                        Classes.Document Doc = MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text));
-                        Doc.Paid = false;
+                        Classes.Document doc = MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        doc.Paid = false;
                         Reload();
                     }
                     catch (Exception ex)
@@ -358,11 +352,11 @@ namespace Faktury.Windows
         {
             if (LVDocuments.SelectedItems.Count > 0)
             {
-                    foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                    foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                     {
                         try
                         {
-                            MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text)).ShowPreview();
+                            MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)).ShowPreview();
                         }
                         catch (Exception ex)
                         {
@@ -377,11 +371,11 @@ namespace Faktury.Windows
         {
             if (LVDocuments.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem CurrentItem in LVDocuments.SelectedItems)
+                foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
                 {
                     try
                     {
-                        MainForm.Instance.FindDocument(Convert.ToInt32(CurrentItem.Text), Convert.ToInt32(CurrentItem.SubItems[1].Text)).Print();
+                        MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)).Print();
                     }
                     catch (Exception ex)
                     {
@@ -405,21 +399,21 @@ namespace Faktury.Windows
             AutoReload();
         }
 
-        public void ShowUnpaidDocuments(String Company)
+        public void ShowUnpaidDocuments(String company)
         {
             cBDateFilter.Checked = cBYearFilter.Checked = CxBNameFilter.Checked = false;
             CxBPaidFilter.Checked = RBUnpaidFilter.Checked = CxBCompanyTagFilter.Checked = true;
-            foreach (ComboBoxItem Item in CBCompanyTag.Items)
+            foreach (ComboBoxItem item in CBCompanyTag.Items)
             {
-                if (Item.Text == Company)
+                if (item.Text == company)
                 {
-                    CBCompanyTag.SelectedItem = Item;
+                    CBCompanyTag.SelectedItem = item;
                     break;
                 }
             }
         }
 
-        private ListViewColumnSorter lvwColumnSorter;
+        private ListViewColumnSorter _lvwColumnSorter;
 
         private void LVDocuments_ColumnClick(object sender, ColumnClickEventArgs e)
         {
@@ -428,23 +422,23 @@ namespace Faktury.Windows
            ListView myListView = (ListView)sender;
 
            // Determine if clicked column is already the column that is being sorted.
-           if ( e.Column == lvwColumnSorter.SortColumn )
+           if ( e.Column == _lvwColumnSorter.SortColumn )
            {
              // Reverse the current sort direction for this column.
-             if (lvwColumnSorter.Order == SortOrder.Ascending)
+             if (_lvwColumnSorter.Order == SortOrder.Ascending)
              {
-              lvwColumnSorter.Order = SortOrder.Descending;
+              _lvwColumnSorter.Order = SortOrder.Descending;
              }
              else
              {
-              lvwColumnSorter.Order = SortOrder.Ascending;
+              _lvwColumnSorter.Order = SortOrder.Ascending;
              }
            }
            else
            {
             // Set the column number that is to be sorted; default to ascending.
-            lvwColumnSorter.SortColumn = e.Column;
-            lvwColumnSorter.Order = SortOrder.Ascending;
+            _lvwColumnSorter.SortColumn = e.Column;
+            _lvwColumnSorter.Order = SortOrder.Ascending;
            }
 
            // Perform the sort with these new sort options.

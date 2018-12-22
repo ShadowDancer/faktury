@@ -24,11 +24,11 @@ namespace Faktury.Print_Framework
             /// that indicates, where it should be drawed.
             /// </summary>
             public bool PrintingModeVertical { get; set; }
-            private ArrayList _printObjects = new ArrayList(); //array with all objects to print
+            private readonly ArrayList _printObjects = new ArrayList(); //array with all objects to print
             //used in BeginPrint, PrintPage functions
             private ArrayList _printElements; //array with elements to print(for begin print)
-            private int _printIndex = 0; //currently printed element
-            private int _pageNum = 0; //current page number
+            private int _printIndex; //currently printed element
+            private int _pageNum; //current page number
 
 
             /// <summary>
@@ -82,9 +82,9 @@ namespace Faktury.Print_Framework
             // create the footer...
             VFooter = new PrintElement(null);
             VFooter.HAddLine();
-            StringFormat Sf = new StringFormat();
-            Sf.Alignment = StringAlignment.Far;
-            VFooter.VAddText("[pagenum]", Sf);
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Far;
+            VFooter.VAddText("[pagenum]", sf);
         }
 
         #region Dialogs
@@ -279,18 +279,18 @@ namespace Faktury.Print_Framework
         /// [docname] - name of current document
         /// [elementnum] - number of currently printed element
         /// </summary>
-        /// <param name="Input">Input string</param>
+        /// <param name="input">Input string</param>
         /// <returns></returns>
-        public String ReplaceTokens(String Input)
+        public String ReplaceTokens(String input)
         {
             // replace...
-            foreach(KeyValuePair<string, string> CurrentKvP in Tookens)
+            foreach(KeyValuePair<string, string> currentKvP in Tookens)
             {
-                Input = Input.Replace(CurrentKvP.Key, CurrentKvP.Value);
+                input = input.Replace(currentKvP.Key, currentKvP.Value);
             }
 
             // return...
-            return Input;
+            return input;
         }
 
         #endregion

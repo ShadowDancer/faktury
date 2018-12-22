@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -13,88 +8,88 @@ namespace Faktury.Windows
     {
         public class CompanyStatisticData
         {
-            int DocumentsTotal = 0;
-            int DocumentsPaid = 0;
-            int DocumentsNotPaid = 0;
+            private int _documentsTotal;
+            private int _documentsPaid;
+            private int _documentsNotPaid;
 
-            float MoneyTotal = 0;
-            float MoneyPaid = 0;
-            float MoneyNotPaid = 0;
+            private float _moneyTotal;
+            private float _moneyPaid;
+            private float _moneyNotPaid;
 
-            string CompanyTag = "";
+            private readonly string _companyTag = "";
 
             public CompanyStatisticData()
             {
-                CompanyTag = "Razem:";
+                _companyTag = "Razem:";
             }
-            public CompanyStatisticData(Classes.Company Source)
+            public CompanyStatisticData(Classes.Company source)
             {
-                CompanyTag = Source.Tag;
+                _companyTag = source.Tag;
 
-                foreach (Classes.Document Document in MainForm.Instance.Documents)
+                foreach (Classes.Document document in MainForm.Instance.Documents)
                 {
-                    if (Document.CompanyID != Source.ID) continue;
+                    if (document.CompanyId != source.Id) continue;
 
-                    DocumentsTotal++;
-                    MoneyTotal += Document.MoneyData.Brutto;
-                    if (Document.Paid)
+                    _documentsTotal++;
+                    _moneyTotal += document.MoneyData.Brutto;
+                    if (document.Paid)
                     {
-                        DocumentsPaid++;
-                        MoneyPaid += Document.MoneyData.Brutto;
+                        _documentsPaid++;
+                        _moneyPaid += document.MoneyData.Brutto;
                     }
                     else
                     {
-                        DocumentsNotPaid++;
-                        MoneyNotPaid += Document.MoneyData.Brutto;
+                        _documentsNotPaid++;
+                        _moneyNotPaid += document.MoneyData.Brutto;
                     }
                 }
             }
 
             public ListViewItem GetListViewItem()
             {
-                ListViewItem NewItem = new ListViewItem();
+                ListViewItem newItem = new ListViewItem();
 
-                NewItem.SubItems[0].Text = CompanyTag;
+                newItem.SubItems[0].Text = _companyTag;
 
-                NewItem.SubItems.Add(DocumentsTotal.ToString());
-                NewItem.SubItems.Add(DocumentsPaid.ToString());
-                NewItem.SubItems.Add(DocumentsNotPaid.ToString());
+                newItem.SubItems.Add(_documentsTotal.ToString());
+                newItem.SubItems.Add(_documentsPaid.ToString());
+                newItem.SubItems.Add(_documentsNotPaid.ToString());
 
-                NewItem.SubItems.Add(MoneyPaid.ToString());
-                NewItem.SubItems.Add(MoneyNotPaid.ToString());
-                NewItem.SubItems.Add(MoneyTotal.ToString());
+                newItem.SubItems.Add(_moneyPaid.ToString());
+                newItem.SubItems.Add(_moneyNotPaid.ToString());
+                newItem.SubItems.Add(_moneyTotal.ToString());
 
-                return NewItem;
+                return newItem;
             }
 
-            public void IncreaseBy(CompanyStatisticData Data)
+            public void IncreaseBy(CompanyStatisticData data)
             {
-                DocumentsTotal += Data.DocumentsTotal;
-                DocumentsPaid += Data.DocumentsPaid;
-                DocumentsNotPaid += Data.DocumentsNotPaid;
+                _documentsTotal += data._documentsTotal;
+                _documentsPaid += data._documentsPaid;
+                _documentsNotPaid += data._documentsNotPaid;
 
-                MoneyTotal += Data.MoneyTotal;
-                MoneyPaid += Data.MoneyPaid;
-                MoneyNotPaid += Data.MoneyNotPaid;
+                _moneyTotal += data._moneyTotal;
+                _moneyPaid += data._moneyPaid;
+                _moneyNotPaid += data._moneyNotPaid;
             }
 
         }
 
-        Dictionary<Classes.Company, CompanyStatisticData> Companies = new Dictionary<Faktury.Classes.Company, CompanyStatisticData>();
-        public StatsWindow(List<Classes.Company> Source)
+        private readonly Dictionary<Classes.Company, CompanyStatisticData> _companies = new Dictionary<Classes.Company, CompanyStatisticData>();
+        public StatsWindow(List<Classes.Company> source)
         {
             InitializeComponent();
 
-            CompanyStatisticData Final = new CompanyStatisticData();
-            foreach(Classes.Company Company in Source)
+            CompanyStatisticData final = new CompanyStatisticData();
+            foreach(Classes.Company company in source)
             {
-                CompanyStatisticData Data = new CompanyStatisticData(Company);
-                Final.IncreaseBy(Data);
+                CompanyStatisticData data = new CompanyStatisticData(company);
+                final.IncreaseBy(data);
 
-                Companies.Add(Company, Data);
-                LVStats.Items.Add(Data.GetListViewItem());
+                _companies.Add(company, data);
+                LVStats.Items.Add(data.GetListViewItem());
             }
-            LVStats.Items.Add(Final.GetListViewItem());
+            LVStats.Items.Add(final.GetListViewItem());
 
         }
 

@@ -1,28 +1,30 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Normal.Primitives
 {
     public class PrintLine : IPrintPrimitive
     {
-        Brush Brush;
-        
-        float Width = 0;
-        RectangleF Position { get; set; }
+        private readonly Brush _brush;
 
-        public PrintLine(Brush Brush, float Width, RectangleF Position)
+        private readonly float _width;
+        private RectangleF Position { get; set; }
+
+        public PrintLine(Brush brush, float width, RectangleF position)
         {
-            this.Brush = Brush;
-            this.Width = Width;
+            _brush = brush;
+            _width = width;
 
-            this.Position = Position;
+            Position = position;
 
-            if (Brush == null) Brush = PrintEngine.Instane.DefaultBrush;
+            if (brush == null)
+            {
+                _brush = PrintEngine.Instane.DefaultBrush;
+            }
         }
 
-        public void Draw(PrintEngine engine, Graphics graphics, RectangleF PageBounds)
+        public void Draw(PrintEngine engine, Graphics graphics, RectangleF pageBounds)
         {
-            Pen pen = new Pen(Brush, Width);
+            Pen pen = new Pen(_brush, _width);
             graphics.DrawLine(pen, Position.X, Position.Y, Position.Width, Position.Height);
         }
 

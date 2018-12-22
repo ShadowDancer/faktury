@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -78,10 +72,10 @@ namespace Faktury.Windows
                 return;
             }
 
-            if (MessageBox.Show("Czy napewno?", "Zmiana nośnika kopii zapasowych", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show("Czy napewno?", "Zmiana nośnika kopii zapasowych", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                DriveInfo Drive = (DriveInfo)((ComboBoxItem)CBSelectDevice.SelectedItem).Data;
-                if (!Drive.IsReady || !Drive.RootDirectory.Exists)
+                DriveInfo drive = (DriveInfo)((ComboBoxItem)CBSelectDevice.SelectedItem).Data;
+                if (!drive.IsReady || !drive.RootDirectory.Exists)
                 {
                     MessageBox.Show("Nośnik nie jest gotowy (został wypięty z gniazda usb lub uszkodzony)!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -92,8 +86,8 @@ namespace Faktury.Windows
                     {
                         MainForm.Instance.Settings.DeviceBackupLabel = CBSelectDevice.Text;
                         MainForm.Instance.Settings.DeviceRandomNumber = new Random().Next();
-                        string BackupFolderPath = Path.Combine(Drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", MainForm.Instance.Settings.DeviceRandomNumber.ToString())));
-                        Directory.CreateDirectory(BackupFolderPath);
+                        string backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", MainForm.Instance.Settings.DeviceRandomNumber.ToString())));
+                        Directory.CreateDirectory(backupFolderPath);
                         TBDeviceName.Text = CBSelectDevice.Text;
                         MessageBox.Show(string.Format("Nośnik {0} jest przygotowany do zapisu kopii zapasowych. Gdy upłynie wyznaczony czas zostniesz poproszony o włożenie nośnika do portu USB.", CBSelectDevice.Text), "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -108,11 +102,11 @@ namespace Faktury.Windows
         private void CBSelectDevice_DropDown(object sender, EventArgs e)
         {
             CBSelectDevice.Items.Clear();
-            foreach (DriveInfo Drive in DriveInfo.GetDrives())
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                if (Drive.DriveType == DriveType.Removable || Drive.DriveType == DriveType.Network)
+                if (drive.DriveType == DriveType.Removable || drive.DriveType == DriveType.Network)
                 {
-                    CBSelectDevice.Items.Add(new ComboBoxItem(Drive.Name + " " + Drive.VolumeLabel, Drive));
+                    CBSelectDevice.Items.Add(new ComboBoxItem(drive.Name + " " + drive.VolumeLabel, drive));
                 }
             }
         }

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
@@ -41,13 +35,13 @@ namespace Faktury.Windows
 
         private void LoadBackup_Load(object sender, EventArgs e)
         {
-            foreach (var DateDirectory in new DirectoryInfo(MainForm.Instance.BackupPath).GetDirectories())
+            foreach (var dateDirectory in new DirectoryInfo(MainForm.Instance.BackupPath).GetDirectories())
             {
-                TreeNode Day = treeView1.Nodes.Add(DateDirectory.Name);
-                foreach (var TimeDirectory in DateDirectory.GetDirectories())
+                TreeNode day = treeView1.Nodes.Add(dateDirectory.Name);
+                foreach (var timeDirectory in dateDirectory.GetDirectories())
                 {
-                    TreeNode Time = Day.Nodes.Add(TimeDirectory.Name.Replace('-',':'));
-                    Time.Tag = Time.FullPath;
+                    TreeNode time = day.Nodes.Add(timeDirectory.Name.Replace('-',':'));
+                    time.Tag = time.FullPath;
                 }
             }
             treeView1.Sort();

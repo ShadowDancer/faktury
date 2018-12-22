@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -24,7 +18,7 @@ namespace Faktury.Windows
         {
             get
             {
-                if(Document.CompanyID != ((ComboBoxItem)CBCompanyTag.SelectedItem).ID) return true;
+                if(Document.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) return true;
 
                 if(Document.IssueDate != DTPIssueDate.Value) return true;
                 if(Document.SellDate != DTPSellDate.Value) return true;
@@ -45,10 +39,10 @@ namespace Faktury.Windows
             }
         }
 
-        public bool ForceClose = false;
+        public bool ForceClose;
 
-        private int OldNumberValue = 0;
-        private int OldYearValue = 0;
+        private int _oldNumberValue;
+        private int _oldYearValue;
 
         public Classes.Document Document { get; set; }
 
@@ -76,24 +70,24 @@ namespace Faktury.Windows
             else return true;
         }
 
-        public void SaveDataFromControls(Classes.Document Document)
+        public void SaveDataFromControls(Classes.Document document)
         {
-            Document.CompanyID = ((ComboBoxItem)CBCompanyTag.SelectedItem).ID;
+            document.CompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
 
-            Document.IssueDate = DTPIssueDate.Value;
-            Document.SellDate = DTPSellDate.Value;
-            Document.Paynament = CBPaynament.Text;
-            Document.PaynamentTime = TBPaynamentTime.Text;
+            document.IssueDate = DTPIssueDate.Value;
+            document.SellDate = DTPSellDate.Value;
+            document.Paynament = CBPaynament.Text;
+            document.PaynamentTime = TBPaynamentTime.Text;
 
-            Document.Name = TBName.Text;
-            Document.DefaultName = cBDefaultName.Checked;
+            document.Name = TBName.Text;
+            document.DefaultName = cBDefaultName.Checked;
 
-            Document.Number = (int)nUDNumber.Value;
-            Document.Year = (int)nUDYear.Value;
+            document.Number = (int)nUDNumber.Value;
+            document.Year = (int)nUDYear.Value;
 
-            Document.Paid = CxBPaid.Checked;
+            document.Paid = CxBPaid.Checked;
 
-            documentProperties.Save(Document.MoneyData);
+            documentProperties.Save(document.MoneyData);
         }
 
         private void DocumentWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -114,17 +108,17 @@ namespace Faktury.Windows
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
         }
 
-        public void UpdateID()
+        public void UpdateId()
         {
-            MainForm.Instance.UpdateHigestDocumentID();
+            MainForm.Instance.UpdateHigestDocumentId();
 
-            if (MainForm.Instance.HigestDocumentID.ContainsKey((int)nUDYear.Value))
+            if (MainForm.Instance.HigestDocumentId.ContainsKey((int)nUDYear.Value))
             {
-                nUDNumber.Value = OldNumberValue = MainForm.Instance.HigestDocumentID[((int)nUDYear.Value)] + 1;
+                nUDNumber.Value = _oldNumberValue = MainForm.Instance.HigestDocumentId[((int)nUDYear.Value)] + 1;
             }
             else
             {
-                OldNumberValue = 1;
+                _oldNumberValue = 1;
                 nUDNumber.Value = 1;
             }
         }
@@ -142,57 +136,57 @@ namespace Faktury.Windows
 
         private void nUDNumber_ValueChanged(object sender, EventArgs e)
         {
-            if (OldNumberValue > nUDNumber.Value)
+            if (_oldNumberValue > nUDNumber.Value)
             {
                 //decrease number
-                int CurrentNumber = (int)nUDNumber.Value;
+                int currentNumber = (int)nUDNumber.Value;
 
-                while (CurrentNumber > 0)
+                while (currentNumber > 0)
                 {
-                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == CurrentNumber)) == null)
+                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
-                        nUDNumber.Value = CurrentNumber;
+                        nUDNumber.Value = currentNumber;
                         break;
                     }
                     else
                     {
-                        CurrentNumber--;
+                        currentNumber--;
                     }
                 }
-                if (CurrentNumber == 0)
+                if (currentNumber == 0)
                 {
-                    nUDNumber.Value = OldNumberValue;
+                    nUDNumber.Value = _oldNumberValue;
                     MessageBox.Show("Nie znaleziono wolnego numeru. Aby zmieniejszyć numer faktury musi być puste miejsce! Aby rozwiązać problem zwiększ numer dokumentu z niższym numerem.", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 }
             }
 
-            if (OldNumberValue < nUDNumber.Value)
+            if (_oldNumberValue < nUDNumber.Value)
             {
                 //increase number
-                int CurrentNumber = (int)nUDNumber.Value;
+                int currentNumber = (int)nUDNumber.Value;
 
                 while (true)
                 {
-                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == CurrentNumber)) == null)
+                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
-                        nUDNumber.Value = CurrentNumber;
+                        nUDNumber.Value = currentNumber;
                         break;
                     }
                     else
                     {
-                        CurrentNumber++;
+                        currentNumber++;
                     }
                 }
             }
 
-            OldNumberValue = (int)nUDNumber.Value;
+            _oldNumberValue = (int)nUDNumber.Value;
             SetDefaultName();
         }
 
         private void nUDYear_ValueChanged(object sender, EventArgs e)
         {
-            if(OldYearValue != nUDYear.Value)
-            UpdateID();
+            if(_oldYearValue != nUDYear.Value)
+            UpdateId();
         }
 
         private void DocumentWindow_Load(object sender, EventArgs e)
@@ -206,9 +200,9 @@ namespace Faktury.Windows
             //create new document if neccessary
             if (Document == null)
             {
-                Document = Faktury.Classes.Document.CreateNewDocument();
+                Document = Classes.Document.CreateNewDocument();
                 nUDYear.Value = DateTime.Today.Year;
-                UpdateID();
+                UpdateId();
                 Document.DefaultName = MainForm.Instance.Settings.DocumentSetDefaultNames;
                 CxBSimilarDates.Checked = MainForm.Instance.Settings.DocumentCreationDateSameAsSellDate;
                 nUDYear.Enabled = true;
@@ -219,18 +213,18 @@ namespace Faktury.Windows
                     CxBSimilarDates.Checked = true;
                 else CxBSimilarDates.Checked = false;
 
-                OldNumberValue = Document.Number;
+                _oldNumberValue = Document.Number;
                 nUDNumber.Value = Document.Number;
 
-                OldYearValue = Document.Year;
+                _oldYearValue = Document.Year;
                 nUDYear.Value = Document.Year;
             }
 
-            foreach (ComboBoxItem Item in CBCompanyTag.Items)
+            foreach (ComboBoxItem item in CBCompanyTag.Items)
             {
-                if (Item.ID == Document.CompanyID)
+                if (item.Id == Document.CompanyId)
                 {
-                    CBCompanyTag.SelectedItem = Item;
+                    CBCompanyTag.SelectedItem = item;
                     break;
                 }
             }
@@ -267,32 +261,32 @@ namespace Faktury.Windows
 
         public void Print()
         {
-            Classes.Document TargetDocument = new Classes.Document();
-            TargetDocument.MoneyData = Document.MoneyData;
-            SaveDataFromControls(TargetDocument);
+            Classes.Document targetDocument = new Classes.Document();
+            targetDocument.MoneyData = Document.MoneyData;
+            SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (MainForm.Instance.Companies.Find(n => n.ID == TargetDocument.CompanyID) == null)
+            if (MainForm.Instance.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            TargetDocument.Print();
+            targetDocument.Print();
         }
 
         public void ShowPreview()
         {
-            Classes.Document TargetDocument = new Classes.Document();
-            TargetDocument.MoneyData = Document.MoneyData;
-            SaveDataFromControls(TargetDocument);
+            Classes.Document targetDocument = new Classes.Document();
+            targetDocument.MoneyData = Document.MoneyData;
+            SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (MainForm.Instance.Companies.Find(n => n.ID == TargetDocument.CompanyID) == null)
+            if (MainForm.Instance.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            TargetDocument.ShowPreview();
+            targetDocument.ShowPreview();
         }
 
         private void CxBSimilarDates_CheckedChanged(object sender, EventArgs e)
@@ -312,20 +306,20 @@ namespace Faktury.Windows
        
     public class ComboBoxItem
     {
-        public ComboBoxItem(string Text, int Data)
+        public ComboBoxItem(string text, int data)
         {
-            this.Text = Text;
-            this.Data = Data;
+            Text = text;
+            Data = data;
         }
-        public ComboBoxItem(string Text, Object Data)
+        public ComboBoxItem(string text, Object data)
         {
-            this.Text = Text;
-            this.Data = Data;
+            Text = text;
+            Data = data;
         }
 
         public string Text = "";
         public Object Data = -1;
-        public int ID { get { return (int)Data; } }
+        public int Id { get { return (int)Data; } }
 
         public override string ToString()
         {

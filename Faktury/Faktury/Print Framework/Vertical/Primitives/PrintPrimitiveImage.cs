@@ -1,31 +1,30 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Vertical.Primitives
 {
-    class PrintPrimitiveImage : IPrintPrimitiveVertical 
+    internal class PrintPrimitiveImage : IPrintPrimitiveVertical 
     {
-        Image Image;
+        private readonly Image _image;
 
             public PrintPrimitiveImage(string bmpPath)
             {
-                Image = Image.FromFile( bmpPath );
+                _image = Image.FromFile( bmpPath );
             }
 
-            public PrintPrimitiveImage(Image Image)
+            public PrintPrimitiveImage(Image image)
             {
-                this.Image = Image;
+                _image = image;
             }
 
             public float CalculateHeight(PrintEngine engine, Graphics graphics)
             {
-                return (Image.Height/Image.VerticalResolution) * 100;
+                return (_image.Height/_image.VerticalResolution) * 100;
             }
 
 
-            public void Draw(PrintEngine engine, Graphics graphics, RectangleF ElementBounds)
+            public void Draw(PrintEngine engine, Graphics graphics, RectangleF elementBounds)
             {
-                graphics.DrawImage( Image, ElementBounds.X,ElementBounds.Y );
+                graphics.DrawImage( _image, elementBounds.X,elementBounds.Y );
             }
 
     }

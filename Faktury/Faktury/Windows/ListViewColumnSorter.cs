@@ -1,10 +1,7 @@
-﻿
-    using System;
-    using System.Collections;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
+﻿using System.Collections;
+using System.Windows.Forms;
 
-namespace Faktury
+namespace Faktury.Windows
 {
     /// <summary>
     /// This class is an implementation of the 'IComparer' interface.
@@ -19,12 +16,13 @@ namespace Faktury
         /// <summary>
         /// Specifies the order in which to sort (i.e. 'Ascending').
         /// </summary>
-        private SortOrder OrderOfSort;
+        private SortOrder _orderOfSort;
+
         /// <summary>
         /// Case insensitive comparer object
         /// </summary>  private NumberCaseInsensitiveComparer ObjectCompare;
-        private ImageTextComparer FirstObjectCompare;
-        private NumberCaseInsensitiveComparer ObjectCompare;
+        private readonly ImageTextComparer _firstObjectCompare;
+        private readonly NumberCaseInsensitiveComparer _objectCompare;
         /// <summary>
         /// Class constructor.  Initializes various elements
         /// </summary>
@@ -35,10 +33,10 @@ namespace Faktury
             ColumnToSort = 0;
             // Initialize the sort order to 'none'
             //OrderOfSort = SortOrder.None;
-            OrderOfSort = SortOrder.Ascending;
+            _orderOfSort = SortOrder.Ascending;
             // Initialize my implementationof CaseInsensitiveComparer object
-            ObjectCompare = new NumberCaseInsensitiveComparer();
-            FirstObjectCompare = new ImageTextComparer();
+            _objectCompare = new NumberCaseInsensitiveComparer();
+            _firstObjectCompare = new ImageTextComparer();
         }  /// <summary>
         /// This method is inherited from the IComparer interface.
         /// It compares the two objects passed\
@@ -58,31 +56,30 @@ namespace Faktury
             listviewY = (ListViewItem)y;
             if (ColumnToSort == 0)
             {
-                compareResult = FirstObjectCompare.Compare(x, y);
+                compareResult = _firstObjectCompare.Compare(x, y);
             }
             else
             {
                 // Compare the two items
                 compareResult =
-                  ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,
-                  listviewY.SubItems[ColumnToSort].Text);
+                  _objectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
             }
 
             if (compareResult == 0 && ColumnToSort == 1 && SortByPrev) 
             {
 
-                compareResult =ObjectCompare.Compare(listviewX.SubItems[ColumnToSort-1].Text, listviewY.SubItems[ColumnToSort-1].Text);
+                compareResult =_objectCompare.Compare(listviewX.SubItems[ColumnToSort-1].Text, listviewY.SubItems[ColumnToSort-1].Text);
 
             }
 
             // Calculate correct return value based on object comparison
-            if (OrderOfSort == SortOrder.Ascending)
+            if (_orderOfSort == SortOrder.Ascending)
             {
                 // Ascending sort is selected,
                 // return normal result of compare operation
                 return compareResult;
             }
-            else if (OrderOfSort == SortOrder.Descending)
+            else if (_orderOfSort == SortOrder.Descending)
             {
                 // Descending sort is selected,
                 // return negative result of compare operation
@@ -101,14 +98,8 @@ namespace Faktury
         /// </summary>
         public int SortColumn
         {
-            set
-            {
-                ColumnToSort = value;
-            }
-            get
-            {
-                return ColumnToSort;
-            }
+            set => ColumnToSort = value;
+            get => ColumnToSort;
         }
         /// <summary>
         /// Gets or sets the order of sorting to apply
@@ -116,44 +107,36 @@ namespace Faktury
         /// </summary>
         public SortOrder Order
         {
-            set
-            {
-                OrderOfSort = value;
-            }
-            get
-            {
-                return OrderOfSort;
-            }
+            set => _orderOfSort = value;
+            get => _orderOfSort;
         }
 
     }
     public class ImageTextComparer : IComparer
     {
         //private CaseInsensitiveComparer ObjectCompare;
-        private NumberCaseInsensitiveComparer ObjectCompare;
+        private readonly NumberCaseInsensitiveComparer _objectCompare;
 
         public ImageTextComparer()
         {
             // Initialize the CaseInsensitiveComparer object
-            ObjectCompare = new NumberCaseInsensitiveComparer();
+            _objectCompare = new NumberCaseInsensitiveComparer();
         }
         public int Compare(object x, object y)
         {
             //int compareResult;
-            int image1, image2;
-            ListViewItem listviewX, listviewY;
             // Cast the objects to be compared to ListViewItem objects
-            listviewX = (ListViewItem)x;
-            image1 = listviewX.ImageIndex;
-            listviewY = (ListViewItem)y;
-            image2 = listviewY.ImageIndex;
+            var listViewX = (ListViewItem)x;
+            var image1 = listViewX.ImageIndex;
+            var listViewY = (ListViewItem)y;
+            var image2 = listViewY.ImageIndex;
             if (image1 < image2)
             {
                 return -1;
             }
             else if (image1 == image2)
             {
-                return ObjectCompare.Compare(listviewX.Text, listviewY.Text);
+                return _objectCompare.Compare(listViewX.Text, listViewY.Text);
             }
             else
             {
@@ -163,10 +146,6 @@ namespace Faktury
     }
     public class NumberCaseInsensitiveComparer : CaseInsensitiveComparer
     {
-        public NumberCaseInsensitiveComparer()
-        {
-
-        }
         public new int Compare(object x, object y)
         {
             // in case x,y are strings and actually number,

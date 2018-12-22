@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -19,9 +13,9 @@ namespace Faktury.Windows
         public void Reload()
         {
             LVServices.Items.Clear();
-            foreach (Classes.Service Service in MainForm.Instance.Services)
+            foreach (Classes.Service service in MainForm.Instance.Services)
             {
-                LVServices.Items.Add(new ListViewItem(new string[] {Service.ID.ToString(), Service.Name.ToString(), Service.Jm.ToString(), Service.Price.ToString()} ));
+                LVServices.Items.Add(new ListViewItem(new string[] {service.Id.ToString(), service.Name.ToString(), service.Jm.ToString(), service.Price.ToString()} ));
             }
         }
 
@@ -44,22 +38,22 @@ namespace Faktury.Windows
 
         private void nowyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MainForm.Instance.addService();
+            MainForm.Instance.AddService();
         }
 
         private void edytujToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (LVServices.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem Item in LVServices.SelectedItems)
+                foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Classes.Service ServiceToEdit = null;
-                    ServiceToEdit = MainForm.Instance.Services.Find(n => n.ID == int.Parse(Item.SubItems[0].Text));
+                    Classes.Service serviceToEdit = null;
+                    serviceToEdit = MainForm.Instance.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
-                    if (ServiceToEdit != null)
-                        MainForm.Instance.editService(ServiceToEdit);
+                    if (serviceToEdit != null)
+                        MainForm.Instance.EditService(serviceToEdit);
                     else
-                        MessageBox.Show("Nie znaleziono usługi " + Item.SubItems[1].Text + "!");
+                        MessageBox.Show("Nie znaleziono usługi " + item.SubItems[1].Text + "!");
                 }
             }
             else MessageBox.Show("Wybierz z listy usługi do edycji!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -69,15 +63,15 @@ namespace Faktury.Windows
         {
             if (LVServices.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem Item in LVServices.SelectedItems)
+                foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Classes.Service ServiceToEdit = null;
-                    ServiceToEdit = MainForm.Instance.Services.Find(n => n.ID == int.Parse(Item.SubItems[0].Text));
+                    Classes.Service serviceToEdit = null;
+                    serviceToEdit = MainForm.Instance.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
-                    if (ServiceToEdit != null)
-                        MainForm.Instance.deleteService(ServiceToEdit);
+                    if (serviceToEdit != null)
+                        MainForm.Instance.DeleteService(serviceToEdit);
                     else
-                        MessageBox.Show("Nie znaleziono usługi " + Item.SubItems[1].Text + "!");
+                        MessageBox.Show("Nie znaleziono usługi " + item.SubItems[1].Text + "!");
                 }
             }
             else MessageBox.Show("Wybierz z listy usługi do usunięcia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);

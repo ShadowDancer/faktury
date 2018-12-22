@@ -63,11 +63,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Xml\CompanyToXmlSerializer.cs" />
+    <Compile Include="Data\Xml\DocumentXmlSerializer.cs" />
+    <Compile Include="Classes\MoneyDataRecord.cs" />
+    <Compile Include="Data\Xml\MoneyDataXmlSerializer.cs" />
+    <Compile Include="Data\Xml\MoneyDataRecordXmlSerializer.cs" />
+    <Compile Include="Data\Xml\ServiceToXmlSerializer.cs" />
     <Compile Include="Data\Xml\BackupManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Company.cs" />
-    <Compile Include="Classes\Date.cs" />
     <Compile Include="Classes\Document.cs" />
     <Compile Include="Classes\Service.cs" />
     <Compile Include="Classes\MoneyData.cs" />

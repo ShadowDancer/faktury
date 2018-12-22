@@ -1,29 +1,31 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Normal.Primitives
 {
     public class PrintHorizontalLine : IPrintPrimitive
     {
-        Brush Brush;
-        
-        float Width = 0;
-        float Height = 0;
+        private readonly Brush _brush;
 
-        public PrintHorizontalLine(Brush Brush, float Width, float Height)
+        private readonly float _width;
+        private readonly float _height;
+
+        public PrintHorizontalLine(Brush brush, float width, float height)
         {
-            this.Brush = Brush;
-            this.Width = Width;
+            _brush = brush;
+            _width = width;
 
-            this.Height = Height;
+            _height = height;
 
-            if (Brush == null) Brush = PrintEngine.Instane.DefaultBrush;
+            if (brush == null)
+            {
+                _brush = PrintEngine.Instane.DefaultBrush;
+            }
         }
 
-        public void Draw(PrintEngine engine, Graphics graphics, RectangleF PageBounds)
+        public void Draw(PrintEngine engine, Graphics graphics, RectangleF pageBounds)
         {
-            Pen pen = new Pen(Brush, Width);
-            graphics.DrawLine(pen, PageBounds.Left, Height, PageBounds.Right, Height);
+            Pen pen = new Pen(_brush, _width);
+            graphics.DrawLine(pen, pageBounds.Left, _height, pageBounds.Right, _height);
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.IO;
+using Faktury.Classes;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
@@ -71,13 +71,13 @@ namespace Faktury.Windows
         {
             LBUnit.Items.Clear();
             LBVat.Items.Clear();
-            foreach (var CurrentString in MainForm.Instance.Settings.Properties_Vat)
+            foreach (var currentString in MainForm.Instance.Settings.PropertiesVat)
             {
-                LBVat.Items.Add(CurrentString);
+                LBVat.Items.Add(currentString);
             }
-            foreach (var CurrentString in MainForm.Instance.Settings.Properties_Unit)
+            foreach (var currentString in MainForm.Instance.Settings.PropertiesUnit)
             {
-                LBUnit.Items.Add(CurrentString);
+                LBUnit.Items.Add(currentString);
             }
         }
 
@@ -91,14 +91,14 @@ namespace Faktury.Windows
         {
             if (TBInput.Text.Length > 0)
             {
-                if (MainForm.Instance.Settings.Properties_Vat.Find(n => n.Equals(TBInput.Text)) != null)
+                if (MainForm.Instance.Settings.PropertiesVat.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else
                 {
-                    MainForm.Instance.Settings.Properties_Vat.Add(TBInput.Text);
+                    MainForm.Instance.Settings.PropertiesVat.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -109,14 +109,14 @@ namespace Faktury.Windows
         {
             if (TBInput.Text.Length > 0)
             {
-                if (MainForm.Instance.Settings.Properties_Unit.Find(n => n.Equals(TBInput.Text)) != null)
+                if (MainForm.Instance.Settings.PropertiesUnit.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else
                 {
-                    MainForm.Instance.Settings.Properties_Unit.Add(TBInput.Text);
+                    MainForm.Instance.Settings.PropertiesUnit.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -127,9 +127,9 @@ namespace Faktury.Windows
         {
             if (LBVat.SelectedItem != null)
             {
-                if (MainForm.Instance.Settings.Properties_Vat.Find(n => n.Equals(LBVat.Text)) != null)
+                if (MainForm.Instance.Settings.PropertiesVat.Find(n => n.Equals(LBVat.Text)) != null)
                 {
-                    MainForm.Instance.Settings.Properties_Vat.Remove(LBVat.Text);
+                    MainForm.Instance.Settings.PropertiesVat.Remove(LBVat.Text);
                     ReloadLists();
                 }
                 else
@@ -145,9 +145,9 @@ namespace Faktury.Windows
         {
             if (LBUnit.SelectedItem != null)
             {
-                if (MainForm.Instance.Settings.Properties_Unit.Find(n => n.Equals(LBUnit.Text)) != null)
+                if (MainForm.Instance.Settings.PropertiesUnit.Find(n => n.Equals(LBUnit.Text)) != null)
                 {
-                    MainForm.Instance.Settings.Properties_Unit.Remove(LBUnit.Text);
+                    MainForm.Instance.Settings.PropertiesUnit.Remove(LBUnit.Text);
                     ReloadLists();
                 }
                 else
@@ -161,18 +161,18 @@ namespace Faktury.Windows
 
         private void BClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         public void BSetOwnerData_Click(object sender, EventArgs e)
         {
-            if (MainForm.Instance.Settings.OwnerCompany == null) MainForm.Instance.Settings.OwnerCompany = new Faktury.Classes.Company();
-            CompanyWindow Dialog = new CompanyWindow();
+            if (MainForm.Instance.Settings.OwnerCompany == null) MainForm.Instance.Settings.OwnerCompany = new Company();
+            CompanyWindow dialog = new CompanyWindow();
             MainForm.Instance.Settings.OwnerCompany.Bank = true;
-            Dialog.Company = (MainForm.Instance.Settings.OwnerCompany);
+            dialog.Company = (MainForm.Instance.Settings.OwnerCompany);
 
-            Dialog.AddToCollection = false;
-            Dialog.ShowDialog(); 
+            dialog.AddToCollection = false;
+            dialog.ShowDialog(); 
         }
 
         private void BBackupSettings_Click(object sender, EventArgs e)
@@ -192,7 +192,7 @@ namespace Faktury.Windows
 
         private void OptionsExport_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 MainForm.Instance.SaveSettingsToFile(saveFileDialog1.FileName);
             }
@@ -200,7 +200,7 @@ namespace Faktury.Windows
 
         private void OptionsImport_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 MainForm.Instance.LoadSettingsFromFile(openFileDialog1.FileName);
             }

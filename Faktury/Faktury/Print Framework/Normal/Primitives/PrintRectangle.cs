@@ -1,30 +1,32 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Normal.Primitives
 {
-    class PrintRectangle : IPrintPrimitive
+    internal class PrintRectangle : IPrintPrimitive
     {
-        Brush Brush;
-        bool Filled;
-        float Width = 0;
-        RectangleF Position { get; set; }
+        private readonly Brush _brush;
+        private readonly bool _filled;
+        private readonly float _width;
+        private RectangleF Position { get; set; }
 
-        public PrintRectangle(Brush Brush, float Width, bool Filled, RectangleF Position)
+        public PrintRectangle(Brush brush, float width, bool filled, RectangleF position)
         {
-            this.Brush = Brush;
-            this.Width = Width;
-            this.Filled = Filled;
-            this.Position = Position;
+            _brush = brush;
+            _width = width;
+            _filled = filled;
+            Position = position;
 
-            if (Brush == null) Brush = PrintEngine.Instane.DefaultBrush;
+            if (brush == null)
+            {
+                _brush = PrintEngine.Instane.DefaultBrush;
+            }
         }
 
-        public void Draw(PrintEngine engine, Graphics graphics, RectangleF PageBounds)
+        public void Draw(PrintEngine engine, Graphics graphics, RectangleF pageBounds)
         {
-            Pen pen = new Pen(Brush, Width);
-            if (Filled == false) graphics.DrawRectangle(pen, Position.X, Position.Y, Position.Width, Position.Height);
-            else graphics.FillRectangle(Brush, Position.X, Position.Y, Position.Width, Position.Height);
+            Pen pen = new Pen(_brush, _width);
+            if (_filled == false) graphics.DrawRectangle(pen, Position.X, Position.Y, Position.Width, Position.Height);
+            else graphics.FillRectangle(_brush, Position.X, Position.Y, Position.Width, Position.Height);
         }
     }
 }

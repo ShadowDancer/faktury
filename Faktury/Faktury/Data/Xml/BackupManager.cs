@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using Faktury.Windows;
 
-namespace Faktury.Windows
+namespace Faktury.Data.Xml
 {
     public class BackupManager
     {
@@ -18,13 +16,13 @@ namespace Faktury.Windows
                 if (MainForm.Instance.Settings.LocalBackupOnlyOnExit && ExitingApplication || !MainForm.Instance.Settings.LocalBackupOnlyOnExit)
                 {
                     if (!Directory.Exists(MainForm.Instance.BackupPath)) Directory.CreateDirectory(MainForm.Instance.BackupPath);
-                    string MainDirectoryPath = Path.Combine(MainForm.Instance.BackupPath, DateTime.Now.ToShortDateString().Replace('\\', '-').Replace('/', '-'));
-                    MainDirectoryPath = Path.Combine(MainDirectoryPath, DateTime.Now.ToLongTimeString().Replace(':', '-'));
-                    Directory.CreateDirectory(MainDirectoryPath);
+                    string mainDirectoryPath = Path.Combine(MainForm.Instance.BackupPath, DateTime.Now.ToShortDateString().Replace('\\', '-').Replace('/', '-'));
+                    mainDirectoryPath = Path.Combine(mainDirectoryPath, DateTime.Now.ToLongTimeString().Replace(':', '-'));
+                    Directory.CreateDirectory(mainDirectoryPath);
 
-                    MainForm.Instance.SaveDocumentsToFile(MainDirectoryPath);
-                    MainForm.Instance.SaveCompaniesToFile(MainDirectoryPath);
-                    MainForm.Instance.SaveServicesToFile(MainDirectoryPath);
+                    MainForm.Instance.SaveDocumentsToFile(mainDirectoryPath);
+                    MainForm.Instance.SaveCompaniesToFile(mainDirectoryPath);
+                    MainForm.Instance.SaveServicesToFile(mainDirectoryPath);
                 }
             }
         }
@@ -44,25 +42,25 @@ namespace Faktury.Windows
                 if (MainForm.Instance.Settings.DeviceBackupLastTime.Add(new TimeSpan(MainForm.Instance.Settings.DeviceBackupPeriod, 0, 0, 0)).Subtract(DateTime.Today).Days <= 0)
                 {
                     //Do backup
-                    string BackupFolderPath = "";
-                    DriveInfo TargetDrive = null;
+                    string backupFolderPath = "";
+                    DriveInfo targetDrive = null;
 
                     do
                     {
-                        foreach (DriveInfo Drive in DriveInfo.GetDrives())
+                        foreach (DriveInfo drive in DriveInfo.GetDrives())
                         {
-                            if (Drive.DriveType == DriveType.Removable || Drive.DriveType == DriveType.Network)
+                            if (drive.DriveType == DriveType.Removable || drive.DriveType == DriveType.Network)
                             {
-                                BackupFolderPath = Path.Combine(Drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", MainForm.Instance.Settings.DeviceRandomNumber.ToString())));
-                                if (Directory.Exists(BackupFolderPath))
+                                backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", MainForm.Instance.Settings.DeviceRandomNumber.ToString())));
+                                if (Directory.Exists(backupFolderPath))
                                 {
-                                    TargetDrive = Drive;
+                                    targetDrive = drive;
                                     break;
                                 }
                             }
                         }
 
-                        if (TargetDrive != null)
+                        if (targetDrive != null)
                         {
                             break;
                         }
@@ -78,14 +76,14 @@ namespace Faktury.Windows
                     while (true);
 
                     //Jeśli ustawiono nośnik kontynuuj
-                    BackupFolderPath = Path.Combine(BackupFolderPath, Path.Combine(DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString().Replace(':', '-')));
-                    Directory.CreateDirectory(BackupFolderPath);
+                    backupFolderPath = Path.Combine(backupFolderPath, Path.Combine(DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString().Replace(':', '-')));
+                    Directory.CreateDirectory(backupFolderPath);
 
                     MainForm.Instance.Settings.DeviceBackupLastTime = DateTime.Today;
                                 
-                    MainForm.Instance.SaveDocumentsToFile(BackupFolderPath);
-                    MainForm.Instance.SaveCompaniesToFile(BackupFolderPath);
-                    MainForm.Instance.SaveServicesToFile(BackupFolderPath);
+                    MainForm.Instance.SaveDocumentsToFile(backupFolderPath);
+                    MainForm.Instance.SaveCompaniesToFile(backupFolderPath);
+                    MainForm.Instance.SaveServicesToFile(backupFolderPath);
                 }
             }
         }
@@ -93,21 +91,21 @@ namespace Faktury.Windows
         /// <summary>
         /// Load local backup, return true if success
         /// </summary>
-        /// <param name="Path"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public bool LoadLocalBackup(string Path)
+        public bool LoadLocalBackup(string path)
         {
-            bool Result = true;
-            string RestorePath = System.IO.Path.Combine(MainForm.Instance.BackupPath, "Restore point");
+            bool result = true;
+            string restorePath = Path.Combine(MainForm.Instance.BackupPath, "Restore point");
             try
             {
                 // Create restore point
                 if (!Directory.Exists(MainForm.Instance.BackupPath)) Directory.CreateDirectory(MainForm.Instance.BackupPath);
-                if (!Directory.Exists(RestorePath)) Directory.CreateDirectory(RestorePath);
+                if (!Directory.Exists(restorePath)) Directory.CreateDirectory(restorePath);
                     
-                MainForm.Instance.SaveDocumentsToFile(RestorePath);
-                MainForm.Instance.SaveCompaniesToFile(RestorePath);
-                MainForm.Instance.SaveServicesToFile(RestorePath);
+                MainForm.Instance.SaveDocumentsToFile(restorePath);
+                MainForm.Instance.SaveCompaniesToFile(restorePath);
+                MainForm.Instance.SaveServicesToFile(restorePath);
 
                 // Delete data
                 MainForm.Instance.CleanCompanies();
@@ -116,7 +114,7 @@ namespace Faktury.Windows
 
 
                 // Load backup
-                if (Directory.Exists(Path))
+                if (Directory.Exists(path))
                 {
                     MainForm.Instance.LoadCompaniesFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
                     MainForm.Instance.LoadDocumentsFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
@@ -127,19 +125,19 @@ namespace Faktury.Windows
             catch
             {
                 // Restore if failed
-                MainForm.Instance.LoadCompaniesFromFile(RestorePath);
-                MainForm.Instance.LoadDocumentsFromFile(RestorePath);
-                MainForm.Instance.LoadServicesFromFile(RestorePath);
+                MainForm.Instance.LoadCompaniesFromFile(restorePath);
+                MainForm.Instance.LoadDocumentsFromFile(restorePath);
+                MainForm.Instance.LoadServicesFromFile(restorePath);
 
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
 
-                Result = false;
+                result = false;
             }
             finally
             {
-                new DirectoryInfo(RestorePath).Delete(true);
+                new DirectoryInfo(restorePath).Delete(true);
             }
-            return Result;
+            return result;
 
         }
     }

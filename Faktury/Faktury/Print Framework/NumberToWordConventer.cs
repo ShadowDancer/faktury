@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using static System.String;
 
-namespace Faktury.Classes
+namespace Faktury.Print_Framework
 {
-    class NumberToWordConventer
+    internal class NumberToWordConventer
     {
-            static readonly string[] Months =
+        private static readonly string[] Months =
             {
                 "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
             };
 
-            static readonly string[] Units =
+        private static readonly string[] Units =
             {
                 "Zero", "Jeden", "Dwa", "Trzy", "Cztery", "Pięć", "Sześć",
                 "Siedem", "Osiem", "Dziewięć", "Dziesięć", "Jedenaście",
@@ -20,41 +21,41 @@ namespace Faktury.Classes
                 "Szesnaście", "Siedemnaście", "Osiemnaście", "Dziewiętnaście"
             };
 
-            static readonly string[] Tens =
+        private static readonly string[] Tens =
             {
                 "Dwadzieścia", "Trzydzieści", "Czterdzieści", "Pięćdziesiąt",
                 "Sześćdziesiąt", "Siedemdziesiąt", "Osiemdziesiąt",
                 "Dziewięćdziesiąt"
             };
 
-            static readonly string[] Hundreds =
+        private static readonly string[] Hundreds =
             {
                 "", "Sto", "Dwieście", "Trzysta", "Czterysta", "Pięćset",
                 "Sześćset", "Siedemset", "Osiemset", "Dziewięćset"
             };
 
-            static readonly string[,] OtherUnits =
+        private static readonly string[,] OtherUnits =
             {
                 { "Jeden Tysiąc", "Tysiące", "Tysięcy"     },
                 { "Milion", "Miliony", "Milionów"    },
                 { "Miliard", "Miliardy", "Miliardów" }
             };
 
-            static readonly string[] MoneyUpperUnits =
+        private static readonly string[] MoneyUpperUnits =
             {
                 "Złoty", "Złote", "Złotych"
             };
 
-            static readonly string[] MoneyLowerUnits =
+        private static readonly string[] MoneyLowerUnits =
             {
                 "Grosz", "Grosze", "Groszy"
             };
 
-        static string SmallValueToWords(int n)
+        private static string SmallValueToWords(int n)
         {
             if (n == 0)
             {
-                return String.Empty;
+                return Empty;
             }
             
             StringBuilder valueInWords = new StringBuilder();
@@ -97,7 +98,7 @@ namespace Faktury.Classes
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        static int GetBigUnitIndex(long n)
+        private static int GetBigUnitIndex(long n)
         {
             if (n == 1) return 0;
 
@@ -111,7 +112,7 @@ namespace Faktury.Classes
             return 1;
         }
 
-        static long ToWords(StringBuilder valueInWords, long n, int level)
+        private static long ToWords(StringBuilder valueInWords, long n, int level)
         {
             int smallValue = 0;
             long divisor = (long) Math.Pow(1000, level + 1);
@@ -136,7 +137,7 @@ namespace Faktury.Classes
         }
 
 
-        public static string ToWords(long value)
+        private static string ToWords(long value)
         {
             if (value == 0)
             {
@@ -159,70 +160,64 @@ namespace Faktury.Classes
 
         public static string ConvertValues(float value)
         {
-            string StringVal = value.ToString();
-            string[] Data = { StringVal };
-            if (StringVal.Contains('.'))
+            string stringVal = value.ToString(CultureInfo.CurrentCulture);
+            string[] data = { stringVal };
+            if (stringVal.Contains('.'))
             {
-                Data = StringVal.Split('.');
+                data = stringVal.Split('.');
             }
-            else if (StringVal.Contains(','))
+            else if (stringVal.Contains(','))
             {
-                Data = StringVal.Split(',');
+                data = stringVal.Split(',');
             }   
 
-            StringVal = ConvertUpperMoney(long.Parse(Data[0]));
-            if (Data.Length > 1)
+            stringVal = ConvertUpperMoney(long.Parse(data[0]));
+            if (data.Length > 1)
             {
-                if (Data[1].Length == 1)
+                if (data[1].Length == 1)
                 {
-                    Data[1] += "0";
+                    data[1] += "0";
                 }
-                StringVal += " " + ConvertLowerMoney(int.Parse(Data[1]));
+                stringVal += " " + ConvertLowerMoney(int.Parse(data[1]));
             }
             else
             {
-                StringVal += " " + ConvertLowerMoney(0);
+                stringVal += " " + ConvertLowerMoney(0);
             }
 
-            return StringVal;
+            return stringVal;
 
         }
 
-        public static string ConvertUpperMoney(long value)
+        private static string ConvertUpperMoney(long value)
         {
-            string Result = "";
-
-                Result = ToWords(value) + " " + MoneyUpperUnits[GetMoneyEndingIndex(Convert.ToInt32(value))];
-
-            return Result;
+            var result = ToWords(value) + " " + MoneyUpperUnits[GetMoneyEndingIndex(Convert.ToInt32(value))];
+            return result;
         }
 
-        public static string ConvertLowerMoney(int value)
+        private static string ConvertLowerMoney(int value)
         {
-            string Result = "";
-
-                Result = ToWords(value) + " " + MoneyLowerUnits[GetMoneyEndingIndex(value)];
-
-            return Result;
+            var result = ToWords(value) + " " + MoneyLowerUnits[GetMoneyEndingIndex(value)];
+            return result;
         }
 
-        public static int GetMoneyEndingIndex(int value)
+        private static int GetMoneyEndingIndex(int value)
         {
-            int Dziesiatki = (value % 100);
-            if (Dziesiatki > 10)
+            int tenths = (value % 100);
+            if (tenths > 10)
             {
-                Dziesiatki = Dziesiatki - (Dziesiatki % 10);
-                Dziesiatki = Dziesiatki / 10;
+                tenths = tenths - (tenths % 10);
+                tenths = tenths / 10;
             }
-            else Dziesiatki = 0;
+            else tenths = 0;
 
-            if (Dziesiatki != 1)
+            if (tenths != 1)
             {
                 switch (value % 10)
                 {
                     case 1:
 
-                        if (Dziesiatki == 0 && value < 100)
+                        if (tenths == 0 && value < 100)
                             return 0;
                         else return 2;    
                     case 2:
@@ -253,12 +248,11 @@ namespace Faktury.Classes
 
         public static int ConvertMonthToNumber(string value)
         {
-            int Out = 0;
-            if (!int.TryParse(value, out Out))
+            if (!int.TryParse(value, out var Out))
             {
                 for (int i = 0; i < Months.Length; i++)
                 {
-                    if (Months[i].ToLower() == value.ToLower()) return i + 1;
+                    if (String.Equals(Months[i], value, StringComparison.CurrentCultureIgnoreCase)) return i + 1;
                 }
             }
             return Out;

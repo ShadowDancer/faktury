@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -16,33 +10,33 @@ namespace Faktury.Windows
             InitializeComponent();
         }
 
-        public Classes.Service Service = null;
+        public Classes.Service Service;
 
         private void ServiceWindow_Load(object sender, EventArgs e)
         {
             //create Service if null
             if (Service == null)
             {
-                Service = new Faktury.Classes.Service();
+                Service = new Classes.Service();
                 Service.CreationDate = DateTime.Now;
                 Service.ModificationDate = Service.CreationDate;
 
                 Service.Name = "Nienazwana usługa";
                 Service.Tag = Service.Name;
-                Service.ID = MainForm.Instance.GetNewServiceID;
+                Service.Id = MainForm.Instance.GetNewServiceId;
             }
 
             //setup comboboxes
-            foreach (string Value in MainForm.Instance.Settings.Properties_Vat)
+            foreach (string value in MainForm.Instance.Settings.PropertiesVat)
             {
-                CBVat.Items.Add(Value);
+                CBVat.Items.Add(value);
                 if (CBVat.Items.Count > 0) CBVat.SelectedIndex = 0;
                 else CBVat.Text = "0";
             }
 
-            foreach (string Value in MainForm.Instance.Settings.Properties_Unit)
+            foreach (string value in MainForm.Instance.Settings.PropertiesUnit)
             {
-                CBJm.Items.Add(Value);
+                CBJm.Items.Add(value);
             }
 
             //load data
@@ -76,8 +70,8 @@ namespace Faktury.Windows
                 return;
             }
 
-                Classes.Service Check = MainForm.Instance.Services.Find(n => n.ID == Service.ID);
-                if (Check == null)
+                Classes.Service check = MainForm.Instance.Services.Find(n => n.Id == Service.Id);
+                if (check == null)
                     MainForm.Instance.Services.Add(Service);
 
 

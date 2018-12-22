@@ -1,28 +1,27 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Normal.Primitives
 {
-    class PrintImage : IPrintPrimitive
+    internal class PrintImage : IPrintPrimitive
     {
-        Image Image;
-        PointF Position { get; set; }
+        private readonly Image _image;
+        private PointF Position { get; set; }
 
-            public PrintImage(string bmpPath, PointF Position)
+            public PrintImage(string bmpPath, PointF position)
             {
-                Image = Image.FromFile( bmpPath );
-                this.Position = Position;
+                _image = Image.FromFile( bmpPath );
+                Position = position;
             }
 
-            public PrintImage(Image Image, PointF Position)
+            public PrintImage(Image image, PointF position)
             {
-                this.Image = Image;
-                this.Position = Position;
+                _image = image;
+                Position = position;
             }
 
-            public void Draw(PrintEngine engine, Graphics graphics, RectangleF PageBounds)
+            public void Draw(PrintEngine engine, Graphics graphics, RectangleF pageBounds)
             {
-                graphics.DrawImage(Image, Position.X, Position.Y);
+                graphics.DrawImage(_image, Position.X, Position.Y);
             }
 
     }

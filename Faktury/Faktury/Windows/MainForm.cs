@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
-using WeifenLuo.WinFormsUI.Docking;
-using System.Runtime.InteropServices;
-using System.Text;
+using Faktury.Classes;
+using Faktury.Data.Xml;
 
 
 namespace Faktury.Windows
 {
     public partial class MainForm : Form
     {
-        private int childFormNumber = 0;
+        private int _childFormNumber;
 
         public MainForm()
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
+            WindowState = FormWindowState.Maximized;
             Instance = this;
 
             DataPath = Path.Combine(AppDataDirectoryPath, "Data");
@@ -28,7 +25,7 @@ namespace Faktury.Windows
 
         #region Properties
             //singleton
-            public static MainForm Instance = null;
+            public static MainForm Instance;
 
 
 
@@ -37,31 +34,31 @@ namespace Faktury.Windows
             public string DataPath;
             public string BackupPath;
 
-            public EditorSettings Settings = null;
+            public EditorSettings Settings;
             public BackupManager BackupManager = new BackupManager();
 
-            public List<Classes.Company> Companies = new List<Faktury.Classes.Company>();
-            public List<Classes.Document> Documents = new List<Faktury.Classes.Document>();
-            public List<Classes.Service> Services = new List<Faktury.Classes.Service>();
+            public List<Company> Companies = new List<Company>();
+            public List<Document> Documents = new List<Document>();
+            public List<Service> Services = new List<Service>();
 
-            public Dictionary<int, int> HigestDocumentID = new Dictionary<int, int>();//get higest ID for year
-            public int HigestCompanyID = 0;
-            public int GetNewCompanyID { get { return ++HigestCompanyID; } }
-            public int HigestServiceID = 0;
-            public int GetNewServiceID { get { return ++HigestServiceID; } }
+            public Dictionary<int, int> HigestDocumentId = new Dictionary<int, int>();//get higest ID for year
+            public int HigestCompanyId;
+            public int GetNewCompanyId { get { return ++HigestCompanyId; } }
+            public int HigestServiceId;
+            public int GetNewServiceId { get { return ++HigestServiceId; } }
 
             #region Windows
                 //options
-                public OptionsWindow OptionsWindow = null;
+                public OptionsWindow OptionsWindow;
 
                 //document list
-                public DocumentListWindow DocumentListWindow = null;
+                public DocumentListWindow DocumentListWindow;
 
                 //company list
-                public CompanyListWindow CompanyListWindow = null;
+                public CompanyListWindow CompanyListWindow;
 
                 //Services list
-                public ServicesListWindow ServicesListWindow = null;
+                public ServicesListWindow ServicesListWindow;
 
             #endregion
 
@@ -72,49 +69,49 @@ namespace Faktury.Windows
 
         #region Functions
 
-        public void UpdateHigestDocumentID()
+        public void UpdateHigestDocumentId()
         {
-            foreach(var CurrentDocument in Documents)
+            foreach(var currentDocument in Documents)
             {
-                if (HigestDocumentID.ContainsKey(CurrentDocument.Year))
+                if (HigestDocumentId.ContainsKey(currentDocument.Year))
                 {
-                    if (HigestDocumentID[CurrentDocument.Year] < CurrentDocument.Number)
+                    if (HigestDocumentId[currentDocument.Year] < currentDocument.Number)
                     {
-                        HigestDocumentID[CurrentDocument.Year] = CurrentDocument.Number;
+                        HigestDocumentId[currentDocument.Year] = currentDocument.Number;
                     }
                 }
                 else 
                 {
-                    if (CurrentDocument.Number > 0) HigestDocumentID.Add(CurrentDocument.Year, CurrentDocument.Number);
-                    else HigestDocumentID.Add(CurrentDocument.Year, 1);
+                    if (currentDocument.Number > 0) HigestDocumentId.Add(currentDocument.Year, currentDocument.Number);
+                    else HigestDocumentId.Add(currentDocument.Year, 1);
                 }
             }
         }
 
-        public void UpdateHigestCompanyID()
+        public void UpdateHigestCompanyId()
         {
-            foreach (Classes.Company CurrentComapny in Companies)
+            foreach (Company currentComapny in Companies)
             {
-                if (CurrentComapny.ID > HigestCompanyID) HigestCompanyID = CurrentComapny.ID;
+                if (currentComapny.Id > HigestCompanyId) HigestCompanyId = currentComapny.Id;
             }
         }
 
-        public void UpdateHigestServiceID()
+        public void UpdateHigestServiceId()
         {
-            foreach (Classes.Service CurrentService in Services)
+            foreach (Service currentService in Services)
             {
-                if (CurrentService.ID > HigestServiceID) HigestServiceID = CurrentService.ID;
+                if (currentService.Id > HigestServiceId) HigestServiceId = currentService.Id;
             }
         }
 
-        public void ReloadCompanyCombobox(ComboBox ComboBox)
+        public void ReloadCompanyCombobox(ComboBox comboBox)
         {
-            ComboBox.Items.Clear();
-            foreach (Classes.Company CurrentCompany in Companies)
+            comboBox.Items.Clear();
+            foreach (Company currentCompany in Companies)
             {
-                ComboBox.Items.Add(new ComboBoxItem(CurrentCompany.Tag, CurrentCompany.ID));
+                comboBox.Items.Add(new ComboBoxItem(currentCompany.Tag, currentCompany.Id));
             }
-            if (ComboBox.Items.Count > 0) ComboBox.SelectedIndex = 0;
+            if (comboBox.Items.Count > 0) comboBox.SelectedIndex = 0;
         }
 
         public void ReloadCompanyComboboxesInChildWindows()
@@ -125,51 +122,51 @@ namespace Faktury.Windows
             }
 
             //update w child window
-            foreach (var CurrentChild in MdiChildren)
+            foreach (var currentChild in MdiChildren)
             {
-                if (CurrentChild is DocumentWindow)
+                if (currentChild is DocumentWindow)
                 {
-                    ((DocumentWindow)CurrentChild).ReloadCompanyCombobox();
+                    ((DocumentWindow)currentChild).ReloadCompanyCombobox();
                 }
             }
         }
 
         #region Services
-        public void addService()
+        public void AddService()
         {
             ServiceWindow childForm = new ServiceWindow();
 
             childForm.MdiParent = this;
 
-            childForm.Text = childFormNumber++.ToString() + ": Nowa usługa";
+            childForm.Text = _childFormNumber++.ToString() + ": Nowa usługa";
             childForm.Show(MainDockPanel);
         }
 
-        public void editService(Classes.Service ServiceToEdit)
+        public void EditService(Service serviceToEdit)
         {
             ServiceWindow childForm = new ServiceWindow();
             childForm.MdiParent = this;
 
-            childForm.Text = childFormNumber++.ToString() + ": Edycja " + ServiceToEdit.Name;
-            childForm.Service = ServiceToEdit;
+            childForm.Text = _childFormNumber++.ToString() + ": Edycja " + serviceToEdit.Name;
+            childForm.Service = serviceToEdit;
             childForm.Show(MainDockPanel);            
         }
 
-        public void deleteService(Classes.Service ServiceToRemove)
+        public void DeleteService(Service serviceToRemove)
         {
             if (MessageBox.Show("Na pewno?", "Usuwanie usługi...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Services.Remove(ServiceToRemove);
+                Services.Remove(serviceToRemove);
             }
         }
 
         public void CleanServices()
         {
-            foreach (var ChildForm in MdiChildren)
+            foreach (var childForm in MdiChildren)
             {
-                if (ChildForm is ServiceWindow)
+                if (childForm is ServiceWindow)
                 {
-                    ChildForm.Close();
+                    childForm.Close();
                 }
             }
             Services.Clear();
@@ -178,46 +175,46 @@ namespace Faktury.Windows
         #endregion
 
         #region Companies
-        public void addCompany()
+        public void AddCompany()
         {
             CompanyWindow childForm = new CompanyWindow();
           
             childForm.MdiParent = this;
 
-            childForm.Text = childFormNumber++.ToString() + ": Nowa firma";
+            childForm.Text = _childFormNumber++.ToString() + ": Nowa firma";
             childForm.Show(MainDockPanel);
         }
 
-        public void editCompany(Classes.Company CompanyToEdit)
+        public void EditCompany(Company companyToEdit)
         {
                 CompanyWindow childForm = new CompanyWindow();
-                if (CompanyToEdit == Settings.OwnerCompany && Settings.OwnerCompany != null) 
+                if (companyToEdit == Settings.OwnerCompany && Settings.OwnerCompany != null) 
                     childForm.AddToCollection = false;
                 else childForm.AddToCollection = true;
 
                 childForm.MdiParent = this;
 
-                childForm.Text = childFormNumber++.ToString() + ": Edycja " + CompanyToEdit.Tag;
-                childForm.Company = CompanyToEdit;
+                childForm.Text = _childFormNumber++.ToString() + ": Edycja " + companyToEdit.Tag;
+                childForm.Company = companyToEdit;
                 childForm.Show(MainDockPanel);
         }
 
-        public void deleteCompany(Classes.Company CompanyToRemove)
+        public void DeleteCompany(Company companyToRemove)
         {
                 if (MessageBox.Show("Na pewno?", "Usuwanie firmy...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                        Companies.Remove(CompanyToRemove);
+                        Companies.Remove(companyToRemove);
                         ReloadCompanyComboboxesInChildWindows();
                 }
         }
 
         public void CleanCompanies()
         {
-            foreach (var ChildForm in MdiChildren)
+            foreach (var childForm in MdiChildren)
             {
-                if (ChildForm is CompanyWindow)
+                if (childForm is CompanyWindow)
                 {
-                    ChildForm.Close();
+                    childForm.Close();
                 }
             }
             Companies.Clear();
@@ -229,48 +226,48 @@ namespace Faktury.Windows
 
         public void CleanDocuments()
         {
-            foreach (var ChildForm in MdiChildren)
+            foreach (var childForm in MdiChildren)
             {
-                if (ChildForm is DocumentWindow)
+                if (childForm is DocumentWindow)
                 {
                     //TODO
-                    ((DocumentWindow)ChildForm).ForceClose = true;
-                    ChildForm.Close();
+                    ((DocumentWindow)childForm).ForceClose = true;
+                    childForm.Close();
                 }
             }
             Documents.Clear();
         }
 
-        public void OpenDocument(Classes.Document Document)
+        public void OpenDocument(Document document)
         {
-            if (Document != null)
+            if (document != null)
             {
 
                 DocumentWindow childForm = new DocumentWindow();
                 childForm.MdiParent = this;
 
-                childForm.Text = Document.Number.ToString() + "//" + Document.Year.ToString() + " " + Document.Name;
-                childForm.Document = Document;
+                childForm.Text = document.Number.ToString() + "//" + document.Year.ToString() + " " + document.Name;
+                childForm.Document = document;
                 childForm.Show(MainDockPanel);
             }
             else throw new Exception();
         }
 
-        public bool SaveDocument(DocumentWindow Window)
+        public bool SaveDocument(DocumentWindow window)
         {
-            Classes.Document Document = Window.Document;
+            Document document = window.Document;
 
             try
             {
-                Classes.Document Check = Documents.Find(n => (n.Number == Window.nUDNumber.Value && n.Year == Window.nUDYear.Value ));
-                if (Check == null)
+                Document check = Documents.Find(n => (n.Number == window.nUDNumber.Value && n.Year == window.nUDYear.Value ));
+                if (check == null)
                 {
-                    if(Documents.Find(n => n == Window.Document) == null)
-                    Documents.Add(Document);
+                    if(Documents.Find(n => n == window.Document) == null)
+                    Documents.Add(document);
                 }
                 else
                 {
-                    if(Check != Window.Document)
+                    if(check != window.Document)
                     throw new Exception("Dokument o danym numerze już istnieje!");
                 }
             }
@@ -281,15 +278,15 @@ namespace Faktury.Windows
             }
 
             //save document if no problems
-            Window.SaveDataFromControls(Document);
-            UpdateHigestDocumentID();
+            window.SaveDataFromControls(document);
+            UpdateHigestDocumentId();
 
             return true;
         }
 
-        public Classes.Document FindDocument(int Number, int Year)
+        public Document FindDocument(int number, int year)
         {
-            return Documents.Find(n => (n.Number == Number && n.Year == Year));
+            return Documents.Find(n => (n.Number == number && n.Year == year));
         }
 
         #endregion
@@ -301,7 +298,7 @@ namespace Faktury.Windows
 
         public void RunFirstUseWizard()
         {
-            if (MessageBox.Show("Program faktury został uruchomiony po raz pierwszy. Kreator pierwszego uruchomienia przeprowadzi Cię przez proces konfigurowania aplikacji. Kontynuować?", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show("Program faktury został uruchomiony po raz pierwszy. Kreator pierwszego uruchomienia przeprowadzi Cię przez proces konfigurowania aplikacji. Kontynuować?", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
                 //Import data
                 if (MessageBox.Show("Chcesz zaimportować dane?\nWybierz nie, jeśli nie posiadasz danych stworzonych przez tą aplikację.", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
@@ -339,15 +336,15 @@ namespace Faktury.Windows
                 ReloadCompanyComboboxesInChildWindows();
             }
             #region Loading
-            public void LoadSettingsFromFile(string ConfigFilePath)
+            public void LoadSettingsFromFile(string configFilePath)
                 {
                     Settings = new EditorSettings();
-                    if (File.Exists(ConfigFilePath))
+                    if (File.Exists(configFilePath))
                     {
-                        using (StreamReader Reader = new StreamReader(ConfigFilePath))
+                        using (StreamReader reader = new StreamReader(configFilePath))
                         {
-                            System.Xml.Serialization.XmlSerializer Serializer = new System.Xml.Serialization.XmlSerializer(typeof(EditorSettings));
-                            Settings = (EditorSettings)Serializer.Deserialize(Reader);
+                            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EditorSettings));
+                            Settings = (EditorSettings)serializer.Deserialize(reader);
                         }
                     }
                     else
@@ -355,51 +352,51 @@ namespace Faktury.Windows
                         RunFirstUseWizard();
                     }
                 }
-                public void LoadCompaniesFromFile(string Filepath)
+                public void LoadCompaniesFromFile(string filepath)
                 {
-                    if (Filepath.Length == 0) return;
+                    if (filepath.Length == 0) return;
                     try
                     {
-                        Filepath = Path.Combine(Filepath, "Companies.xml");
+                        filepath = Path.Combine(filepath, "Companies.xml");
 
-                        XmlDocument Doc = new XmlDocument();
-                        Doc.Load(Filepath);
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(filepath);
 
-                        foreach (XmlNode CurrentNode in Doc["Companies"])
+                        foreach (XmlNode currentNode in doc["Companies"])
                         {
-                            if (CurrentNode.Name == "IssueCompany") continue;
+                            if (currentNode.Name == "IssueCompany") continue;
 
-                            Classes.Company NewCompany = Classes.Company.GetCompanyFromXml(CurrentNode);
-                            Classes.Company Check = new Faktury.Classes.Company();
-                            Check = Companies.Find(n => n.ID == NewCompany.ID);
-                            if (Check == null)
+                            Company newCompany = CompanyToXmlSerializer.GetCompanyFromXml(currentNode);
+                            Company check = new Company();
+                            check = Companies.Find(n => n.Id == newCompany.Id);
+                            if (check == null)
                             {
-                                Companies.Add(NewCompany);
+                                Companies.Add(newCompany);
                             }
-                            else MessageBox.Show("Kolekcja zawiera już element o ID " + NewCompany.ID.ToString() + "!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            else MessageBox.Show("Kolekcja zawiera już element o ID " + newCompany.Id.ToString() + "!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        MainForm.Instance.UpdateHigestCompanyID();
+                        Instance.UpdateHigestCompanyId();
                     }
                     catch
                     {
                         MessageBox.Show("Nie można wczytać pliku z kontrahentami!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                public void LoadDocumentsFromFile(string Filepath)
+                public void LoadDocumentsFromFile(string filepath)
                 {
-                    if (Filepath.Length == 0) return;
+                    if (filepath.Length == 0) return;
                     try
                     {
-                        Filepath = Path.Combine(Filepath, "Documents.xml");
+                        filepath = Path.Combine(filepath, "Documents.xml");
 
-                        XmlDocument Doc = new XmlDocument();
-                        Doc.Load(Filepath);
-                        foreach (XmlNode CurrentNode in Doc["Documents"])
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(filepath);
+                        foreach (XmlNode currentNode in doc["Documents"])
                         {
-                            Classes.Document NewDocument = Classes.Document.GetDocumentFromXml(CurrentNode);
-                                Documents.Add(NewDocument);
+                            Document newDocument = DocumentXmlSerializer.GetDocumentFromXml(currentNode);
+                                Documents.Add(newDocument);
                         }
-                        UpdateHigestDocumentID();
+                        UpdateHigestDocumentId();
                     }
                     catch
                     {
@@ -407,20 +404,20 @@ namespace Faktury.Windows
                     }
 
                 }
-                public void LoadServicesFromFile(string Filepath)
+                public void LoadServicesFromFile(string filepath)
                 {
-                    if (Filepath.Length == 0) return;
+                    if (filepath.Length == 0) return;
                     try
                     {
-                        Filepath = Path.Combine(Filepath, "Services.xml");
+                        filepath = Path.Combine(filepath, "Services.xml");
 
-                        XmlDocument Doc = new XmlDocument();
-                        Doc.Load(Filepath);
-                        foreach (XmlNode CurrentNode in Doc["Services"])
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(filepath);
+                        foreach (XmlNode currentNode in doc["Services"])
                         {
-                            Services.Add(Classes.Service.GetServiceFromXml(CurrentNode));
+                            Services.Add(ServiceToXmlSerializer.GetServiceFromXml(currentNode));
                         }
-                        MainForm.Instance.UpdateHigestServiceID();
+                        Instance.UpdateHigestServiceId();
                     }
                     catch
                     {
@@ -451,75 +448,75 @@ namespace Faktury.Windows
                 }
             }
             #region Saving
-                public void SaveSettingsToFile(string ConfigFilePath)
+                public void SaveSettingsToFile(string configFilePath)
                 {
-                    using(StreamWriter Writer = new StreamWriter(ConfigFilePath))
+                    using(StreamWriter writer = new StreamWriter(configFilePath))
                     {
                         
                         System.Xml.Serialization.XmlSerializerNamespaces ns = new System.Xml.Serialization.XmlSerializerNamespaces();
                         ns.Add("", "");
 
-                        System.Xml.Serialization.XmlSerializer Serializer = new System.Xml.Serialization.XmlSerializer(typeof(EditorSettings));
-                        Serializer.Serialize(Writer, Settings, ns) ;
+                        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EditorSettings));
+                        serializer.Serialize(writer, Settings, ns) ;
                     }
                 }
 
-                public void SaveCompaniesToFile(string Filepath)
+                public void SaveCompaniesToFile(string filepath)
                 {
-                    Filepath = Path.Combine(Filepath, "Companies.xml");
+                    filepath = Path.Combine(filepath, "Companies.xml");
 
-                    XmlDocument Doc = new XmlDocument();
+                    XmlDocument doc = new XmlDocument();
 
-                    XmlDeclaration xmlHeader = Doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                    XmlDeclaration xmlHeader = doc.CreateXmlDeclaration("1.0", "utf-8", null);
 
-                    Doc.LoadXml("<Companies></Companies>");
-                    Doc.InsertBefore(xmlHeader, Doc.DocumentElement); 
+                    doc.LoadXml("<Companies></Companies>");
+                    doc.InsertBefore(xmlHeader, doc.DocumentElement); 
 
 
-                    foreach (var CurrentCompany in Companies)
+                    foreach (var currentCompany in Companies)
                     {
-                        Doc["Companies"].AppendChild(CurrentCompany.GetXmlElement(Doc));
+                        doc["Companies"].AppendChild(CompanyToXmlSerializer.GetXmlElement(currentCompany, doc));
                     }
 
-                    Doc.Save(Filepath);
+                    doc.Save(filepath);
                 }
-                public void SaveDocumentsToFile(string Filepath)
+                public void SaveDocumentsToFile(string filepath)
                 {
-                    Filepath = Path.Combine(Filepath, "Documents.xml");
+                    filepath = Path.Combine(filepath, "Documents.xml");
 
-                    XmlDocument Doc = new XmlDocument();
+                    XmlDocument doc = new XmlDocument();
 
-                    XmlDeclaration xmlHeader = Doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                    XmlDeclaration xmlHeader = doc.CreateXmlDeclaration("1.0", "utf-8", null);
 
-                    Doc.LoadXml("<Documents></Documents>");
-                    Doc.InsertBefore(xmlHeader, Doc.DocumentElement); 
+                    doc.LoadXml("<Documents></Documents>");
+                    doc.InsertBefore(xmlHeader, doc.DocumentElement); 
 
 
-                    foreach (var CurrentDocument in Documents)
+                    foreach (var currentDocument in Documents)
                     {
-                        Doc["Documents"].AppendChild(CurrentDocument.GetXmlElement(Doc));
+                        doc["Documents"].AppendChild(DocumentXmlSerializer.GetXmlElement(currentDocument, doc));
                     }
 
-                    Doc.Save(Filepath);
+                    doc.Save(filepath);
                 }
-                public void SaveServicesToFile(string Filepath)
+                public void SaveServicesToFile(string filepath)
                 {
-                    Filepath = Path.Combine(Filepath, "Services.xml");
+                    filepath = Path.Combine(filepath, "Services.xml");
 
-                    XmlDocument Doc = new XmlDocument();
+                    XmlDocument doc = new XmlDocument();
 
-                    XmlDeclaration xmlHeader = Doc.CreateXmlDeclaration("1.0", "utf-8", null);
+                    XmlDeclaration xmlHeader = doc.CreateXmlDeclaration("1.0", "utf-8", null);
 
-                    Doc.LoadXml("<Services></Services>");
-                    Doc.InsertBefore(xmlHeader, Doc.DocumentElement);
+                    doc.LoadXml("<Services></Services>");
+                    doc.InsertBefore(xmlHeader, doc.DocumentElement);
 
 
-                    foreach (var CurrentService in Services)
+                    foreach (var currentService in Services)
                     {
-                        Doc["Services"].AppendChild(CurrentService.GetXmlElement(Doc));
+                        doc["Services"].AppendChild(ServiceToXmlSerializer.GetXmlElement(currentService, doc));
                     }
 
-                    Doc.Save(Filepath);
+                    doc.Save(filepath);
                 }
             #endregion
         #endregion
@@ -630,9 +627,9 @@ namespace Faktury.Windows
 
 
             childForm.Text = "Nowy Dokument";
-            childFormNumber++;
-            if (childFormNumber > 1)
-                childForm.Text += " (" + childFormNumber.ToString() + ")";
+            _childFormNumber++;
+            if (_childFormNumber > 1)
+                childForm.Text += " (" + _childFormNumber.ToString() + ")";
 
             childForm.Show(MainDockPanel);
         }
@@ -670,7 +667,7 @@ namespace Faktury.Windows
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                string FileName = saveFileDialog.FileName;
+                string fileName = saveFileDialog.FileName;
             }
         }
 
@@ -687,16 +684,16 @@ namespace Faktury.Windows
 
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var CurrentChild in MdiChildren)
+            foreach (var currentChild in MdiChildren)
             {
-                CurrentChild.Close();
+                currentChild.Close();
             }
             if (EndApplication() == true) Close();
         }
 
         private void newCompanyToolStripButton_Click(object sender, EventArgs e)
         {
-            addCompany();
+            AddCompany();
         }
         #region Printing
 

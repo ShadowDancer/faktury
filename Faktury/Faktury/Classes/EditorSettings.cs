@@ -1,36 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
-namespace Faktury
+namespace Faktury.Classes
 {
 
     public class CommonDocuments
     {
         [DllImport("shell32.dll")]
-        static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken,
+        private static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken,
            uint dwFlags, [Out] StringBuilder pszPath);
 
         public static string GetCommonDocumentsFolder()
         {
-            int SIDL_COMMON_DOCUMENTS = 0x002e;
+            int sidlCommonDocuments = 0x002e;
             StringBuilder sb = new StringBuilder();
-            SHGetFolderPath(IntPtr.Zero, SIDL_COMMON_DOCUMENTS, IntPtr.Zero, 0x0000, sb);
+            SHGetFolderPath(IntPtr.Zero, sidlCommonDocuments, IntPtr.Zero, 0x0000, sb);
             return sb.ToString();
         }
     }
 
     public class EditorSettings
     {
-        public Classes.Company OwnerCompany = null;
+        public Company OwnerCompany = null;
 
         //SQL database
-        public string SQLAdress = "";
-        public string SQLUser = "";
-        public string SQLPass = "";
-        public string SQLName = "";
+        public string SqlAdress = "";
+        public string SqlUser = "";
+        public string SqlPass = "";
+        public string SqlName = "";
 
         //backup
         public bool LocalBackup = true;
@@ -45,8 +44,8 @@ namespace Faktury
         public DateTime DeviceBackupLastTime = DateTime.Now;
 
         //materials
-        public List<string> Properties_Vat = new List<string>();
-        public List<string> Properties_Unit = new List<string>();
+        public List<string> PropertiesVat = new List<string>();
+        public List<string> PropertiesUnit = new List<string>();
 
         //documents
         public bool DocumentAutoRefresh = true;

@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
 {
     public partial class CompanyListWindow : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        private ListViewColumnSorter lvwColumnSorter;
-        private string Filter;
+        private ListViewColumnSorter _lvwColumnSorter;
+        private string _filter;
 
         public CompanyListWindow()
         {
@@ -22,28 +17,28 @@ namespace Faktury.Windows
         public void Reload()
         {
             LVCompanies.Items.Clear();
-            foreach(Classes.Company CurrentCompany in MainForm.Instance.Companies)
+            foreach(Classes.Company currentCompany in MainForm.Instance.Companies)
             {
 
 
-                ListViewItem NewItem = new ListViewItem(new string[] {CurrentCompany.ID.ToString(), CurrentCompany.Tag, CurrentCompany.Name, " " + CurrentCompany.Nip, CurrentCompany.CreationDate.ToString(), CurrentCompany.ModificationDate.ToString()});
+                ListViewItem newItem = new ListViewItem(new string[] {currentCompany.Id.ToString(), currentCompany.Tag, currentCompany.Name, " " + currentCompany.Nip, currentCompany.CreationDate.ToString(), currentCompany.ModificationDate.ToString()});
 
-                if (!string.IsNullOrEmpty(Filter))
+                if (!string.IsNullOrEmpty(_filter))
                 {
                     if (
-                        CurrentCompany.Name.ToLower().Contains(Filter) ||
-                        CurrentCompany.Owner.ToLower().Contains(Filter) ||
-                        CurrentCompany.Adress.ToLower().Contains(Filter) ||
-                        CurrentCompany.Street.ToLower().Contains(Filter) ||
-                        CurrentCompany.Nip.ToLower().Contains(Filter) ||
-                        CurrentCompany.Tag.ToLower().Contains(Filter))
+                        currentCompany.Name.ToLower().Contains(_filter) ||
+                        currentCompany.Owner.ToLower().Contains(_filter) ||
+                        currentCompany.Address.ToLower().Contains(_filter) ||
+                        currentCompany.Street.ToLower().Contains(_filter) ||
+                        currentCompany.Nip.ToLower().Contains(_filter) ||
+                        currentCompany.Tag.ToLower().Contains(_filter))
                     {
-                        LVCompanies.Items.Add(NewItem);
+                        LVCompanies.Items.Add(newItem);
                     }
                 }
                 else
                 {
-                    LVCompanies.Items.Add(NewItem);
+                    LVCompanies.Items.Add(newItem);
                 }
             }
         }
@@ -55,8 +50,8 @@ namespace Faktury.Windows
 
         private void CompanyListWindow_Load(object sender, EventArgs e)
         {
-            lvwColumnSorter = new ListViewColumnSorter();
-            LVCompanies.ListViewItemSorter = lvwColumnSorter;
+            _lvwColumnSorter = new ListViewColumnSorter();
+            LVCompanies.ListViewItemSorter = _lvwColumnSorter;
 
             Reload();
         }
@@ -80,22 +75,22 @@ namespace Faktury.Windows
 
         private void nowaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MainForm.Instance.addCompany();
+            MainForm.Instance.AddCompany();
         }
 
         private void edytujToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (LVCompanies.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem Item in LVCompanies.SelectedItems)
+                foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    Classes.Company CompanyToEdit = null;
-                    CompanyToEdit = MainForm.Instance.Companies.Find(n => n.ID == int.Parse(Item.SubItems[0].Text));
+                    Classes.Company companyToEdit = null;
+                    companyToEdit = MainForm.Instance.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
-                    if (CompanyToEdit != null)
-                        MainForm.Instance.editCompany(CompanyToEdit);
+                    if (companyToEdit != null)
+                        MainForm.Instance.EditCompany(companyToEdit);
                     else
-                        MessageBox.Show("Nie znaleziono kontrahenta " + Item.SubItems[1].Text + "!");
+                        MessageBox.Show("Nie znaleziono kontrahenta " + item.SubItems[1].Text + "!");
                 }
             }
             else MessageBox.Show("Wybierz z listy kontrahentów do edycji!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -105,15 +100,15 @@ namespace Faktury.Windows
         {
             if (LVCompanies.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem Item in LVCompanies.SelectedItems)
+                foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    Classes.Company CompanyToEdit = null;
-                    CompanyToEdit = MainForm.Instance.Companies.Find(n => n.ID == int.Parse(Item.SubItems[0].Text));
+                    Classes.Company companyToEdit = null;
+                    companyToEdit = MainForm.Instance.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
-                    if (CompanyToEdit != null)
-                        MainForm.Instance.deleteCompany(CompanyToEdit);
+                    if (companyToEdit != null)
+                        MainForm.Instance.DeleteCompany(companyToEdit);
                     else
-                        MessageBox.Show("Nie znaleziono kontrahenta " + Item.SubItems[1].Text + "!");
+                        MessageBox.Show("Nie znaleziono kontrahenta " + item.SubItems[1].Text + "!");
 
                     Reload();
                 }
@@ -126,21 +121,21 @@ namespace Faktury.Windows
         {
             if (LVCompanies.SelectedItems.Count > 0)
             {
-                List<Classes.Company> Companies = new List<Faktury.Classes.Company>();
-                foreach (ListViewItem CurrentItem in LVCompanies.SelectedItems)
+                List<Classes.Company> companies = new List<Classes.Company>();
+                foreach (ListViewItem currentItem in LVCompanies.SelectedItems)
                 {
                     try
                     {
-                        Classes.Company Company = MainForm.Instance.Companies.Find(n => n.ID == Convert.ToInt32(CurrentItem.SubItems[0].Text));
-                        Companies.Add(Company);
+                        Classes.Company company = MainForm.Instance.Companies.Find(n => n.Id == Convert.ToInt32(currentItem.SubItems[0].Text));
+                        companies.Add(company);
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Błąd otwierania plików:", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                StatsWindow NewWindow = new StatsWindow(Companies);
-                NewWindow.Show(MainForm.Instance.MainDockPanel);
+                StatsWindow newWindow = new StatsWindow(companies);
+                newWindow.Show(MainForm.Instance.MainDockPanel);
             }
             else MessageBox.Show("Wybierz z listy kontrachentów do uwzględnienia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -151,23 +146,23 @@ namespace Faktury.Windows
             ListView myListView = (ListView)sender;
 
             // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == lvwColumnSorter.SortColumn)
+            if (e.Column == _lvwColumnSorter.SortColumn)
             {
                 // Reverse the current sort direction for this column.
-                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                if (_lvwColumnSorter.Order == SortOrder.Ascending)
                 {
-                    lvwColumnSorter.Order = SortOrder.Descending;
+                    _lvwColumnSorter.Order = SortOrder.Descending;
                 }
                 else
                 {
-                    lvwColumnSorter.Order = SortOrder.Ascending;
+                    _lvwColumnSorter.Order = SortOrder.Ascending;
                 }
             }
             else
             {
                 // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
 
             // Perform the sort with these new sort options.
@@ -176,7 +171,7 @@ namespace Faktury.Windows
 
         private void bSearch_Click(object sender, EventArgs e)
         {
-            Filter = tbFilter.Text.ToLower();
+            _filter = tbFilter.Text.ToLower();
             Reload();
         }
 

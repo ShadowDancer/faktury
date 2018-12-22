@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using Faktury.Print_Framework;
 
 namespace Faktury.Windows
 {
@@ -18,9 +14,9 @@ namespace Faktury.Windows
 
         private void Reload()
         {
-            float TotalNetto = 0;
-            float TotalBrutto = 0;
-            float TotalVAT = 0;
+            float totalNetto = 0;
+            float totalBrutto = 0;
+            float totalVat = 0;
 
             for (int i = 0; i < LVEServices.Items.Count; i++)
             {
@@ -30,19 +26,19 @@ namespace Faktury.Windows
                     LVEServices.Items[i].Text = (i + 1).ToString();
 
                     //Wartość Netto
-                    float Netto = (float)Math.Round((Convert.ToSingle(LVEServices.Items[i].SubItems[2].Text) * Convert.ToSingle(LVEServices.Items[i].SubItems[3].Text)), 2);
-                    TotalNetto += Netto;
-                    LVEServices.Items[i].SubItems[5].Text = Netto.ToString("0.00");
+                    float netto = (float)Math.Round((Convert.ToSingle(LVEServices.Items[i].SubItems[2].Text) * Convert.ToSingle(LVEServices.Items[i].SubItems[3].Text)), 2);
+                    totalNetto += netto;
+                    LVEServices.Items[i].SubItems[5].Text = netto.ToString("0.00");
 
                     //vat
-                    float VAT = (float)Math.Round(Netto * (float.Parse(LVEServices.Items[i].SubItems[8].Text) / 100), 2);
-                    TotalVAT += VAT;
-                    LVEServices.Items[i].SubItems[6].Text = VAT.ToString("0.00");
+                    float vat = (float)Math.Round(netto * (float.Parse(LVEServices.Items[i].SubItems[8].Text) / 100), 2);
+                    totalVat += vat;
+                    LVEServices.Items[i].SubItems[6].Text = vat.ToString("0.00");
 
                     //Wartość Brutto
-                    float Brutto = (float)Math.Round(Netto + VAT, 2);
-                    TotalBrutto += Brutto;
-                    LVEServices.Items[i].SubItems[7].Text = Brutto.ToString("0.00");
+                    float brutto = (float)Math.Round(netto + vat, 2);
+                    totalBrutto += brutto;
+                    LVEServices.Items[i].SubItems[7].Text = brutto.ToString("0.00");
                 }
                 catch (Exception ex)
                 {
@@ -50,71 +46,71 @@ namespace Faktury.Windows
                 }
             }
 
-            TotalNetto = (float)Math.Round(TotalNetto, 2);
-            TotalVAT = (float)Math.Round(TotalVAT, 2);
-            TotalBrutto = (float)Math.Round(TotalBrutto, 2);
+            totalNetto = (float)Math.Round(totalNetto, 2);
+            totalVat = (float)Math.Round(totalVat, 2);
+            totalBrutto = (float)Math.Round(totalBrutto, 2);
 
-            TBTotalNetto.Text = TotalNetto.ToString("0.00");
-            TBTotalVAT.Text = TotalVAT.ToString("0.00");
-            TBTotalBrutto.Text = TotalBrutto.ToString("0.00");
+            TBTotalNetto.Text = totalNetto.ToString("0.00");
+            TBTotalVAT.Text = totalVat.ToString("0.00");
+            TBTotalBrutto.Text = totalBrutto.ToString("0.00");
 
-            TBSlownie.Text = Classes.NumberToWordConventer.ConvertValues(TotalBrutto);
+            TBSlownie.Text = NumberToWordConventer.ConvertValues(totalBrutto);
 
         }
 
-        public bool Changed = false;
+        public bool Changed;
 
         //Wczytuje kontrolki i rekordy
-        public void Initialize(Classes.MoneyData MoneyData)
+        public void Initialize(Classes.MoneyData moneyData)
         {
             //load combo box
-            foreach (Classes.Service CurrentService in MainForm.Instance.Services)
+            foreach (Classes.Service currentService in MainForm.Instance.Services)
             {
-                CBService.Items.Add(new ComboBoxItem(CurrentService.Tag, CurrentService.ID));
+                CBService.Items.Add(new ComboBoxItem(currentService.Tag, currentService.Id));
             }
             if (CBService.Items.Count > 0) CBService.SelectedIndex = 0;
 
-            foreach (var CurrentRecord in MoneyData.Records)
+            foreach (var currentRecord in moneyData.Records)
             {
-                ListViewItem NewItem = new ListViewItem();
-                NewItem.SubItems.Add(CurrentRecord.Name);
-                NewItem.SubItems.Add(CurrentRecord.Cost.ToString());
-                NewItem.SubItems.Add(CurrentRecord.Count.ToString());
-                NewItem.SubItems.Add(CurrentRecord.Unit);
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add(CurrentRecord.VATPrecent.ToString());
+                ListViewItem newItem = new ListViewItem();
+                newItem.SubItems.Add(currentRecord.Name);
+                newItem.SubItems.Add(currentRecord.Cost.ToString());
+                newItem.SubItems.Add(currentRecord.Count.ToString());
+                newItem.SubItems.Add(currentRecord.Unit);
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add(currentRecord.VatPrecent.ToString());
                 
-                LVEServices.Items.Add(NewItem);
+                LVEServices.Items.Add(newItem);
             }
             Reload();
         }
 
         //Zapisuje dane
-        public void Save(Classes.MoneyData MoneyData)
+        public void Save(Classes.MoneyData moneyData)
         {
-            MoneyData.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
-            MoneyData.Netto =  Convert.ToSingle(TBTotalNetto.Text);
-            MoneyData.TotalVAT =  Convert.ToSingle(TBTotalVAT.Text);
+            moneyData.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
+            moneyData.Netto =  Convert.ToSingle(TBTotalNetto.Text);
+            moneyData.TotalVat =  Convert.ToSingle(TBTotalVAT.Text);
 
-            MoneyData.InWords = TBSlownie.Text;
+            moneyData.InWords = TBSlownie.Text;
 
-            MoneyData.Records.Clear();
-            foreach (ListViewItem CurrentItem in LVEServices.Items)
+            moneyData.Records.Clear();
+            foreach (ListViewItem currentItem in LVEServices.Items)
             {
-                Classes.MoneyDataRecord NewRecord = new Faktury.Classes.MoneyDataRecord();
+                Classes.MoneyDataRecord newRecord = new Classes.MoneyDataRecord();
 
-                NewRecord.Name = CurrentItem.SubItems[1].Text;
-                NewRecord.Cost = Convert.ToSingle(CurrentItem.SubItems[2].Text);
-                NewRecord.Count = Convert.ToSingle(CurrentItem.SubItems[3].Text);
-                NewRecord.Unit = CurrentItem.SubItems[4].Text;
-                NewRecord.Netto = Convert.ToSingle(CurrentItem.SubItems[5].Text);
-                NewRecord.VAT = Convert.ToSingle(CurrentItem.SubItems[6].Text);
-                NewRecord.Brutto = Convert.ToSingle(CurrentItem.SubItems[7].Text);
-                NewRecord.VATPrecent = Convert.ToSingle(CurrentItem.SubItems[8].Text);
+                newRecord.Name = currentItem.SubItems[1].Text;
+                newRecord.Cost = Convert.ToSingle(currentItem.SubItems[2].Text);
+                newRecord.Count = Convert.ToSingle(currentItem.SubItems[3].Text);
+                newRecord.Unit = currentItem.SubItems[4].Text;
+                newRecord.Netto = Convert.ToSingle(currentItem.SubItems[5].Text);
+                newRecord.Vat = Convert.ToSingle(currentItem.SubItems[6].Text);
+                newRecord.Brutto = Convert.ToSingle(currentItem.SubItems[7].Text);
+                newRecord.VatPrecent = Convert.ToSingle(currentItem.SubItems[8].Text);
 
-                MoneyData.Records.Add(NewRecord);
+                moneyData.Records.Add(newRecord);
             }
         }
 
@@ -149,10 +145,10 @@ namespace Faktury.Windows
 
         private void RecordAdd_Click(object sender, EventArgs e)
         {
-            Classes.Service Check = null;
+            Classes.Service check = null;
             try
             {
-                Check = MainForm.Instance.Services.First(n => n.ID == ((ComboBoxItem)CBService.SelectedItem).ID);
+                check = MainForm.Instance.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
 
             }
             catch
@@ -162,29 +158,29 @@ namespace Faktury.Windows
             }
 
             Changed = true;
-            ListViewItem NewItem = new ListViewItem("");
+            ListViewItem newItem = new ListViewItem("");
             {
-                NewItem.SubItems.Add(Check.Name);
-                NewItem.SubItems.Add(Check.Price.ToString());
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add(Check.Jm);
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add("0");
-                NewItem.SubItems.Add(Check.Vat.ToString());
+                newItem.SubItems.Add(check.Name);
+                newItem.SubItems.Add(check.Price.ToString());
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add(check.Jm);
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add("0");
+                newItem.SubItems.Add(check.Vat.ToString());
             }
 
-            LVEServices.Items.Add(NewItem);
+            LVEServices.Items.Add(newItem);
             Reload();
         }
 
         private void RecordEdit_Click(object sender, EventArgs e)
         {
-            Classes.Service Check = null;
+            Classes.Service check = null;
             try
             {
-                Check = MainForm.Instance.Services.Find(n => n.ID == ((ComboBoxItem)CBService.SelectedItem).ID);
-                if (Check == null) throw new Exception();
+                check = MainForm.Instance.Services.Find(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                if (check == null) throw new Exception();
             }
             catch
             {
@@ -195,10 +191,10 @@ namespace Faktury.Windows
             Changed = true;
             if (LVEServices.SelectedItems.Count > 0)
             {
-                LVEServices.SelectedItems[0].SubItems[1].Text = Check.Name;
-                LVEServices.SelectedItems[0].SubItems[2].Text = Check.Price.ToString();
-                LVEServices.SelectedItems[0].SubItems[4].Text = Check.Jm;
-                LVEServices.SelectedItems[0].SubItems[8].Text = Check.Vat.ToString();
+                LVEServices.SelectedItems[0].SubItems[1].Text = check.Name;
+                LVEServices.SelectedItems[0].SubItems[2].Text = check.Price.ToString();
+                LVEServices.SelectedItems[0].SubItems[4].Text = check.Jm;
+                LVEServices.SelectedItems[0].SubItems[8].Text = check.Vat.ToString();
 
                 Reload();
             }
@@ -212,11 +208,11 @@ namespace Faktury.Windows
         {
             if (LVEServices.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem CurrentItem in LVEServices.SelectedItems)
+                foreach (ListViewItem currentItem in LVEServices.SelectedItems)
                 {
-                    LVEServices.Items.Remove(CurrentItem);
+                    LVEServices.Items.Remove(currentItem);
                 }
-                MainForm.Instance.UpdateHigestDocumentID();
+                MainForm.Instance.UpdateHigestDocumentId();
                 Reload();
                 Changed = true;
             }
@@ -232,7 +228,7 @@ namespace Faktury.Windows
 
             Changed = true;
             LVEServices.Items.Clear();
-            MainForm.Instance.UpdateHigestDocumentID();
+            MainForm.Instance.UpdateHigestDocumentId();
         }
 
         #endregion
