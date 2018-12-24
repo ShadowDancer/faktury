@@ -10,10 +10,8 @@ namespace Faktury.Windows
     {
         private BackupManager BackupManager { get; }
 
-        public class BackupNodeSorter : IComparer
+        private class BackupNodeSorter : IComparer
         {
-            // Compare the length of the strings, or the strings
-            // themselves, if they are the same length.
             public int Compare(object obj1, object obj2)
             {
                 TreeNode x = (TreeNode)obj1;
@@ -27,7 +25,7 @@ namespace Faktury.Windows
                 {
                     
                 }
-                return string.Compare(x.Text, y.Text);
+                return string.CompareOrdinal(x.Text, y.Text);
             }
         }
 

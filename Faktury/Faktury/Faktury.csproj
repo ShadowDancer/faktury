@@ -63,10 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\DocumentPrinter.cs" />
+    <Compile Include="Classes\Printing\DocumentPrinter.cs" />
     <Compile Include="Data\Xml\CompanyToXmlSerializer.cs" />
     <Compile Include="Data\Xml\DocumentXmlSerializer.cs" />
-    <Compile Include="Classes\MoneyDataRecord.cs" />
+    <Compile Include="Classes\DocumentItem.cs" />
     <Compile Include="Data\Xml\MoneyDataXmlSerializer.cs" />
     <Compile Include="Data\Xml\MoneyDataRecordXmlSerializer.cs" />
     <Compile Include="Data\Xml\ServiceToXmlSerializer.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="Classes\Company.cs" />
     <Compile Include="Classes\Document.cs" />
     <Compile Include="Classes\Service.cs" />
-    <Compile Include="Classes\MoneyData.cs" />
+    <Compile Include="Classes\DocumentSummary.cs" />
     <Compile Include="Windows\DocumentProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -239,6 +239,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

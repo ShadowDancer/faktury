@@ -69,7 +69,7 @@ namespace Faktury.Windows
         public bool Changed;
 
         //Wczytuje kontrolki i rekordy
-        public void Initialize(MoneyData moneyData)
+        public void Initialize(Document document)
         {
             //load combo box
             foreach (Service currentService in ModelStore.Services)
@@ -78,7 +78,7 @@ namespace Faktury.Windows
             }
             if (CBService.Items.Count > 0) CBService.SelectedIndex = 0;
 
-            foreach (var currentRecord in moneyData.Records)
+            foreach (var currentRecord in document.Items)
             {
                 ListViewItem newItem = new ListViewItem();
                 newItem.SubItems.Add(currentRecord.Name);
@@ -96,29 +96,31 @@ namespace Faktury.Windows
         }
 
         //Zapisuje dane
-        public void Save(MoneyData moneyData)
+        public void Save(Document document)
         {
-            moneyData.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
-            moneyData.Netto =  Convert.ToSingle(TBTotalNetto.Text);
-            moneyData.TotalVat =  Convert.ToSingle(TBTotalVAT.Text);
+            DocumentSummary documentSummary = document.DocumentSummary;
+            documentSummary.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
+            documentSummary.Netto =  Convert.ToSingle(TBTotalNetto.Text);
+            documentSummary.TotalVat =  Convert.ToSingle(TBTotalVAT.Text);
 
-            moneyData.InWords = TBSlownie.Text;
+            documentSummary.InWords = TBSlownie.Text;
 
-            moneyData.Records.Clear();
+            document.Items.Clear();
             foreach (ListViewItem currentItem in LVEServices.Items)
             {
-                MoneyDataRecord newRecord = new MoneyDataRecord();
+                DocumentItem newRecord = new DocumentItem
+                {
+                    Name = currentItem.SubItems[1].Text,
+                    Cost = Convert.ToSingle(currentItem.SubItems[2].Text),
+                    Count = Convert.ToSingle(currentItem.SubItems[3].Text),
+                    Unit = currentItem.SubItems[4].Text,
+                    Netto = Convert.ToSingle(currentItem.SubItems[5].Text),
+                    Vat = Convert.ToSingle(currentItem.SubItems[6].Text),
+                    Brutto = Convert.ToSingle(currentItem.SubItems[7].Text),
+                    VatPercent = Convert.ToSingle(currentItem.SubItems[8].Text)
+                };
 
-                newRecord.Name = currentItem.SubItems[1].Text;
-                newRecord.Cost = Convert.ToSingle(currentItem.SubItems[2].Text);
-                newRecord.Count = Convert.ToSingle(currentItem.SubItems[3].Text);
-                newRecord.Unit = currentItem.SubItems[4].Text;
-                newRecord.Netto = Convert.ToSingle(currentItem.SubItems[5].Text);
-                newRecord.Vat = Convert.ToSingle(currentItem.SubItems[6].Text);
-                newRecord.Brutto = Convert.ToSingle(currentItem.SubItems[7].Text);
-                newRecord.VatPercent = Convert.ToSingle(currentItem.SubItems[8].Text);
-
-                moneyData.Records.Add(newRecord);
+                document.Items.Add(newRecord);
             }
         }
 

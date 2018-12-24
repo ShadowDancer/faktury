@@ -92,7 +92,7 @@ namespace Faktury.Data.Xml
             paidElem.InnerText = Convert.ToString(document.Paid);
             documentElement.AppendChild(paidElem);
 
-            documentElement.AppendChild(MoneyDataXmlSerializer.GetXmlElement(document.MoneyData, xmlDoc));
+            documentElement.AppendChild(MoneyDataXmlSerializer.GetXmlElement(document, xmlDoc));
 
             return documentElement;
         }
@@ -122,7 +122,7 @@ namespace Faktury.Data.Xml
 
             if(element["Paid"] != null)newDocument.Paid = Convert.ToBoolean(element["Paid"].InnerText);//to remove
 
-            newDocument.MoneyData = MoneyDataXmlSerializer.GetMoneyDataFromXml(element["MoneyData"]);
+            newDocument.DocumentSummary = MoneyDataXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
 
             return newDocument;
         }

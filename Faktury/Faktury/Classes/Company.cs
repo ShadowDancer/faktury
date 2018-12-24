@@ -10,7 +10,7 @@ namespace Faktury.Classes
         public string Street { get; set; } = "";
         public string Nip { get; set; } = "";
         public string Tag { get; set; } = "";
-        public bool Bank { get; set; } = false;
+        public bool Bank { get; set; }
         public string BankAccount { get; set; } = "";
         public string BankSection { get; set; } = "";
         public string PhoneNumber { get; set; } = "";

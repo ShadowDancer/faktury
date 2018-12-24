@@ -25,7 +25,7 @@ namespace Faktury.Windows
             //device
             GBDevice.Enabled = CxBDeviceBackup.Checked = editorSettings.DeviceBackup;
             NuDPeriod.Value = editorSettings.DeviceBackupPeriod;
-            TimeToNextDeviceBackupUpdate();
+            ComputeTimeToNextDeviceBackupUpdate();
 
             TBDeviceName.Text = editorSettings.DeviceBackupLabel;
         }
@@ -35,12 +35,12 @@ namespace Faktury.Windows
             Close();
         }
 
-        public void TimeToNextDeviceBackupUpdate()
+        private void ComputeTimeToNextDeviceBackupUpdate()
         {
             var editorSettings = _settingsAccessor.GetSettings();
             TimeSpan span = editorSettings.DeviceBackupLastTime.Add(new TimeSpan(editorSettings.DeviceBackupPeriod, 0, 0, 0)).Subtract(DateTime.Today);
             if (span.Days < 0) span = new TimeSpan();
-            LElapsedTime.Text = String.Format("Pozostało {0} dni.", span.Days);
+            LElapsedTime.Text = $"Pozostało {span.Days} dni.";
         }
 
         private void CxBLocalBackup_CheckedChanged(object sender, EventArgs e)
@@ -61,13 +61,13 @@ namespace Faktury.Windows
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             _settingsAccessor.GetSettings().DeviceBackupPeriod = (int)NuDPeriod.Value;
-            TimeToNextDeviceBackupUpdate();
+            ComputeTimeToNextDeviceBackupUpdate();
         }
 
         private void BReset_Click(object sender, EventArgs e)
         {
             _settingsAccessor.GetSettings().DeviceBackupLastTime = DateTime.Today;
-            TimeToNextDeviceBackupUpdate();
+            ComputeTimeToNextDeviceBackupUpdate();
         }
 
         private void BChange_Click(object sender, EventArgs e)
@@ -95,7 +95,8 @@ namespace Faktury.Windows
                         string backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", editorSettings.DeviceRandomNumber.ToString())));
                         Directory.CreateDirectory(backupFolderPath);
                         TBDeviceName.Text = CBSelectDevice.Text;
-                        MessageBox.Show(string.Format("Nośnik {0} jest przygotowany do zapisu kopii zapasowych. Gdy upłynie wyznaczony czas zostniesz poproszony o włożenie nośnika do portu USB.", CBSelectDevice.Text), "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(
+                            $"Nośnik {CBSelectDevice.Text} jest przygotowany do zapisu kopii zapasowych. Gdy upłynie wyznaczony czas zostniesz poproszony o włożenie nośnika do portu USB.", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch(Exception ex)
                     {

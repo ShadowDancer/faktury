@@ -8,38 +8,38 @@ namespace Faktury.Data.Xml
 {
     public class MoneyDataXmlSerializer
     {
-        public static XmlElement GetXmlElement(MoneyData moneyData, XmlDocument xmlDoc)
+        public static XmlElement GetXmlElement(Document document, XmlDocument xmlDoc)
         {
             var moneyDataElement = xmlDoc.CreateElement("MoneyData");
-
+            var documentSummary = document.DocumentSummary;
             var netto = xmlDoc.CreateElement("Netto");
-            netto.InnerText = moneyData.Netto.ToString(CultureInfo.InvariantCulture);
+            netto.InnerText = documentSummary.Netto.ToString(CultureInfo.InvariantCulture);
             moneyDataElement.AppendChild(netto);
 
             var vat = xmlDoc.CreateElement("TotalVAT");
-            vat.InnerText = moneyData.TotalVat.ToString(CultureInfo.InvariantCulture);
+            vat.InnerText = documentSummary.TotalVat.ToString(CultureInfo.InvariantCulture);
             moneyDataElement.AppendChild(vat);
 
             var brutto = xmlDoc.CreateElement("Brutto");
-            brutto.InnerText = moneyData.Brutto.ToString(CultureInfo.InvariantCulture);
+            brutto.InnerText = documentSummary.Brutto.ToString(CultureInfo.InvariantCulture);
             moneyDataElement.AppendChild(brutto);
 
             var inWords = xmlDoc.CreateElement("InWords");
-            inWords.InnerText = moneyData.InWords;
+            inWords.InnerText = documentSummary.InWords;
             moneyDataElement.AppendChild(inWords);
 
             var records = xmlDoc.CreateElement("Records");
             moneyDataElement.AppendChild(records);
 
-            foreach (var currentRecord in moneyData.Records)
+            foreach (var currentRecord in document.Items)
                 records.AppendChild(MoneyDataRecordXmlSerializer.GetXmlElement(currentRecord, xmlDoc));
 
             return moneyDataElement;
         }
 
-        public static MoneyData GetMoneyDataFromXml(XmlNode xmlElement)
+        public static DocumentSummary GetMoneyDataFromXml(Document document, XmlNode xmlElement)
         {
-            var newMoneyData = new MoneyData
+            var newMoneyData = new DocumentSummary
             {
                 Netto = float.Parse(xmlElement["Netto"].InnerText),
                 TotalVat = float.Parse(xmlElement["TotalVAT"].InnerText),
@@ -49,11 +49,18 @@ namespace Faktury.Data.Xml
 
 
             foreach (XmlElement currentElement in xmlElement["Records"])
-                newMoneyData.Records.Add(MoneyDataRecordXmlSerializer.GetRecordFromXml(currentElement));
+                document.Items.Add(MoneyDataRecordXmlSerializer.GetRecordFromXml(currentElement));
 
             if (xmlElement["Vat"] != null)
-                foreach (var record in newMoneyData.Records)
-                    record.Vat = int.Parse(xmlElement["Vat"].InnerText);
+            {
+                int vat = int.Parse(xmlElement["Vat"].InnerText);
+                foreach (var item in document.Items)
+                {
+                    item.Vat = vat;
+                }
+                    
+            }
+                
 
             return newMoneyData;
         }

@@ -8,7 +8,7 @@ namespace Faktury.Data.Xml
 {
     public class MoneyDataRecordXmlSerializer
     {
-        public static XmlElement GetXmlElement(MoneyDataRecord moneyData, XmlDocument xmlDoc)
+        public static XmlElement GetXmlElement(DocumentItem moneyData, XmlDocument xmlDoc)
         {
             XmlElement record = xmlDoc.CreateElement("Record");
 
@@ -47,9 +47,9 @@ namespace Faktury.Data.Xml
             return record;
         }
 
-        public static MoneyDataRecord GetRecordFromXml(XmlElement xmlElement)
+        public static DocumentItem GetRecordFromXml(XmlElement xmlElement)
         {
-            MoneyDataRecord newRecord = new MoneyDataRecord
+            DocumentItem newRecord = new DocumentItem
             {
                 Unit = xmlElement["Unit"].InnerText,
                 Name = xmlElement["Name"].InnerText,

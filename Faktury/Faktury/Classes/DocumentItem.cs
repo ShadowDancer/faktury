@@ -1,13 +1,16 @@
 ﻿namespace Faktury.Classes
 {
-    public class MoneyDataRecord
+    public class DocumentItem
     {
         /// <summary>
         /// szt / m / m^2 etc.
         /// </summary>
         public string Unit { get; set; }
+
         public string Name { get; set; }
+
         public float Cost { get; set; }
+
         public float Count { get; set; }
 
         public float Netto { get; set; }

@@ -8,7 +8,7 @@ namespace Faktury.Windows
     public partial class ServiceWindow : DockContent
     {
         private readonly SettingsAccessor _settingsAccessor;
-        private ModelStore _modelStore;
+        private readonly ModelStore _modelStore;
 
         public ServiceWindow(ModelStore modelStore, SettingsAccessor settingsAccessor)
         {
@@ -24,25 +24,26 @@ namespace Faktury.Windows
             //create Service if null
             if (Service == null)
             {
-                Service = new Service();
-                Service.CreationDate = DateTime.Now;
-                Service.ModificationDate = Service.CreationDate;
-
-                Service.Name = "Nienazwana usługa";
-                Service.Tag = Service.Name;
-                Service.Id = _modelStore.NewServiceId();
+                var date = DateTime.Now;
+                var name = "Nienazwana usługa";
+                Service = new Service
+                {
+                    CreationDate = date, ModificationDate = date, Name = name,
+                    Tag = name,
+                    Id = _modelStore.NewServiceId()
+                };
             }
 
             //setup comboboxes
             var editorSettings = _settingsAccessor.GetSettings();
-            foreach (string value in editorSettings.PropertiesVat)
+            foreach (string value in editorSettings.Properties_Vat)
             {
                 CBVat.Items.Add(value);
                 if (CBVat.Items.Count > 0) CBVat.SelectedIndex = 0;
                 else CBVat.Text = "0";
             }
 
-            foreach (string value in editorSettings.PropertiesUnit)
+            foreach (string value in editorSettings.Properties_Unit)
             {
                 CBJm.Items.Add(value);
             }

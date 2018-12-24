@@ -7,7 +7,7 @@ namespace Faktury.Windows
 {
     public partial class CompanyWindow : DockContent
     {
-        private ModelStore _modelStore;
+        private readonly ModelStore _modelStore;
 
         public CompanyWindow(ModelStore modelStore)
         {
@@ -22,11 +22,10 @@ namespace Faktury.Windows
         {
             if (Company == null)
             {
-                Company = new Company();
-                Company.Name = "Nowa";
-                Company.Bank = false;
-                Company.Id = _modelStore.NewCompanyId();
-                Company.CreationDate = DateTime.Now;
+                Company = new Company
+                {
+                    Name = "Nowa", Bank = false, Id = _modelStore.NewCompanyId(), CreationDate = DateTime.Now
+                };
                 Company.ModificationDate = Company.CreationDate;
             }
 

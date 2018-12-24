@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
@@ -9,7 +8,7 @@ namespace Faktury.Windows
 {
     public partial class CompanyListWindow : DockContent
     {
-        private ModelStore _modelStore;
+        private readonly ModelStore _modelStore;
         private ListViewColumnSorter _lvwColumnSorter;
         private string _filter;
 
@@ -19,7 +18,7 @@ namespace Faktury.Windows
             InitializeComponent();
         }
 
-        public void Reload()
+        private void Reload()
         {
             LVCompanies.Items.Clear();
             foreach(Company currentCompany in _modelStore.Companies)

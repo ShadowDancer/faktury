@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
+using Faktury.Classes.Printing;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -26,7 +27,7 @@ namespace Faktury.Windows
             documentProperties.ModelStore = modelStore;
         }
 
-        public bool Changed
+        private bool Changed
         {
             get
             {
@@ -100,7 +101,8 @@ namespace Faktury.Windows
 
             document.Paid = CxBPaid.Checked;
 
-            documentProperties.Save(document.MoneyData);
+
+            documentProperties.Save(document);
         }
 
         private void DocumentWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -108,7 +110,7 @@ namespace Faktury.Windows
             e.Cancel = !OrderClose();
         }
 
-        public void SetDefaultName()
+        private void SetDefaultName()
         {
             if (cBDefaultName.Checked)
             {
@@ -242,7 +244,7 @@ namespace Faktury.Windows
 
             CxBPaid.Checked = Document.Paid;
 
-            documentProperties.Initialize(Document.MoneyData);
+            documentProperties.Initialize(Document);
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -264,7 +266,7 @@ namespace Faktury.Windows
         {
             var targetDocument = new Document
             {
-                MoneyData = Document.MoneyData
+                DocumentSummary = Document.DocumentSummary
             };
             SaveDataFromControls(targetDocument);
 
@@ -281,7 +283,7 @@ namespace Faktury.Windows
         {
             var targetDocument = new Document
             {
-                MoneyData = Document.MoneyData
+                DocumentSummary = Document.DocumentSummary
             };
             SaveDataFromControls(targetDocument);
 

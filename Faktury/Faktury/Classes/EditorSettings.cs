@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Faktury.Classes
 {
+    [Serializable]
     public class EditorSettings
     {
         public Company OwnerCompany = null;
@@ -19,8 +20,12 @@ namespace Faktury.Classes
         public DateTime DeviceBackupLastTime = DateTime.Now;
 
         //materials
-        public List<string> PropertiesVat = new List<string>();
-        public List<string> PropertiesUnit = new List<string>();
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public List<string> Properties_Vat = new List<string>();
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public List<string> Properties_Unit = new List<string>();
 
         //documents
         public bool DocumentAutoRefresh = true;
@@ -38,6 +43,7 @@ namespace Faktury.Classes
         public bool DocumentFilterDateNow = false;
         public bool DocumentFilterDateOlder = false;
 
+        // ReSharper disable once IdentifierTypo
         public bool DocumentFilterPaynament = false;
         public bool DocumentFilterPaidOnly = false;
 

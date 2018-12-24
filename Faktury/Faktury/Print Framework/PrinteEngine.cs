@@ -82,8 +82,7 @@ namespace Faktury.Print_Framework
             // create the footer...
             VFooter = new PrintElement(null);
             VFooter.HAddLine();
-            StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Far;
+            StringFormat sf = new StringFormat {Alignment = StringAlignment.Far};
             VFooter.VAddText("[pagenum]", sf);
         }
 
@@ -95,8 +94,7 @@ namespace Faktury.Print_Framework
         public void ShowPreview()
         {
             // now, show the print dialog...
-            PrintPreviewDialog dialog = new PrintPreviewDialog();
-            dialog.Document = this;
+            PrintPreviewDialog dialog = new PrintPreviewDialog {Document = this};
 
             // show the dialog...
             try
@@ -129,9 +127,7 @@ namespace Faktury.Print_Framework
         public void ShowPrintDialog()
         {
             // create and show...
-            PrintDialog dialog = new PrintDialog();
-            dialog.PrinterSettings = PrinterSettings;
-            dialog.Document = this;
+            PrintDialog dialog = new PrintDialog {PrinterSettings = PrinterSettings, Document = this};
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 // save the changes...

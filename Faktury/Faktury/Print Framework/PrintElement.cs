@@ -95,8 +95,7 @@ namespace Faktury.Print_Framework
         }
         public void AddText(string text, StringAlignment alignment, RectangleF position)
         {
-            StringFormat sf = new StringFormat();
-            sf.Alignment = alignment;
+            StringFormat sf = new StringFormat {Alignment = alignment};
             AddPrimitive(new PrintText(text, sf, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringFormat stringFormat, RectangleF position)
@@ -109,8 +108,7 @@ namespace Faktury.Print_Framework
         }
         public void AddText(string text, StringAlignment alignment, Font font, RectangleF position)
         {
-            StringFormat sf = new StringFormat();
-            sf.Alignment = alignment;
+            StringFormat sf = new StringFormat {Alignment = alignment};
             AddPrimitive(new PrintText(text, sf, font, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringFormat stringFormat, Font font, Brush brush, RectangleF position)

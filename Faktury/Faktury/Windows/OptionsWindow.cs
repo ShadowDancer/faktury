@@ -69,11 +69,11 @@ namespace Faktury.Windows
             LBUnit.Items.Clear();
             LBVat.Items.Clear();
             var editorSettings = _settingsAccessor.GetSettings();
-            foreach (var currentString in editorSettings.PropertiesVat)
+            foreach (var currentString in editorSettings.Properties_Vat)
             {
                 LBVat.Items.Add(currentString);
             }
-            foreach (var currentString in editorSettings.PropertiesUnit)
+            foreach (var currentString in editorSettings.Properties_Unit)
             {
                 LBUnit.Items.Add(currentString);
             }
@@ -90,13 +90,13 @@ namespace Faktury.Windows
             if (TBInput.Text.Length > 0)
             {
                 var editorSettings = _settingsAccessor.GetSettings();
-                if (editorSettings.PropertiesVat.Find(n => n.Equals(TBInput.Text)) != null)
+                if (editorSettings.Properties_Vat.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    editorSettings.PropertiesVat.Add(TBInput.Text);
+                    editorSettings.Properties_Vat.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -108,13 +108,13 @@ namespace Faktury.Windows
             if (TBInput.Text.Length > 0)
             {
                 var editorSettings = _settingsAccessor.GetSettings();
-                if (editorSettings.PropertiesUnit.Find(n => n.Equals(TBInput.Text)) != null)
+                if (editorSettings.Properties_Unit.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    editorSettings.PropertiesUnit.Add(TBInput.Text);
+                    editorSettings.Properties_Unit.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -126,9 +126,9 @@ namespace Faktury.Windows
             if (LBVat.SelectedItem != null)
             {
                 var editorSettings = _settingsAccessor.GetSettings();
-                if (editorSettings.PropertiesVat.Find(n => n.Equals(LBVat.Text)) != null)
+                if (editorSettings.Properties_Vat.Find(n => n.Equals(LBVat.Text)) != null)
                 {
-                    editorSettings.PropertiesVat.Remove(LBVat.Text);
+                    editorSettings.Properties_Vat.Remove(LBVat.Text);
                     ReloadLists();
                 }
                 else
@@ -144,9 +144,9 @@ namespace Faktury.Windows
             if (LBUnit.SelectedItem != null)
             {
                 var editorSettings = _settingsAccessor.GetSettings();
-                if (editorSettings.PropertiesUnit.Find(n => n.Equals(LBUnit.Text)) != null)
+                if (editorSettings.Properties_Unit.Find(n => n.Equals(LBUnit.Text)) != null)
                 {
-                    editorSettings.PropertiesUnit.Remove(LBUnit.Text);
+                    editorSettings.Properties_Unit.Remove(LBUnit.Text);
                     ReloadLists();
                 }
                 else

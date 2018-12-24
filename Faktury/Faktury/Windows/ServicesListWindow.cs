@@ -8,7 +8,7 @@ namespace Faktury.Windows
 {
     public partial class ServicesListWindow : DockContent
     {
-        private ModelStore _modelStore;
+        private readonly ModelStore _modelStore;
 
         public ServicesListWindow(ModelStore modelStore)
         {
@@ -53,8 +53,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Service serviceToEdit = null;
-                    serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.EditService(serviceToEdit);
@@ -71,8 +70,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Service serviceToEdit = null;
-                    serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.DeleteService(serviceToEdit);

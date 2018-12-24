@@ -51,10 +51,9 @@ namespace Faktury.Windows
         public int Compare(object x, object y)
         {
             int compareResult;
-            ListViewItem listviewX, listviewY;
             // Cast the objects to be compared to ListViewItem objects
-            listviewX = (ListViewItem)x;
-            listviewY = (ListViewItem)y;
+            var listViewX = (ListViewItem)x;
+            var listViewY = (ListViewItem)y;
             if (ColumnToSort == 0)
             {
                 compareResult = _firstObjectCompare.Compare(x, y);
@@ -63,13 +62,13 @@ namespace Faktury.Windows
             {
                 // Compare the two items
                 compareResult =
-                  _objectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+                  _objectCompare.Compare(listViewX.SubItems[ColumnToSort].Text, listViewY.SubItems[ColumnToSort].Text);
             }
 
             if (compareResult == 0 && ColumnToSort == 1 && SortByPrev) 
             {
 
-                compareResult =_objectCompare.Compare(listviewX.SubItems[ColumnToSort-1].Text, listviewY.SubItems[ColumnToSort-1].Text);
+                compareResult =_objectCompare.Compare(listViewX.SubItems[ColumnToSort-1].Text, listViewY.SubItems[ColumnToSort-1].Text);
 
             }
 
@@ -159,12 +158,14 @@ namespace Faktury.Windows
             return base.Compare(x, y);
         }
         private bool IsWholeNumber(string strNumber)
-        { // use a regular expression to find out if string is actually a number
-            for (int i = 0; i < strNumber.Length; i++)
+        {
+            // use a regular expression to find out if string is actually a number
+            foreach (var character in strNumber)
             {
-                if (!char.IsDigit(strNumber[i]))
+                if (!char.IsDigit(character))
                     return false;
             }
+
             return true;
         }
     }

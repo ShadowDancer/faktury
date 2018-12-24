@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Faktury.Classes
 {
@@ -19,7 +20,10 @@ namespace Faktury.Classes
         public int Number { get; set; }
         public int Year { get; set; }
 
-        public MoneyData MoneyData { get; set; } = new MoneyData();
+
+        public List<DocumentItem> Items { get; } = new List<DocumentItem>();
+
+        public DocumentSummary DocumentSummary { get; set; } = new DocumentSummary();
 
         public bool Paid { get; set; }
 

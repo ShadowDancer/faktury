@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
+using Faktury.Classes.Printing;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -36,12 +37,7 @@ namespace Faktury.Windows
             {
                 newItem.SubItems.Add(currentCompany.Tag);
                 newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
-
-                if (document.Paid)
-                {
-                    newItem.SubItems.Add("Tak");
-                }
-                else newItem.SubItems.Add("Nie");
+                newItem.SubItems.Add(document.Paid ? "Tak" : "Nie");
 
                 return newItem;
             }
@@ -53,7 +49,7 @@ namespace Faktury.Windows
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
         }
 
-        public void Reload()
+        private void Reload()
         {
             LVDocuments.Items.Clear();
             foreach (var currentDocument in _modelStore.Documents)

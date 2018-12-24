@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Faktury.Classes;
+using Faktury.Classes.Printing;
 using Faktury.Data.Xml;
 using Faktury.Print_Framework;
 
@@ -173,11 +174,11 @@ namespace Faktury.Windows
         {
             foreach (var childForm in MdiChildren)
             {
-                if (childForm is DocumentWindow)
+                if (childForm is DocumentWindow window)
                 {
                     //TODO
-                    ((DocumentWindow)childForm).ForceClose = true;
-                    childForm.Close();
+                    window.ForceClose = true;
+                    window.Close();
                 }
             }
 
@@ -235,7 +236,7 @@ namespace Faktury.Windows
 
         #endregion
 
-        public bool CanEndApplication()
+        private bool CanEndApplication()
         {
             return MdiChildren.Length <= 0;
         }
@@ -285,7 +286,6 @@ namespace Faktury.Windows
             }
         }
 
-        //Widok
         #region View
 
         private void opcjeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -349,8 +349,7 @@ namespace Faktury.Windows
 
         private void closeCurrentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMdiChild != null)
-                ActiveMdiChild.Close();
+            ActiveMdiChild?.Close();
         }
 
         private void CloseAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -435,14 +434,14 @@ namespace Faktury.Windows
 
         private void printPreviewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMdiChild != null && ActiveMdiChild is DocumentListWindow)
+            if (ActiveMdiChild != null && ActiveMdiChild is DocumentListWindow listWindow)
             {
-                ((DocumentListWindow)ActiveMdiChild).ShowPreview();
+                listWindow.ShowPreview();
             }
 
-            if (ActiveMdiChild != null && ActiveMdiChild is DocumentWindow)
+            if (ActiveMdiChild != null && ActiveMdiChild is DocumentWindow window)
             {
-                ((DocumentWindow)ActiveMdiChild).ShowPreview();
+                window.ShowPreview();
             }
         }
 
@@ -459,15 +458,14 @@ namespace Faktury.Windows
 
         private void printToolStripButton_Click(object sender, EventArgs e)
         {
-
-            if (ActiveMdiChild != null && ActiveMdiChild is DocumentListWindow)
+            if (ActiveMdiChild != null && ActiveMdiChild is DocumentListWindow listWindow)
             {
-                ((DocumentListWindow)ActiveMdiChild).Print();
+                listWindow.Print();
             }
 
-            if (ActiveMdiChild != null && ActiveMdiChild is DocumentWindow)
+            if (ActiveMdiChild != null && ActiveMdiChild is DocumentWindow window)
             {
-                ((DocumentWindow)ActiveMdiChild).ShowPreview();
+                window.Print();
             }
         }
 
