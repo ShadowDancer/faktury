@@ -1,27 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Forms;
+using Faktury.Classes;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
-    public partial class CompanyListWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class CompanyListWindow : DockContent
     {
+        private ModelStore _modelStore;
         private ListViewColumnSorter _lvwColumnSorter;
         private string _filter;
 
-        public CompanyListWindow()
+        public CompanyListWindow(ModelStore modelStore)
         {
+            _modelStore = modelStore;
             InitializeComponent();
         }
 
         public void Reload()
         {
             LVCompanies.Items.Clear();
-            foreach(Classes.Company currentCompany in MainForm.Instance.Companies)
+            foreach(Company currentCompany in _modelStore.Companies)
             {
 
 
-                ListViewItem newItem = new ListViewItem(new string[] {currentCompany.Id.ToString(), currentCompany.Tag, currentCompany.Name, " " + currentCompany.Nip, currentCompany.CreationDate.ToString(), currentCompany.ModificationDate.ToString()});
+                ListViewItem newItem = new ListViewItem(new[]
+                {
+                    currentCompany.Id.ToString(),
+                    currentCompany.Tag,
+                    currentCompany.Name,
+                    " " + currentCompany.Nip,
+                    currentCompany.CreationDate.ToString(CultureInfo.CurrentCulture),
+                    currentCompany.ModificationDate.ToString(CultureInfo.CurrentCulture)
+                });
 
                 if (!string.IsNullOrEmpty(_filter))
                 {
@@ -84,8 +97,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    Classes.Company companyToEdit = null;
-                    companyToEdit = MainForm.Instance.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    var companyToEdit = _modelStore.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
                     if (companyToEdit != null)
                         MainForm.Instance.EditCompany(companyToEdit);
@@ -102,9 +114,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    Classes.Company companyToEdit = null;
-                    companyToEdit = MainForm.Instance.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
-
+                    var companyToEdit = _modelStore.Companies.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
                     if (companyToEdit != null)
                         MainForm.Instance.DeleteCompany(companyToEdit);
                     else
@@ -116,29 +126,6 @@ namespace Faktury.Windows
             else MessageBox.Show("Wybierz z listy kontrahentów do usunięcia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         #endregion
-
-        private void statystykiToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (LVCompanies.SelectedItems.Count > 0)
-            {
-                List<Classes.Company> companies = new List<Classes.Company>();
-                foreach (ListViewItem currentItem in LVCompanies.SelectedItems)
-                {
-                    try
-                    {
-                        Classes.Company company = MainForm.Instance.Companies.Find(n => n.Id == Convert.ToInt32(currentItem.SubItems[0].Text));
-                        companies.Add(company);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Błąd otwierania plików:", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                StatsWindow newWindow = new StatsWindow(companies);
-                newWindow.Show(MainForm.Instance.MainDockPanel);
-            }
-            else MessageBox.Show("Wybierz z listy kontrachentów do uwzględnienia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
 
         private void LVCompanies_ColumnClick(object sender, ColumnClickEventArgs e)
         {

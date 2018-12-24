@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class OptionsWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -49,7 +52,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.BBackupSettings = new System.Windows.Forms.Button();
             this.OpenDataDirectory = new System.Windows.Forms.FolderBrowserDialog();
-            this.BSQLSettings = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.OptionsReset = new System.Windows.Forms.Button();
             this.OptionsExport = new System.Windows.Forms.Button();
@@ -316,7 +318,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(652, 366);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.BSQLSettings);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.BClose);
             this.Controls.Add(this.groupBox1);
@@ -338,32 +339,31 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button LoadBackup;
-        private System.Windows.Forms.Button CompaniesExport;
-        private System.Windows.Forms.Button CompaniesImport;
-        private System.Windows.Forms.Button CompaniesClean;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox LBUnit;
-        private System.Windows.Forms.ListBox LBVat;
-        private System.Windows.Forms.Button BDelUnit;
-        private System.Windows.Forms.Button BDelVat;
-        private System.Windows.Forms.Button BAddUnit;
-        private System.Windows.Forms.Button BAddVat;
-        private System.Windows.Forms.TextBox TBInput;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button BClose;
-        private System.Windows.Forms.Button BSetOwnerData;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button BBackupSettings;
-        private System.Windows.Forms.FolderBrowserDialog OpenDataDirectory;
-        private System.Windows.Forms.Button BSQLSettings;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button OptionsReset;
-        private System.Windows.Forms.Button OptionsExport;
-        private System.Windows.Forms.Button OptionsImport;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private GroupBox groupBox2;
+        private Button LoadBackup;
+        private Button CompaniesExport;
+        private Button CompaniesImport;
+        private Button CompaniesClean;
+        private GroupBox groupBox1;
+        private ListBox LBUnit;
+        private ListBox LBVat;
+        private Button BDelUnit;
+        private Button BDelVat;
+        private Button BAddUnit;
+        private Button BAddVat;
+        private TextBox TBInput;
+        private Label label2;
+        private Label label1;
+        private Button BClose;
+        private Button BSetOwnerData;
+        private GroupBox groupBox3;
+        private Button BBackupSettings;
+        private FolderBrowserDialog OpenDataDirectory;
+        private GroupBox groupBox4;
+        private Button OptionsReset;
+        private Button OptionsExport;
+        private Button OptionsImport;
+        private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
     }
 }

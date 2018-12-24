@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class DocumentProperties
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -329,34 +332,34 @@
         #endregion
 
         private ListViewEx.ListViewEx LVEServices;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.ColumnHeader VAT;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.TextBox TBSlownie;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox TBTotalBrutto;
-        private System.Windows.Forms.TextBox TBTotalVAT;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox TBTotalNetto;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox TBListViewExTB;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem usuńWszystkieToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
-        private System.Windows.Forms.ToolStripComboBox CBService;
-        private System.Windows.Forms.ToolStripMenuItem dodajToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader8;
+        private ColumnHeader VAT;
+        private Label label7;
+        private Panel panel3;
+        private TextBox TBSlownie;
+        private Label label6;
+        private TextBox TBTotalBrutto;
+        private TextBox TBTotalVAT;
+        private Label label5;
+        private Label label4;
+        private Label label3;
+        private TextBox TBTotalNetto;
+        private Panel panel2;
+        private TextBox TBListViewExTB;
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripMenuItem usuńToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem usuńWszystkieToolStripMenuItem;
+        private ToolStripMenuItem resetToolStripMenuItem;
+        private ToolStripComboBox CBService;
+        private ToolStripMenuItem dodajToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class DocumentWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -326,7 +329,7 @@
             this.Name = "DocumentWindow";
             this.Text = "DocumentWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DocumentWindow_FormClosing);
-            this.Load += new System.EventHandler(this.DocumentWindow_Load);
+            this.Load += new System.EventHandler((sender, e) => this.DocumentWindow_Load(sender, e));
             ((System.ComponentModel.ISupportInitialize)(this.nUDNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDYear)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -345,28 +348,28 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox TBPaynamentTime;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox CBPaynament;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox cBDefaultName;
-        private System.Windows.Forms.TextBox TBName;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.ComboBox CBCompanyTag;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.Button Cancel;
-        public System.Windows.Forms.NumericUpDown nUDNumber;
-        public System.Windows.Forms.NumericUpDown nUDYear;
-        private System.Windows.Forms.CheckBox CxBPaid;
-        private System.Windows.Forms.DateTimePicker DTPIssueDate;
-        private System.Windows.Forms.CheckBox CxBSimilarDates;
-        private System.Windows.Forms.DateTimePicker DTPSellDate;
+        private Label label1;
+        private Label label2;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private TextBox TBPaynamentTime;
+        private Label label3;
+        private ComboBox CBPaynament;
+        private GroupBox groupBox3;
+        private CheckBox cBDefaultName;
+        private TextBox TBName;
+        private GroupBox groupBox4;
+        private ComboBox CBCompanyTag;
+        private GroupBox groupBox6;
+        private GroupBox groupBox5;
+        private Button Ok;
+        private Button Cancel;
+        public NumericUpDown nUDNumber;
+        public NumericUpDown nUDYear;
+        private CheckBox CxBPaid;
+        private DateTimePicker DTPIssueDate;
+        private CheckBox CxBSimilarDates;
+        private DateTimePicker DTPSellDate;
         private DocumentProperties documentProperties;
     }
 }

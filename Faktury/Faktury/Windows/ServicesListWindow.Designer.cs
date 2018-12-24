@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class ServicesListWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -160,18 +163,18 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView LVServices;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem nowyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem edytujToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem odświeżToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem zamknijToolStripMenuItem;
+        private ListView LVServices;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripMenuItem nowyToolStripMenuItem;
+        private ToolStripMenuItem edytujToolStripMenuItem;
+        private ToolStripMenuItem usuńToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem odświeżToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem zamknijToolStripMenuItem;
     }
 }

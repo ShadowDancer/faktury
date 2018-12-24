@@ -1,12 +1,16 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Collections;
 using System.IO;
+using System.Windows.Forms;
+using Faktury.Data.Xml;
 
 namespace Faktury.Windows
 {
     public partial class LoadBackup : Form
     {
-        public class BackupNodeSorter : System.Collections.IComparer
+        private BackupManager BackupManager { get; }
+
+        public class BackupNodeSorter : IComparer
         {
             // Compare the length of the strings, or the strings
             // themselves, if they are the same length.
@@ -27,15 +31,16 @@ namespace Faktury.Windows
             }
         }
 
-        public LoadBackup()
+        public LoadBackup(BackupManager backupManager)
         {
+            BackupManager = backupManager;
             InitializeComponent();
             treeView1.TreeViewNodeSorter = new BackupNodeSorter();
         }
 
         private void LoadBackup_Load(object sender, EventArgs e)
         {
-            foreach (var dateDirectory in new DirectoryInfo(MainForm.Instance.BackupPath).GetDirectories())
+            foreach (var dateDirectory in new DirectoryInfo(BackupManager.BackupPath).GetDirectories())
             {
                 TreeNode day = treeView1.Nodes.Add(dateDirectory.Name);
                 foreach (var timeDirectory in dateDirectory.GetDirectories())
@@ -56,7 +61,7 @@ namespace Faktury.Windows
         {
             if (treeView1.SelectedNode.Tag != null)
             {
-                if(MainForm.Instance.BackupManager.LoadLocalBackup((string)treeView1.SelectedNode.Tag))
+                if(BackupManager.LoadLocalBackup((string)treeView1.SelectedNode.Tag))
                     MessageBox.Show("Poprawnie wczytano kopię zapasową!", "Wczytywanie kopii zapasowej", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Archiwum jest uszkodzone lub nie istnieje!", "Wczytywanie kopii zapasowej", MessageBoxButtons.OK, MessageBoxIcon.Error);

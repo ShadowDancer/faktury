@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Windows.Forms;
 
 namespace Faktury.Windows
@@ -79,17 +80,16 @@ namespace Faktury.Windows
                 // return normal result of compare operation
                 return compareResult;
             }
-            else if (_orderOfSort == SortOrder.Descending)
+
+            if (_orderOfSort == SortOrder.Descending)
             {
                 // Descending sort is selected,
                 // return negative result of compare operation
                 return (-compareResult);
             }
-            else
-            {
-                // Return '0' to indicate they are equal
-                return 0;
-            }
+
+            // Return '0' to indicate they are equal
+            return 0;
         }
 
         /// <summary>
@@ -134,14 +134,13 @@ namespace Faktury.Windows
             {
                 return -1;
             }
-            else if (image1 == image2)
+
+            if (image1 == image2)
             {
                 return _objectCompare.Compare(listViewX.Text, listViewY.Text);
             }
-            else
-            {
-                return 1;
-            }
+
+            return 1;
         }
     }
     public class NumberCaseInsensitiveComparer : CaseInsensitiveComparer
@@ -150,16 +149,14 @@ namespace Faktury.Windows
         {
             // in case x,y are strings and actually number,
             // convert them to int and use the base.Compare for comparison
-            if ((x is System.String) && IsWholeNumber((string)x)
-               && (y is System.String) && IsWholeNumber((string)y))
+            if ((x is String) && IsWholeNumber((string)x)
+               && (y is String) && IsWholeNumber((string)y))
             {
-                return base.Compare(System.Convert.ToInt32(x),
-                                       System.Convert.ToInt32(y));
+                return base.Compare(Convert.ToInt32(x),
+                                       Convert.ToInt32(y));
             }
-            else
-            {
-                return base.Compare(x, y);
-            }
+
+            return base.Compare(x, y);
         }
         private bool IsWholeNumber(string strNumber)
         { // use a regular expression to find out if string is actually a number

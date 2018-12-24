@@ -1,40 +1,48 @@
 ﻿using System;
 using System.Windows.Forms;
+using Faktury.Classes;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
-    public partial class ServiceWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class ServiceWindow : DockContent
     {
-        public ServiceWindow()
+        private readonly SettingsAccessor _settingsAccessor;
+        private ModelStore _modelStore;
+
+        public ServiceWindow(ModelStore modelStore, SettingsAccessor settingsAccessor)
         {
+            _settingsAccessor = settingsAccessor;
+            _modelStore = modelStore;
             InitializeComponent();
         }
 
-        public Classes.Service Service;
+        public Service Service;
 
         private void ServiceWindow_Load(object sender, EventArgs e)
         {
             //create Service if null
             if (Service == null)
             {
-                Service = new Classes.Service();
+                Service = new Service();
                 Service.CreationDate = DateTime.Now;
                 Service.ModificationDate = Service.CreationDate;
 
                 Service.Name = "Nienazwana usługa";
                 Service.Tag = Service.Name;
-                Service.Id = MainForm.Instance.GetNewServiceId;
+                Service.Id = _modelStore.NewServiceId();
             }
 
             //setup comboboxes
-            foreach (string value in MainForm.Instance.Settings.PropertiesVat)
+            var editorSettings = _settingsAccessor.GetSettings();
+            foreach (string value in editorSettings.PropertiesVat)
             {
                 CBVat.Items.Add(value);
                 if (CBVat.Items.Count > 0) CBVat.SelectedIndex = 0;
                 else CBVat.Text = "0";
             }
 
-            foreach (string value in MainForm.Instance.Settings.PropertiesUnit)
+            foreach (string value in editorSettings.PropertiesUnit)
             {
                 CBJm.Items.Add(value);
             }
@@ -44,10 +52,10 @@ namespace Faktury.Windows
             TBTag.Text = Service.Tag;
             nUDPrice.Value = (decimal)Service.Price;
             CBVat.Text = Service.Vat.ToString();
-            CBJm.Text = Service.Jm.ToString();
+            CBJm.Text = Service.Jm;
         }
 
-        public void SaveData()
+        private void SaveData()
         {
             Service.Vat = int.Parse(CBVat.Text);
             Service.Jm = CBJm.Text;
@@ -70,10 +78,10 @@ namespace Faktury.Windows
                 return;
             }
 
-                Classes.Service check = MainForm.Instance.Services.Find(n => n.Id == Service.Id);
-                if (check == null)
-                    MainForm.Instance.Services.Add(Service);
-
+            if (_modelStore.Services.Find(n => n.Id == Service.Id) == null)
+            {
+                _modelStore.Services.Add(Service);
+            }
 
             if (MainForm.Instance.ServicesListWindow != null && !MainForm.Instance.ServicesListWindow.IsDisposed)
             {

@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Faktury.Classes;
 using Faktury.Print_Framework;
+using ListViewEx;
 
 namespace Faktury.Windows
 {
     public partial class DocumentProperties : UserControl
     {
+        /// <summary>
+        /// Injected as runtime, because controls cannot use constructor injection
+        /// </summary>
+        public ModelStore ModelStore { get; set; }
+
         public DocumentProperties()
         {
             InitializeComponent();
@@ -42,7 +50,7 @@ namespace Faktury.Windows
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Wiersz " + (i + 1).ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Wiersz " + (i + 1), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -61,10 +69,10 @@ namespace Faktury.Windows
         public bool Changed;
 
         //Wczytuje kontrolki i rekordy
-        public void Initialize(Classes.MoneyData moneyData)
+        public void Initialize(MoneyData moneyData)
         {
             //load combo box
-            foreach (Classes.Service currentService in MainForm.Instance.Services)
+            foreach (Service currentService in ModelStore.Services)
             {
                 CBService.Items.Add(new ComboBoxItem(currentService.Tag, currentService.Id));
             }
@@ -74,13 +82,13 @@ namespace Faktury.Windows
             {
                 ListViewItem newItem = new ListViewItem();
                 newItem.SubItems.Add(currentRecord.Name);
-                newItem.SubItems.Add(currentRecord.Cost.ToString());
-                newItem.SubItems.Add(currentRecord.Count.ToString());
+                newItem.SubItems.Add(currentRecord.Cost.ToString(CultureInfo.CurrentCulture));
+                newItem.SubItems.Add(currentRecord.Count.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add(currentRecord.Unit);
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
-                newItem.SubItems.Add(currentRecord.VatPrecent.ToString());
+                newItem.SubItems.Add(currentRecord.VatPercent.ToString(CultureInfo.CurrentCulture));
                 
                 LVEServices.Items.Add(newItem);
             }
@@ -88,7 +96,7 @@ namespace Faktury.Windows
         }
 
         //Zapisuje dane
-        public void Save(Classes.MoneyData moneyData)
+        public void Save(MoneyData moneyData)
         {
             moneyData.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
             moneyData.Netto =  Convert.ToSingle(TBTotalNetto.Text);
@@ -99,7 +107,7 @@ namespace Faktury.Windows
             moneyData.Records.Clear();
             foreach (ListViewItem currentItem in LVEServices.Items)
             {
-                Classes.MoneyDataRecord newRecord = new Classes.MoneyDataRecord();
+                MoneyDataRecord newRecord = new MoneyDataRecord();
 
                 newRecord.Name = currentItem.SubItems[1].Text;
                 newRecord.Cost = Convert.ToSingle(currentItem.SubItems[2].Text);
@@ -108,14 +116,14 @@ namespace Faktury.Windows
                 newRecord.Netto = Convert.ToSingle(currentItem.SubItems[5].Text);
                 newRecord.Vat = Convert.ToSingle(currentItem.SubItems[6].Text);
                 newRecord.Brutto = Convert.ToSingle(currentItem.SubItems[7].Text);
-                newRecord.VatPrecent = Convert.ToSingle(currentItem.SubItems[8].Text);
+                newRecord.VatPercent = Convert.ToSingle(currentItem.SubItems[8].Text);
 
                 moneyData.Records.Add(newRecord);
             }
         }
 
         #region Extended List View
-        private void LVEServices_SubItemClicked(object sender, ListViewEx.SubItemEventArgs e)
+        private void LVEServices_SubItemClicked(object sender, SubItemEventArgs e)
         {
             if (e.SubItem > 0 && e.SubItem < 5)
                 LVEServices.StartEditing(TBListViewExTB, e.Item, e.SubItem);
@@ -145,10 +153,10 @@ namespace Faktury.Windows
 
         private void RecordAdd_Click(object sender, EventArgs e)
         {
-            Classes.Service check = null;
+            Service check;
             try
             {
-                check = MainForm.Instance.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                check = ModelStore.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
 
             }
             catch
@@ -161,7 +169,7 @@ namespace Faktury.Windows
             ListViewItem newItem = new ListViewItem("");
             {
                 newItem.SubItems.Add(check.Name);
-                newItem.SubItems.Add(check.Price.ToString());
+                newItem.SubItems.Add(check.Price.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add(check.Jm);
                 newItem.SubItems.Add("0");
@@ -176,10 +184,10 @@ namespace Faktury.Windows
 
         private void RecordEdit_Click(object sender, EventArgs e)
         {
-            Classes.Service check = null;
+            Service check;
             try
             {
-                check = MainForm.Instance.Services.Find(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                check = ModelStore.Services.Find(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
                 if (check == null) throw new Exception();
             }
             catch
@@ -192,7 +200,7 @@ namespace Faktury.Windows
             if (LVEServices.SelectedItems.Count > 0)
             {
                 LVEServices.SelectedItems[0].SubItems[1].Text = check.Name;
-                LVEServices.SelectedItems[0].SubItems[2].Text = check.Price.ToString();
+                LVEServices.SelectedItems[0].SubItems[2].Text = check.Price.ToString(CultureInfo.CurrentCulture);
                 LVEServices.SelectedItems[0].SubItems[4].Text = check.Jm;
                 LVEServices.SelectedItems[0].SubItems[8].Text = check.Vat.ToString();
 
@@ -201,7 +209,6 @@ namespace Faktury.Windows
             else
             {
                 MessageBox.Show("Wybierz usługę do edycji z listy!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
         }
         private void RecordDelete_Click(object sender, EventArgs e)
@@ -212,23 +219,21 @@ namespace Faktury.Windows
                 {
                     LVEServices.Items.Remove(currentItem);
                 }
-                MainForm.Instance.UpdateHigestDocumentId();
+                ModelStore.UpdateHighestDocumentId();
                 Reload();
                 Changed = true;
             }
             else
             {
                 MessageBox.Show("Wybierz usługę do usunięcia z listy!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
         }
 
         private void RecordDeleteAll_Click(object sender, EventArgs e)
         {
-
             Changed = true;
             LVEServices.Items.Clear();
-            MainForm.Instance.UpdateHigestDocumentId();
+            ModelStore.UpdateHighestDocumentId();
         }
 
         #endregion

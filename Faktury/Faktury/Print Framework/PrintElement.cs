@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Drawing;
+using Faktury.Print_Framework.Normal;
+using Faktury.Print_Framework.Normal.Primitives;
+using Faktury.Print_Framework.Vertical;
+using Faktury.Print_Framework.Vertical.Primitives;
 
 namespace Faktury.Print_Framework
 {
@@ -41,7 +45,7 @@ namespace Faktury.Print_Framework
         /// Only for Vertical mode
         /// </summary>
         /// <param name="primitive">primitive object</param>
-        private void VAddPrimitive(Vertical.IPrintPrimitiveVertical primitive)
+        private void VAddPrimitive(IPrintPrimitiveVertical primitive)
         {
             _printPrimitivesVertical.Add(primitive);
         }
@@ -49,7 +53,7 @@ namespace Faktury.Print_Framework
         /// Adds primitive to the list(primitive must inhreit from IPrintPrimitive)
         /// </summary>
         /// <param name="primitive">primitive object</param>
-        private void AddPrimitive(Normal.IPrintPrimitive primitive)
+        private void AddPrimitive(IPrintPrimitive primitive)
         {
             _printPrimitives.Add(primitive);
         }
@@ -59,97 +63,97 @@ namespace Faktury.Print_Framework
         public void AddText(string text, PointF position)
         {
             RectangleF pos = new RectangleF(position.X, position.Y, 0, 0);
-            AddPrimitive(new Normal.Primitives.PrintText(text, new StringFormat(), PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, pos));
+            AddPrimitive(new PrintText(text, new StringFormat(), PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, pos));
         }
         public void AddText(string text, StringFormat stringFormat, PointF position)
         {
             RectangleF pos = new RectangleF(position.X, position.Y, 0, 0);
-            AddPrimitive(new Normal.Primitives.PrintText(text, stringFormat, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, pos));
+            AddPrimitive(new PrintText(text, stringFormat, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, pos));
         }
         public void AddText(string text, Font font, PointF position)
         {
             RectangleF pos = new RectangleF(position.X, position.Y, 0, 0);
-            AddPrimitive(new Normal.Primitives.PrintText(text, new StringFormat(), font, PrintEngine.Instane.DefaultBrush, pos));
+            AddPrimitive(new PrintText(text, new StringFormat(), font, PrintEngine.Instane.DefaultBrush, pos));
         }
         public void AddText(string text, Font font, Brush brush, PointF position)
         {
             RectangleF pos = new RectangleF(position.X, position.Y, 0, 0);
-            AddPrimitive(new Normal.Primitives.PrintText(text, new StringFormat(), font, brush, pos));
+            AddPrimitive(new PrintText(text, new StringFormat(), font, brush, pos));
         }
 
         public void AddText(string text, StringFormat stringFromat, Font font, Brush brush, PointF position)
         {
             RectangleF pos = new RectangleF(position.X, position.Y, 0, 0);
-            AddPrimitive(new Normal.Primitives.PrintText(text, stringFromat, font, brush, pos));
+            AddPrimitive(new PrintText(text, stringFromat, font, brush, pos));
         }
 
 
         //version with rectnagle input
         public void AddText(string text, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintText(text, new StringFormat(), PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
+            AddPrimitive(new PrintText(text, new StringFormat(), PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringAlignment alignment, RectangleF position)
         {
             StringFormat sf = new StringFormat();
             sf.Alignment = alignment;
-            AddPrimitive(new Normal.Primitives.PrintText(text, sf, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
+            AddPrimitive(new PrintText(text, sf, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringFormat stringFormat, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintText(text, stringFormat, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
+            AddPrimitive(new PrintText(text, stringFormat, PrintEngine.Instane.DefaultFont, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, Font font, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintText(text, new StringFormat(), font, PrintEngine.Instane.DefaultBrush, position));
+            AddPrimitive(new PrintText(text, new StringFormat(), font, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringAlignment alignment, Font font, RectangleF position)
         {
             StringFormat sf = new StringFormat();
             sf.Alignment = alignment;
-            AddPrimitive(new Normal.Primitives.PrintText(text, sf, font, PrintEngine.Instane.DefaultBrush, position));
+            AddPrimitive(new PrintText(text, sf, font, PrintEngine.Instane.DefaultBrush, position));
         }
         public void AddText(string text, StringFormat stringFormat, Font font, Brush brush, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintText(text, stringFormat, font, brush, position));
+            AddPrimitive(new PrintText(text, stringFormat, font, brush, position));
         }
         #endregion
         #region AddLine
         public void AddLine(RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintLine(PrintEngine.Instane.DefaultBrush, 1, position));
+            AddPrimitive(new PrintLine(PrintEngine.Instane.DefaultBrush, 1, position));
         }
         public void AddLine(float width, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintLine(PrintEngine.Instane.DefaultBrush, width, position));
+            AddPrimitive(new PrintLine(PrintEngine.Instane.DefaultBrush, width, position));
         }
         public void AddLine(Brush brush, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintLine(brush, 1, position));
+            AddPrimitive(new PrintLine(brush, 1, position));
         }
         public void AddLine(Brush brush, float width, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintLine(brush, width, position));
+            AddPrimitive(new PrintLine(brush, width, position));
         }
         #endregion
         #region AddHorizontalLine
 
         public void AddHorizontalLine(float height)
         {
-            AddPrimitive(new Normal.Primitives.PrintHorizontalLine(PrintEngine.Instane.DefaultBrush, 1, height));
+            AddPrimitive(new PrintHorizontalLine(PrintEngine.Instane.DefaultBrush, 1, height));
         }
 
         public void AddHorizontalLine(float width, float height)
         {
-            AddPrimitive(new Normal.Primitives.PrintHorizontalLine(PrintEngine.Instane.DefaultBrush, width, height));
+            AddPrimitive(new PrintHorizontalLine(PrintEngine.Instane.DefaultBrush, width, height));
         }
         public void AddHorizontalLine(Brush brush, float height)
         {
-            AddPrimitive(new Normal.Primitives.PrintHorizontalLine(brush, 1, height));
+            AddPrimitive(new PrintHorizontalLine(brush, 1, height));
         }
         public void AddHorizontalLine(Brush brush, float width, float height)
         {
-            AddPrimitive(new Normal.Primitives.PrintHorizontalLine(brush, width, height));
+            AddPrimitive(new PrintHorizontalLine(brush, width, height));
         }
 
         #endregion
@@ -161,7 +165,7 @@ namespace Faktury.Print_Framework
         /// <param name="position"></param>
         public void AddRectangle(RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintRectangle(PrintEngine.Instane.DefaultBrush, 1, false, position));
+            AddPrimitive(new PrintRectangle(PrintEngine.Instane.DefaultBrush, 1, false, position));
         }
         /// <summary>
         /// Drawing non filled rectangle
@@ -170,7 +174,7 @@ namespace Faktury.Print_Framework
         /// <param name="position"></param>
         public void AddRectangle(int width, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintRectangle(PrintEngine.Instane.DefaultBrush, width, false, position));
+            AddPrimitive(new PrintRectangle(PrintEngine.Instane.DefaultBrush, width, false, position));
         }
         /// <summary>
         /// Drawing rectangle on target position
@@ -180,7 +184,7 @@ namespace Faktury.Print_Framework
         /// <param name="position"></param>
         public void AddRectangle(int width, bool filled, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintRectangle(PrintEngine.Instane.DefaultBrush, width, filled, position));
+            AddPrimitive(new PrintRectangle(PrintEngine.Instane.DefaultBrush, width, filled, position));
         }
         /// <summary>
         /// Draw rectangle in target area
@@ -191,7 +195,7 @@ namespace Faktury.Print_Framework
         /// <param name="position"></param>
         public void AddRectangle(Brush brush, int width, bool filled, RectangleF position)
         {
-            AddPrimitive(new Normal.Primitives.PrintRectangle(brush, width, filled, position));
+            AddPrimitive(new PrintRectangle(brush, width, filled, position));
         }
 
 
@@ -235,7 +239,7 @@ namespace Faktury.Print_Framework
             /// <param name="brush">Brush used to draw text</param>
             public void VAddText(String text, StringFormat stringFromat, Font font, Brush brush)
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveText(text, stringFromat, font, brush));
+                VAddPrimitive(new PrintPrimitiveText(text, stringFromat, font, brush));
             }
         #endregion
         #region HAddImage
@@ -245,7 +249,7 @@ namespace Faktury.Print_Framework
             /// <param name="filePath">Path to bitmap file on HDD</param>
             public void HAddImage(String filePath)
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveImage(filePath));
+                VAddPrimitive(new PrintPrimitiveImage(filePath));
             }
             /// <summary>
             /// Adding image to element
@@ -253,7 +257,7 @@ namespace Faktury.Print_Framework
             /// <param name="image">Image object that will be printed</param>
             public void HAddImage(Image image)
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveImage(image));
+                VAddPrimitive(new PrintPrimitiveImage(image));
             }
         #endregion
         #region HAddLine
@@ -297,7 +301,7 @@ namespace Faktury.Print_Framework
             /// <param name="alignment">Alignment of the line</param>
             public void HAddLine(Brush brush, float length, float width, LineAlignment alignment)
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveLine(brush, length, width, alignment));
+                VAddPrimitive(new PrintPrimitiveLine(brush, length, width, alignment));
             }
         #endregion
         #region HAddBlankLine
@@ -306,7 +310,7 @@ namespace Faktury.Print_Framework
             /// </summary>
             public void HAddBlankLine()
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveBlankLine());
+                VAddPrimitive(new PrintPrimitiveBlankLine());
             }
             /// <summary>
             /// Adding blank line to element
@@ -314,7 +318,7 @@ namespace Faktury.Print_Framework
             /// <param name="height">Height of the line</param>
             public void HAddBlankLine(float height)
             {
-                VAddPrimitive(new Vertical.Primitives.PrintPrimitiveBlankLine(height));
+                VAddPrimitive(new PrintPrimitiveBlankLine(height));
             }
         #endregion
         #region HAddParagraph
@@ -343,7 +347,7 @@ namespace Faktury.Print_Framework
         {
             // loop through the print height...
             float height = 0;
-            foreach (Vertical.IPrintPrimitiveVertical primitive in _printPrimitivesVertical)
+            foreach (IPrintPrimitiveVertical primitive in _printPrimitivesVertical)
             {
                 // get the height...
                 height += primitive.CalculateHeight(engine, graphics);
@@ -360,7 +364,7 @@ namespace Faktury.Print_Framework
         /// <param name="graphics"></param>
         public void Draw(PrintEngine engine, Graphics graphics, Rectangle pageBounds)
         {
-            foreach (Normal.IPrintPrimitive primitive in _printPrimitives)
+            foreach (IPrintPrimitive primitive in _printPrimitives)
             {
                 // render it...
                 primitive.Draw(engine, graphics, pageBounds);
@@ -381,7 +385,7 @@ namespace Faktury.Print_Framework
             RectangleF elementBounds = new RectangleF(pageBounds.Left, (int)yPos, pageBounds.Right - pageBounds.Left, (int)height);
 
             // now, tell the primitives to print themselves...
-            foreach (Vertical.IPrintPrimitiveVertical primitive in _printPrimitivesVertical)
+            foreach (IPrintPrimitiveVertical primitive in _printPrimitivesVertical)
             {
                 // render it...
                 primitive.Draw(engine, graphics, elementBounds);

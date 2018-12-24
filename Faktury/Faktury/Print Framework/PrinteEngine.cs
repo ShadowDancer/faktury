@@ -190,7 +190,7 @@ namespace Faktury.Print_Framework
             Rectangle pageBounds = new Rectangle();
 
             #region Header and footer printing
-            if (PrintingModeVertical == true)
+            if (PrintingModeVertical)
             {
                 //print header
                 float headerHeight = 0;
@@ -224,7 +224,7 @@ namespace Faktury.Print_Framework
                 // get the element...
                 PrintElement element = (PrintElement)_printElements[_printIndex];
 
-                if (PrintingModeVertical == true)
+                if (PrintingModeVertical)
                 {
                     float height = element.HCalculateHeight(this, e.Graphics);
 

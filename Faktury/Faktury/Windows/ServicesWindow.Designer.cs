@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class ServiceWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -185,18 +188,18 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox CBJm;
-        private System.Windows.Forms.ComboBox CBVat;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TBName;
-        private System.Windows.Forms.NumericUpDown nUDPrice;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button BOk;
-        private System.Windows.Forms.Button BCancel;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox TBTag;
+        private ComboBox CBJm;
+        private ComboBox CBVat;
+        private Label label1;
+        private TextBox TBName;
+        private NumericUpDown nUDPrice;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Button BOk;
+        private Button BCancel;
+        private Label label5;
+        private TextBox TBTag;
 
     }
 }

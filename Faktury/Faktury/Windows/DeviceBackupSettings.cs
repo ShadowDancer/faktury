@@ -1,28 +1,33 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Faktury.Classes;
 
 namespace Faktury.Windows
 {
     public partial class BackupSettings : Form
     {
-        public BackupSettings()
+        private readonly SettingsAccessor _settingsAccessor;
+
+        public BackupSettings(SettingsAccessor settingsAccessor)
         {
+            _settingsAccessor = settingsAccessor;
             InitializeComponent();
         }
 
         private void BackupSettings_Load(object sender, EventArgs e)
         {
             //load local backup
-            GBLocalCopy.Enabled = CxBLocalBackup.Checked = MainForm.Instance.Settings.LocalBackup;
-            CxBLocalBackupOnlyWhenExit.Checked = MainForm.Instance.Settings.LocalBackupOnlyOnExit;
+            var editorSettings = _settingsAccessor.GetSettings();
+            GBLocalCopy.Enabled = CxBLocalBackup.Checked = editorSettings.LocalBackup;
+            CxBLocalBackupOnlyWhenExit.Checked = editorSettings.LocalBackupOnlyOnExit;
 
             //device
-            GBDevice.Enabled = CxBDeviceBackup.Checked = MainForm.Instance.Settings.DeviceBackup;
-            NuDPeriod.Value = MainForm.Instance.Settings.DeviceBackupPeriod;
+            GBDevice.Enabled = CxBDeviceBackup.Checked = editorSettings.DeviceBackup;
+            NuDPeriod.Value = editorSettings.DeviceBackupPeriod;
             TimeToNextDeviceBackupUpdate();
 
-            TBDeviceName.Text = MainForm.Instance.Settings.DeviceBackupLabel;
+            TBDeviceName.Text = editorSettings.DeviceBackupLabel;
         }
 
         private void BClose_Click(object sender, EventArgs e)
@@ -32,35 +37,36 @@ namespace Faktury.Windows
 
         public void TimeToNextDeviceBackupUpdate()
         {
-            TimeSpan span = MainForm.Instance.Settings.DeviceBackupLastTime.Add(new TimeSpan(MainForm.Instance.Settings.DeviceBackupPeriod, 0, 0, 0)).Subtract(DateTime.Today);
+            var editorSettings = _settingsAccessor.GetSettings();
+            TimeSpan span = editorSettings.DeviceBackupLastTime.Add(new TimeSpan(editorSettings.DeviceBackupPeriod, 0, 0, 0)).Subtract(DateTime.Today);
             if (span.Days < 0) span = new TimeSpan();
             LElapsedTime.Text = String.Format("Pozostało {0} dni.", span.Days);
         }
 
         private void CxBLocalBackup_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.LocalBackup = GBLocalCopy.Enabled = CxBLocalBackup.Checked;
+            _settingsAccessor.GetSettings().LocalBackup = GBLocalCopy.Enabled = CxBLocalBackup.Checked;
         }
 
         private void CxBLocalBackupOnlyWhenExit_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.LocalBackupOnlyOnExit = CxBLocalBackupOnlyWhenExit.Checked;
+            _settingsAccessor.GetSettings().LocalBackupOnlyOnExit = CxBLocalBackupOnlyWhenExit.Checked;
         }
 
         private void CxBDeviceBackup_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DeviceBackup = GBDevice.Enabled = CxBDeviceBackup.Checked;
+            _settingsAccessor.GetSettings().DeviceBackup = GBDevice.Enabled = CxBDeviceBackup.Checked;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DeviceBackupPeriod = (int)NuDPeriod.Value;
+            _settingsAccessor.GetSettings().DeviceBackupPeriod = (int)NuDPeriod.Value;
             TimeToNextDeviceBackupUpdate();
         }
 
         private void BReset_Click(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DeviceBackupLastTime = DateTime.Today;
+            _settingsAccessor.GetSettings().DeviceBackupLastTime = DateTime.Today;
             TimeToNextDeviceBackupUpdate();
         }
 
@@ -78,15 +84,15 @@ namespace Faktury.Windows
                 if (!drive.IsReady || !drive.RootDirectory.Exists)
                 {
                     MessageBox.Show("Nośnik nie jest gotowy (został wypięty z gniazda usb lub uszkodzony)!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
                 else
                 {
                     try
                     {
-                        MainForm.Instance.Settings.DeviceBackupLabel = CBSelectDevice.Text;
-                        MainForm.Instance.Settings.DeviceRandomNumber = new Random().Next();
-                        string backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", MainForm.Instance.Settings.DeviceRandomNumber.ToString())));
+                        var editorSettings = _settingsAccessor.GetSettings();
+                        editorSettings.DeviceBackupLabel = CBSelectDevice.Text;
+                        editorSettings.DeviceRandomNumber = new Random().Next();
+                        string backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", editorSettings.DeviceRandomNumber.ToString())));
                         Directory.CreateDirectory(backupFolderPath);
                         TBDeviceName.Text = CBSelectDevice.Text;
                         MessageBox.Show(string.Format("Nośnik {0} jest przygotowany do zapisu kopii zapasowych. Gdy upłynie wyznaczony czas zostniesz poproszony o włożenie nośnika do portu USB.", CBSelectDevice.Text), "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);

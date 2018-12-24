@@ -1,17 +1,29 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
+using Faktury.Classes;
+using Faktury.Print_Framework;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
-    public partial class DocumentWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class DocumentWindow : DockContent
     {
-        public DocumentWindow()
+        private readonly ModelStore _modelStore;
+        private readonly PrintEngine _printEngine;
+        private readonly SettingsAccessor _settingsAccessor;
+
+        public DocumentWindow(ModelStore modelStore, PrintEngine printEngine, SettingsAccessor settingsAccessor)
         {
+            _modelStore = modelStore;
+            _printEngine = printEngine;
+            _settingsAccessor = settingsAccessor;
             InitializeComponent();
             CBPaynament.Items.Clear();
             CBPaynament.Items.Add("Przelew");
             CBPaynament.Items.Add("Gotówka");
             CBPaynament.SelectedIndex = 0;
+            documentProperties.ModelStore = modelStore;
         }
 
         public bool Changed
@@ -22,8 +34,8 @@ namespace Faktury.Windows
 
                 if(Document.IssueDate != DTPIssueDate.Value) return true;
                 if(Document.SellDate != DTPSellDate.Value) return true;
-                if(Document.Paynament != CBPaynament.Text) return true;
-                if(Document.PaynamentTime != TBPaynamentTime.Text) return true;
+                if(Document.Payment != CBPaynament.Text) return true;
+                if(Document.PaymentTime != TBPaynamentTime.Text) return true;
 
                 if(Document.Name != TBName.Text) return true;
                 if(Document.DefaultName != cBDefaultName.Checked) return true;
@@ -44,7 +56,7 @@ namespace Faktury.Windows
         private int _oldNumberValue;
         private int _oldYearValue;
 
-        public Classes.Document Document { get; set; }
+        public Document Document { get; set; }
 
         private bool OrderClose()
         {
@@ -67,17 +79,18 @@ namespace Faktury.Windows
                 }
 
             }
-            else return true;
+
+            return true;
         }
 
-        public void SaveDataFromControls(Classes.Document document)
+        public void SaveDataFromControls(Document document)
         {
             document.CompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
 
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
-            document.Paynament = CBPaynament.Text;
-            document.PaynamentTime = TBPaynamentTime.Text;
+            document.Payment = CBPaynament.Text;
+            document.PaymentTime = TBPaynamentTime.Text;
 
             document.Name = TBName.Text;
             document.DefaultName = cBDefaultName.Checked;
@@ -97,9 +110,9 @@ namespace Faktury.Windows
 
         public void SetDefaultName()
         {
-            if (cBDefaultName.Checked == true)
+            if (cBDefaultName.Checked)
             {
-                TBName.Text = nUDNumber.Value.ToString() + ": " + CBCompanyTag.Text + " " + DTPIssueDate.Value.ToLongDateString();
+                TBName.Text = nUDNumber.Value.ToString(CultureInfo.CurrentCulture) + ": " + CBCompanyTag.Text + " " + DTPIssueDate.Value.ToLongDateString();
             }
         }
 
@@ -108,19 +121,10 @@ namespace Faktury.Windows
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
         }
 
-        public void UpdateId()
+        private void UpdateId()
         {
-            MainForm.Instance.UpdateHigestDocumentId();
-
-            if (MainForm.Instance.HigestDocumentId.ContainsKey((int)nUDYear.Value))
-            {
-                nUDNumber.Value = _oldNumberValue = MainForm.Instance.HigestDocumentId[((int)nUDYear.Value)] + 1;
-            }
-            else
-            {
-                _oldNumberValue = 1;
-                nUDNumber.Value = 1;
-            }
+            _modelStore.UpdateHighestDocumentId();
+            nUDNumber.Value = _oldNumberValue = _modelStore.NewDocumentId((int)nUDYear.Value);
         }
 
         private void cBDefaultName_CheckedChanged(object sender, EventArgs e)
@@ -139,19 +143,17 @@ namespace Faktury.Windows
             if (_oldNumberValue > nUDNumber.Value)
             {
                 //decrease number
-                int currentNumber = (int)nUDNumber.Value;
+                var currentNumber = (int)nUDNumber.Value;
 
                 while (currentNumber > 0)
                 {
-                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
+                    if (_modelStore.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
                         nUDNumber.Value = currentNumber;
                         break;
                     }
-                    else
-                    {
-                        currentNumber--;
-                    }
+
+                    currentNumber--;
                 }
                 if (currentNumber == 0)
                 {
@@ -163,19 +165,17 @@ namespace Faktury.Windows
             if (_oldNumberValue < nUDNumber.Value)
             {
                 //increase number
-                int currentNumber = (int)nUDNumber.Value;
+                var currentNumber = (int)nUDNumber.Value;
 
                 while (true)
                 {
-                    if (MainForm.Instance.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
+                    if (_modelStore.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
                         nUDNumber.Value = currentNumber;
                         break;
                     }
-                    else
-                    {
-                        currentNumber++;
-                    }
+
+                    currentNumber++;
                 }
             }
 
@@ -200,11 +200,12 @@ namespace Faktury.Windows
             //create new document if neccessary
             if (Document == null)
             {
-                Document = Classes.Document.CreateNewDocument();
+                var editorSettings = _settingsAccessor.GetSettings();
+                Document = Document.CreateNewDocument();
                 nUDYear.Value = DateTime.Today.Year;
                 UpdateId();
-                Document.DefaultName = MainForm.Instance.Settings.DocumentSetDefaultNames;
-                CxBSimilarDates.Checked = MainForm.Instance.Settings.DocumentCreationDateSameAsSellDate;
+                Document.DefaultName = editorSettings.DocumentSetDefaultNames;
+                CxBSimilarDates.Checked = editorSettings.DocumentCreationDateSameAsSellDate;
                 nUDYear.Enabled = true;
             }
             else
@@ -232,8 +233,8 @@ namespace Faktury.Windows
             DTPIssueDate.Value = Document.IssueDate;
             DTPSellDate.Value = Document.SellDate;
 
-            CBPaynament.Text = Document.Paynament;
-            TBPaynamentTime.Text = Document.PaynamentTime;
+            CBPaynament.Text = Document.Payment;
+            TBPaynamentTime.Text = Document.PaymentTime;
 
             TBName.Text = Document.Name;
             cBDefaultName.Checked = Document.DefaultName;
@@ -261,32 +262,36 @@ namespace Faktury.Windows
 
         public void Print()
         {
-            Classes.Document targetDocument = new Classes.Document();
-            targetDocument.MoneyData = Document.MoneyData;
+            var targetDocument = new Document
+            {
+                MoneyData = Document.MoneyData
+            };
             SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (MainForm.Instance.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
+            if (_modelStore.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            targetDocument.Print();
+            new DocumentPrinter(_modelStore, _settingsAccessor, targetDocument).Print(_printEngine);
         }
 
         public void ShowPreview()
         {
-            Classes.Document targetDocument = new Classes.Document();
-            targetDocument.MoneyData = Document.MoneyData;
+            var targetDocument = new Document
+            {
+                MoneyData = Document.MoneyData
+            };
             SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (MainForm.Instance.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
+            if (_modelStore.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            targetDocument.ShowPreview();
+            new DocumentPrinter(_modelStore, _settingsAccessor, targetDocument).ShowPreview(_printEngine);
         }
 
         private void CxBSimilarDates_CheckedChanged(object sender, EventArgs e)
@@ -317,9 +322,9 @@ namespace Faktury.Windows
             Data = data;
         }
 
-        public string Text = "";
-        public Object Data = -1;
-        public int Id { get { return (int)Data; } }
+        public string Text;
+        public object Data;
+        public int Id => (int)Data;
 
         public override string ToString()
         {

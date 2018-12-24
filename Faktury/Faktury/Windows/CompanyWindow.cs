@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Windows.Forms;
+using Faktury.Classes;
+using WeifenLuo.WinFormsUI.Docking;
+
 namespace Faktury.Windows
 {
-    public partial class CompanyWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class CompanyWindow : DockContent
     {
+        private ModelStore _modelStore;
 
-        public CompanyWindow()
+        public CompanyWindow(ModelStore modelStore)
         {
+            _modelStore = modelStore;
             InitializeComponent();
         }
 
-        public Classes.Company Company { get; set; }
+        public Company Company { get; set; }
         public bool AddToCollection = true;
 
         private void CompanyWindow_Load(object sender, EventArgs e)
         {
             if (Company == null)
             {
-                Company = new Classes.Company();
+                Company = new Company();
                 Company.Name = "Nowa";
                 Company.Bank = false;
-                Company.Id = MainForm.Instance.GetNewCompanyId;
+                Company.Id = _modelStore.NewCompanyId();
                 Company.CreationDate = DateTime.Now;
                 Company.ModificationDate = Company.CreationDate;
             }
@@ -59,9 +64,9 @@ namespace Faktury.Windows
 
                 if (AddToCollection)
                 {
-                    Classes.Company check = MainForm.Instance.Companies.Find(n => n.Id == Company.Id);
+                    Company check = _modelStore.Companies.Find(n => n.Id == Company.Id);
                     if (check == null)
-                        MainForm.Instance.Companies.Add(Company);
+                        _modelStore.Companies.Add(Company);
                 }
 
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();

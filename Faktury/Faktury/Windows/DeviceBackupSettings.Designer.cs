@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class BackupSettings
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -248,23 +251,23 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox CxBDeviceBackup;
-        private System.Windows.Forms.GroupBox GBDevice;
-        private System.Windows.Forms.CheckBox CxBLocalBackup;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown NuDPeriod;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox CxBLocalBackupOnlyWhenExit;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox GBLocalCopy;
-        private System.Windows.Forms.Button BClose;
-        private System.Windows.Forms.Button BReset;
-        private System.Windows.Forms.Label LElapsedTime;
-        private System.Windows.Forms.FolderBrowserDialog OpenBackupDirectory;
-        private System.Windows.Forms.Button BChangeDevice;
-        private System.Windows.Forms.ComboBox CBSelectDevice;
-        private System.Windows.Forms.TextBox TBDeviceName;
-        private System.Windows.Forms.Label label4;
+        private CheckBox CxBDeviceBackup;
+        private GroupBox GBDevice;
+        private CheckBox CxBLocalBackup;
+        private Label label3;
+        private NumericUpDown NuDPeriod;
+        private Label label2;
+        private CheckBox CxBLocalBackupOnlyWhenExit;
+        private Label label1;
+        private GroupBox GBLocalCopy;
+        private Button BClose;
+        private Button BReset;
+        private Label LElapsedTime;
+        private FolderBrowserDialog OpenBackupDirectory;
+        private Button BChangeDevice;
+        private ComboBox CBSelectDevice;
+        private TextBox TBDeviceName;
+        private Label label4;
 
     }
 }

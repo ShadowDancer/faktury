@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml;
 using Faktury.Classes;
+
 // ReSharper disable PossibleNullReferenceException
 
 namespace Faktury.Data.Xml
@@ -36,7 +37,7 @@ namespace Faktury.Data.Xml
             record.AppendChild(vat);
 
             XmlElement vatPercent = xmlDoc.CreateElement("VATPrecent");
-            vatPercent.InnerText = moneyData.VatPrecent.ToString(CultureInfo.InvariantCulture);
+            vatPercent.InnerText = moneyData.VatPercent.ToString(CultureInfo.InvariantCulture);
             record.AppendChild(vatPercent);
 
             XmlElement brutto = xmlDoc.CreateElement("Brutto");
@@ -63,9 +64,9 @@ namespace Faktury.Data.Xml
 
             if (xmlElement["VATPrecent"] != null)
             {
-                newRecord.VatPrecent = float.Parse(xmlElement["VATPrecent"].InnerText);
+                newRecord.VatPercent = float.Parse(xmlElement["VATPrecent"].InnerText);
             }
-            else newRecord.VatPrecent = 22.0f;
+            else newRecord.VatPercent = 22.0f;
 
             return newRecord;
         }

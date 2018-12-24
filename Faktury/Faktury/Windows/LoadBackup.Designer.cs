@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class LoadBackup
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -80,8 +83,8 @@
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.Button BLoad;
-        private System.Windows.Forms.Button BCancel;
+        private TreeView treeView1;
+        private Button BLoad;
+        private Button BCancel;
     }
 }

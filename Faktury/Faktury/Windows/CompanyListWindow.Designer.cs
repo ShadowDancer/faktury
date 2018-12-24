@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class CompanyListWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -42,8 +45,6 @@
             this.edytujToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.statystykiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.odświeżToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -111,62 +112,48 @@
             this.edytujToolStripMenuItem,
             this.usuńToolStripMenuItem,
             this.toolStripSeparator1,
-            this.statystykiToolStripMenuItem,
-            this.toolStripSeparator2,
             this.odświeżToolStripMenuItem,
             this.zamknijToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(125, 148);
+            this.contextMenuStrip.Size = new System.Drawing.Size(119, 120);
             // 
             // nowaToolStripMenuItem
             // 
             this.nowaToolStripMenuItem.Name = "nowaToolStripMenuItem";
-            this.nowaToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.nowaToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.nowaToolStripMenuItem.Text = "Nowa";
             this.nowaToolStripMenuItem.Click += new System.EventHandler(this.nowaToolStripMenuItem_Click);
             // 
             // edytujToolStripMenuItem
             // 
             this.edytujToolStripMenuItem.Name = "edytujToolStripMenuItem";
-            this.edytujToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.edytujToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.edytujToolStripMenuItem.Text = "Edytuj";
             this.edytujToolStripMenuItem.Click += new System.EventHandler(this.edytujToolStripMenuItem_Click);
             // 
             // usuńToolStripMenuItem
             // 
             this.usuńToolStripMenuItem.Name = "usuńToolStripMenuItem";
-            this.usuńToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.usuńToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.usuńToolStripMenuItem.Text = "Usuń";
             this.usuńToolStripMenuItem.Click += new System.EventHandler(this.usuńToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(121, 6);
-            // 
-            // statystykiToolStripMenuItem
-            // 
-            this.statystykiToolStripMenuItem.Name = "statystykiToolStripMenuItem";
-            this.statystykiToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.statystykiToolStripMenuItem.Text = "Statystyki";
-            this.statystykiToolStripMenuItem.Click += new System.EventHandler(this.statystykiToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(121, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(115, 6);
             // 
             // odświeżToolStripMenuItem
             // 
             this.odświeżToolStripMenuItem.Name = "odświeżToolStripMenuItem";
-            this.odświeżToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.odświeżToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.odświeżToolStripMenuItem.Text = "Odśwież";
             this.odświeżToolStripMenuItem.Click += new System.EventHandler(this.odświeżToolStripMenuItem_Click);
             // 
             // zamknijToolStripMenuItem
             // 
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
-            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.zamknijToolStripMenuItem_Click);
             // 
@@ -222,24 +209,22 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView LVCompanies;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem nowaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem edytujToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem odświeżToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zamknijToolStripMenuItem;
-        private System.Windows.Forms.ColumnHeader ID;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ToolStripMenuItem statystykiToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox tbFilter;
-        private System.Windows.Forms.Button bSearch;
+        private ListView LVCompanies;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripMenuItem nowaToolStripMenuItem;
+        private ToolStripMenuItem edytujToolStripMenuItem;
+        private ToolStripMenuItem usuńToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem odświeżToolStripMenuItem;
+        private ToolStripMenuItem zamknijToolStripMenuItem;
+        private ColumnHeader ID;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private Panel panel1;
+        private TextBox tbFilter;
+        private Button bSearch;
     }
 }

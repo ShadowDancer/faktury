@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class CompanyWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -317,30 +320,30 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TBName;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox TBOwner;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox TBAdress;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox TBNip;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox TBMobile;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox TBPhone;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.GroupBox GBBank;
-        private System.Windows.Forms.TextBox TBBankSecion;
-        private System.Windows.Forms.TextBox TBBankAccount;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox TBTag;
-        private System.Windows.Forms.Label LTag;
-        private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.Button Cancel;
-        private System.Windows.Forms.TextBox TBAdress2;
-        private System.Windows.Forms.Label label10;
+        private Label label1;
+        private TextBox TBName;
+        private Label label2;
+        private TextBox TBOwner;
+        private Label label3;
+        private TextBox TBAdress;
+        private Label label4;
+        private TextBox TBNip;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private TextBox TBMobile;
+        private Label label6;
+        private TextBox TBPhone;
+        private Label label5;
+        private GroupBox GBBank;
+        private TextBox TBBankSecion;
+        private TextBox TBBankAccount;
+        private Label label8;
+        private Label label7;
+        private TextBox TBTag;
+        private Label LTag;
+        private Button Ok;
+        private Button Cancel;
+        private TextBox TBAdress2;
+        private Label label10;
     }
 }

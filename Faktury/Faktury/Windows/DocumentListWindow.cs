@@ -1,12 +1,23 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
+using Faktury.Classes;
+using Faktury.Print_Framework;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
-    public partial class DocumentListWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class DocumentListWindow : DockContent
     {
-        public DocumentListWindow()
+        private readonly SettingsAccessor _settingsAccessor;
+        private readonly ModelStore _modelStore;
+        private readonly PrintEngine _printEngine;
+
+        public DocumentListWindow(ModelStore modelStore, PrintEngine printEngine, SettingsAccessor settingsAccessor)
         {
+            _settingsAccessor = settingsAccessor;
+            _modelStore = modelStore;
+            _printEngine = printEngine;
             InitializeComponent();
         }
 
@@ -15,18 +26,21 @@ namespace Faktury.Windows
             MainForm.Instance.dokumentyToolStripMenuItem.Checked = false;
         }
 
-        private ListViewItem GetListViewItemFromDocument(Classes.Document document)
+        private ListViewItem GetListViewItemFromDocument(Document document)
         {
             ListViewItem newItem = new ListViewItem(document.Number.ToString());
             newItem.SubItems.Add(document.Year.ToString());
             newItem.SubItems.Add(document.Name);
-            Classes.Company currentCompany = MainForm.Instance.Companies.Find(n => n.Id == document.CompanyId);
+            Company currentCompany = _modelStore.Companies.Find(n => n.Id == document.CompanyId);
             if (currentCompany != null)
             {
                 newItem.SubItems.Add(currentCompany.Tag);
-                newItem.SubItems.Add(document.IssueDate.ToString());
+                newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
 
-                if (document.Paid) newItem.SubItems.Add("Tak");
+                if (document.Paid)
+                {
+                    newItem.SubItems.Add("Tak");
+                }
                 else newItem.SubItems.Add("Nie");
 
                 return newItem;
@@ -42,13 +56,13 @@ namespace Faktury.Windows
         public void Reload()
         {
             LVDocuments.Items.Clear();
-            foreach (var currentDocument in MainForm.Instance.Documents)
+            foreach (var currentDocument in _modelStore.Documents)
             {
                     //throw exception if something is wrong
-                    if(cBYearFilter.Checked == true)
+                    if(cBYearFilter.Checked)
                         if (currentDocument.Year != nUDYear.Value) continue;
 
-                    if (cBDateFilter.Checked == true)
+                    if (cBDateFilter.Checked)
                     {
                         DateTime checkDate = currentDocument.IssueDate;
 
@@ -57,11 +71,11 @@ namespace Faktury.Windows
                         if (RBOlderThan.Checked && checkDate.CompareTo(DTPDateFilter.Value) <= 0) continue;
                     }
 
-                    if(CxBCompanyTagFilter.Checked == true)
+                    if(CxBCompanyTagFilter.Checked)
                         if (currentDocument.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) continue;
 
-                    if (CxBNameFilter.Checked == true)
-                        if (currentDocument.Name.ToLower().IndexOf(TBName.Text.ToLower()) == -1) continue;
+                    if (CxBNameFilter.Checked)
+                        if (currentDocument.Name.ToLower().IndexOf(TBName.Text.ToLower(), StringComparison.Ordinal) == -1) continue;
 
                     if (CxBPaidFilter.Checked)
                     {
@@ -78,7 +92,7 @@ namespace Faktury.Windows
 
         private void AutoReload()
         {
-            if (cBAutoRefreshList.Checked == true) Reload();
+            if (cBAutoRefreshList.Checked) Reload();
         }
 
         private void DocumentList_Activated(object sender, EventArgs e)
@@ -90,31 +104,30 @@ namespace Faktury.Windows
         {
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
 
-            _lvwColumnSorter = new ListViewColumnSorter();
-            _lvwColumnSorter.SortByPrev = true;
-            _lvwColumnSorter.ColumnToSort = 1;
+            _lvwColumnSorter = new ListViewColumnSorter {SortByPrev = true, ColumnToSort = 1};
             LVDocuments.ListViewItemSorter = _lvwColumnSorter;
             LVDocuments.Sort();
 
             #region InitButtons
             //main filters checkboxes
-            CxBNameFilter.Checked = MainForm.Instance.Settings.DocumentFilterName;
+            var editorSettings = _settingsAccessor.GetSettings();
+            CxBNameFilter.Checked = editorSettings.DocumentFilterName;
             CxBNameFilter_CheckedChanged(null, null);
-            CxBCompanyTagFilter.Checked = MainForm.Instance.Settings.DocumentFilterCompany;
+            CxBCompanyTagFilter.Checked = editorSettings.DocumentFilterCompany;
             CxBCompanyTagFilter_CheckedChanged(null, null);
-            cBYearFilter.Checked = MainForm.Instance.Settings.DocumentFilterYear;
+            cBYearFilter.Checked = editorSettings.DocumentFilterYear;
             cBYearFilter_CheckedChanged(null, null);
 
             //paynament filters
-            CxBPaidFilter.Checked = GBPaynamentFilter.Enabled = MainForm.Instance.Settings.DocumentFilterPaynament;
-            if (MainForm.Instance.Settings.DocumentFilterPaidOnly)RBPaidFilter.Checked = true;
+            CxBPaidFilter.Checked = GBPaynamentFilter.Enabled = editorSettings.DocumentFilterPaynament;
+            if (editorSettings.DocumentFilterPaidOnly)RBPaidFilter.Checked = true;
             else RBUnpaidFilter.Checked = true;
             //main filters values
-            nUDYear.Value = MainForm.Instance.Settings.DocumentFilterYearValue;
-            TBName.Text = MainForm.Instance.Settings.DocumentFilterNameValue;
+            nUDYear.Value = editorSettings.DocumentFilterYearValue;
+            TBName.Text = editorSettings.DocumentFilterNameValue;
             foreach(ComboBoxItem item in CBCompanyTag.Items)
             {
-                if (item.Id == MainForm.Instance.Settings.DocumentFilterCompanyValue)
+                if (item.Id == editorSettings.DocumentFilterCompanyValue)
                 {
                     CBCompanyTag.SelectedItem = item;
                     break;
@@ -123,24 +136,24 @@ namespace Faktury.Windows
             
             //date checkbox
             groupBoxDateFilter.Enabled = cBDateFilter.Checked;
-            DTPDateFilter.Value = MainForm.Instance.Settings.DocumentFilterDateTime;
+            DTPDateFilter.Value = editorSettings.DocumentFilterDateTime;
 
             //date radiobutons
-            RBFromDay.Checked = MainForm.Instance.Settings.DocumentFilterDateNow;
+            RBFromDay.Checked = editorSettings.DocumentFilterDateNow;
             RBFromDay_CheckedChanged(null, null);
-            RBOlderThan.Checked = MainForm.Instance.Settings.DocumentFilterDateOlder;
+            RBOlderThan.Checked = editorSettings.DocumentFilterDateOlder;
             RBOlderThan_CheckedChanged(null, null);
-            RBYoungerThan.Checked = MainForm.Instance.Settings.DocumentFilterDateYounger;
+            RBYoungerThan.Checked = editorSettings.DocumentFilterDateYounger;
             RBYoungerThan_CheckedChanged(null, null);
 
 
             //context menu buttons
 
             //filtry
-            pokażFiltryToolStripMenuItem.Checked = MainForm.Instance.Settings.DocumentShowFilters;
+            pokażFiltryToolStripMenuItem.Checked = editorSettings.DocumentShowFilters;
             pokażFiltryToolStripMenuItem_Click(null, null);
             //autouzupełnianie
-            cBAutoRefreshList.Checked = MainForm.Instance.Settings.DocumentAutoRefresh;
+            cBAutoRefreshList.Checked = editorSettings.DocumentAutoRefresh;
             cBAutoRefreshList_Click(null, null);
 
             #endregion
@@ -153,47 +166,47 @@ namespace Faktury.Windows
         #region Contol
         private void RBYoungerThan_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterDateYounger = RBYoungerThan.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterDateYounger = RBYoungerThan.Checked;
             AutoReload();
         }
 
         private void RBFromDay_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterDateNow = RBFromDay.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterDateNow = RBFromDay.Checked;
             AutoReload();
         }
 
         private void RBOlderThan_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterDateOlder = RBOlderThan.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterDateOlder = RBOlderThan.Checked;
             AutoReload();
         }
 
         private void cBYearFilter_CheckedChanged(object sender, EventArgs e)
         {
             nUDYear.Enabled = cBYearFilter.Checked;
-            MainForm.Instance.Settings.DocumentFilterYear = cBYearFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterYear = cBYearFilter.Checked;
             AutoReload();
         }
 
         private void cBDate_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxDateFilter.Enabled = cBDateFilter.Checked;
-            MainForm.Instance.Settings.DocumentFilterDate = cBDateFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterDate = cBDateFilter.Checked;
             AutoReload();
         }
         #endregion
         private void CxBCompanyTagFilter_CheckedChanged(object sender, EventArgs e)
         {
             CBCompanyTag.Enabled = CxBCompanyTagFilter.Checked;
-            MainForm.Instance.Settings.DocumentFilterCompany = CxBCompanyTagFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterCompany = CxBCompanyTagFilter.Checked;
             AutoReload();
         }
 
         private void CxBNameFilter_CheckedChanged(object sender, EventArgs e)
         {
             TBName.Enabled = CxBNameFilter.Checked;
-            MainForm.Instance.Settings.DocumentFilterName = CxBNameFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterName = CxBNameFilter.Checked;
             AutoReload();
         }
 
@@ -203,34 +216,32 @@ namespace Faktury.Windows
 
         private void nUDYear_ValueChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterYearValue = (int)nUDYear.Value;
+            var editorSettings = _settingsAccessor.GetSettings();
+            editorSettings.DocumentFilterYearValue = (int)nUDYear.Value;
             AutoReload();
         }
-
-        private void CBOwnerCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            AutoReload();
-        }
-
+        
         private void CBCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
+            var editorSettings = _settingsAccessor.GetSettings();
+            editorSettings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
             AutoReload();
         }
 
         private void TBName_TextChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterNameValue = TBName.Text;
+            var editorSettings = _settingsAccessor.GetSettings();
+            editorSettings.DocumentFilterNameValue = TBName.Text;
             AutoReload();
         }
 
         private void DTPDateFilter_ValueChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterDateTime = DTPDateFilter.Value;
+            var editorSettings = _settingsAccessor.GetSettings();
+            editorSettings.DocumentFilterDateTime = DTPDateFilter.Value;
             AutoReload();
         }
         
-
         #endregion
 
         #region ContextMenu
@@ -245,7 +256,7 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            MainForm.Instance.Documents.Remove(MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
+                            _modelStore.Documents.Remove(_modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -266,7 +277,7 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            MainForm.Instance.OpenDocument(MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
+                            MainForm.Instance.OpenDocument(_modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -295,12 +306,12 @@ namespace Faktury.Windows
         private void pokażFiltryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Visible = pokażFiltryToolStripMenuItem.Checked;
-            MainForm.Instance.Settings.DocumentShowFilters = pokażFiltryToolStripMenuItem.Checked;
+            _settingsAccessor.GetSettings().DocumentShowFilters = pokażFiltryToolStripMenuItem.Checked;
         }
 
         private void cBAutoRefreshList_Click(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentAutoRefresh = cBAutoRefreshList.Checked;
+            _settingsAccessor.GetSettings().DocumentAutoRefresh = cBAutoRefreshList.Checked;
             AutoReload();
         }
 
@@ -312,7 +323,7 @@ namespace Faktury.Windows
                 {
                     try
                     {
-                        Classes.Document doc = MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        Document doc = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
                         doc.Paid = true;
                         Reload();
                     }
@@ -333,7 +344,7 @@ namespace Faktury.Windows
                 {
                     try
                     {
-                        Classes.Document doc = MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        Document doc = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
                         doc.Paid = false;
                         Reload();
                     }
@@ -356,7 +367,8 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)).ShowPreview();
+                            var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                            new DocumentPrinter(_modelStore, _settingsAccessor,  document).ShowPreview(_printEngine);
                         }
                         catch (Exception ex)
                         {
@@ -375,7 +387,8 @@ namespace Faktury.Windows
                 {
                     try
                     {
-                        MainForm.Instance.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)).Print();
+                        var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        new DocumentPrinter(_modelStore, _settingsAccessor, document).Print(_printEngine);
                     }
                     catch (Exception ex)
                     {
@@ -388,14 +401,14 @@ namespace Faktury.Windows
 
         private void CxBPaidOnlyFilter_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterPaynament = CxBPaidFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterPaynament = CxBPaidFilter.Checked;
             GBPaynamentFilter.Enabled = CxBPaidFilter.Checked;
             AutoReload();
         }
 
         private void RBPaidFilter_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Instance.Settings.DocumentFilterPaidOnly = RBPaidFilter.Checked;
+            _settingsAccessor.GetSettings().DocumentFilterPaidOnly = RBPaidFilter.Checked;
             AutoReload();
         }
 

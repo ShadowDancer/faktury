@@ -9,7 +9,14 @@ namespace Faktury.Data.Xml
 {
     public class DocumentXmlSerializer
     {
-        public static XmlElement GetXmlElement(Document document, XmlDocument xmlDoc)
+        private readonly ModelStore _modelStore;
+
+        public DocumentXmlSerializer(ModelStore modelStore)
+        {
+            _modelStore = modelStore;
+        }
+
+        public XmlElement GetXmlElement(Document document, XmlDocument xmlDoc)
         {
             XmlElement documentElement = xmlDoc.CreateElement("Document");
 
@@ -58,11 +65,11 @@ namespace Faktury.Data.Xml
             #endregion
 
             XmlElement payment = xmlDoc.CreateElement("Paynament");
-            payment.InnerText = document.Paynament;
+            payment.InnerText = document.Payment;
             documentElement.AppendChild(payment);
 
             XmlElement paymentTime = xmlDoc.CreateElement("PaynamentTime");
-            paymentTime.InnerText = document.PaynamentTime;
+            paymentTime.InnerText = document.PaymentTime;
             documentElement.AppendChild(paymentTime);
 
             XmlElement name = xmlDoc.CreateElement("Name");
@@ -90,7 +97,7 @@ namespace Faktury.Data.Xml
             return documentElement;
         }
 
-        public static Document GetDocumentFromXml(XmlNode element)
+        public Document GetDocumentFromXml(XmlNode element)
         {
             Document newDocument = new Document();
 
@@ -98,7 +105,7 @@ namespace Faktury.Data.Xml
             if (element["CompanyTag"] != null)
             {
                 string text = element["CompanyTag"].InnerText;
-                Company comp = Windows.MainForm.Instance.Companies.Find(n => n.Tag == text);
+                Company comp = _modelStore.Companies.Find(n => n.Tag == text);
                 newDocument.CompanyId = comp.Id;
             }
 
@@ -106,8 +113,8 @@ namespace Faktury.Data.Xml
             newDocument.IssueDate = new DateTime(int.Parse(element["IssueDate"]["Year"].InnerText), int.Parse(element["IssueDate"]["Month"].InnerText), int.Parse(element["IssueDate"]["Day"].InnerText));
             newDocument.SellDate = new DateTime(int.Parse(element["SellDate"]["Year"].InnerText), NumberToWordConventer.ConvertMonthToNumber(element["SellDate"]["Month"].InnerText), int.Parse(element["SellDate"]["Day"].InnerText));
 
-            newDocument.Paynament = element["Paynament"].InnerText;
-            newDocument.PaynamentTime = element["PaynamentTime"].InnerText;
+            newDocument.Payment = element["Paynament"].InnerText;
+            newDocument.PaymentTime = element["PaynamentTime"].InnerText;
             newDocument.Name = element["Name"].InnerText;
             newDocument.DefaultName = Convert.ToBoolean(element["DefaultName"].InnerText);
             newDocument.Number = Convert.ToInt32 (element["Number"].InnerText);

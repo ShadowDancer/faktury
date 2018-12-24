@@ -1,4 +1,4 @@
-﻿using System.Drawing; 
+﻿using System.Drawing;
 
 namespace Faktury.Print_Framework.Vertical
 {

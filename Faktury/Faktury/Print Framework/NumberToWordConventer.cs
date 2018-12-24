@@ -230,7 +230,8 @@ namespace Faktury.Print_Framework
                         return 2;
                 }
             }
-            else return 2;
+
+            return 2;
 
         }
 

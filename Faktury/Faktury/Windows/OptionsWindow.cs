@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Windows.Forms;
 using Faktury.Classes;
+using Faktury.Data.Xml;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
     public partial class OptionsWindow : DockContent
     {
-        public OptionsWindow()
+        private readonly SettingsAccessor _settingsAccessor;
+        private readonly ModelStoreLoader _storeLoader;
+        private ModelStore ModelStore { get; }
+        private BackupManager BackupManager { get; }
+
+        public OptionsWindow(ModelStore modelStore, BackupManager backupManager, SettingsAccessor settingsAccessor, ModelStoreLoader storeLoader)
         {
+            _settingsAccessor = settingsAccessor;
+            _storeLoader = storeLoader;
+            ModelStore = modelStore;
+            BackupManager = backupManager;
             InitializeComponent();
         }
 
@@ -22,9 +32,7 @@ namespace Faktury.Windows
         {
             if (MainForm.Instance.OpenDataFolder.ShowDialog() == DialogResult.OK)
             {
-                MainForm.Instance.LoadCompaniesFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
-                MainForm.Instance.LoadDocumentsFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
-                MainForm.Instance.LoadServicesFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
+                _storeLoader.LoadDataFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
             }
         }
@@ -33,9 +41,7 @@ namespace Faktury.Windows
         {
             if (MainForm.Instance.OpenDataFolder.ShowDialog() == DialogResult.OK)
             {
-                MainForm.Instance.SaveCompaniesToFile(MainForm.Instance.OpenDataFolder.SelectedPath);
-                MainForm.Instance.SaveDocumentsToFile(MainForm.Instance.OpenDataFolder.SelectedPath);
-                MainForm.Instance.SaveServicesToFile(MainForm.Instance.OpenDataFolder.SelectedPath);
+                _storeLoader.SaveDataToDirectory(MainForm.Instance.OpenDataFolder.SelectedPath);
             }
         }
 
@@ -51,15 +57,6 @@ namespace Faktury.Windows
             }
         }
 
-        private void DocumentsClean_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Czy na pewno?\r\n", "Wyczyść dokumenty", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-            {
-                MainForm.Instance.CleanDocuments();
-                MessageBox.Show("Aby przywrócić dane użyj przycisku \"Wczytaj kopię bezpieczeństwa\" w menu opcji.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
         #endregion
 
         private void OptionsWindow_Load(object sender, EventArgs e)
@@ -71,11 +68,12 @@ namespace Faktury.Windows
         {
             LBUnit.Items.Clear();
             LBVat.Items.Clear();
-            foreach (var currentString in MainForm.Instance.Settings.PropertiesVat)
+            var editorSettings = _settingsAccessor.GetSettings();
+            foreach (var currentString in editorSettings.PropertiesVat)
             {
                 LBVat.Items.Add(currentString);
             }
-            foreach (var currentString in MainForm.Instance.Settings.PropertiesUnit)
+            foreach (var currentString in editorSettings.PropertiesUnit)
             {
                 LBUnit.Items.Add(currentString);
             }
@@ -84,21 +82,21 @@ namespace Faktury.Windows
 
         private void LoadBackup_Click(object sender, EventArgs e)
         {
-            new LoadBackup().ShowDialog();
+            new LoadBackup(BackupManager).ShowDialog();
         }
 
         private void BAddVat_Click(object sender, EventArgs e)
         {
             if (TBInput.Text.Length > 0)
             {
-                if (MainForm.Instance.Settings.PropertiesVat.Find(n => n.Equals(TBInput.Text)) != null)
+                var editorSettings = _settingsAccessor.GetSettings();
+                if (editorSettings.PropertiesVat.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
                 else
                 {
-                    MainForm.Instance.Settings.PropertiesVat.Add(TBInput.Text);
+                    editorSettings.PropertiesVat.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -109,14 +107,14 @@ namespace Faktury.Windows
         {
             if (TBInput.Text.Length > 0)
             {
-                if (MainForm.Instance.Settings.PropertiesUnit.Find(n => n.Equals(TBInput.Text)) != null)
+                var editorSettings = _settingsAccessor.GetSettings();
+                if (editorSettings.PropertiesUnit.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
                 else
                 {
-                    MainForm.Instance.Settings.PropertiesUnit.Add(TBInput.Text);
+                    editorSettings.PropertiesUnit.Add(TBInput.Text);
                     ReloadLists();
                 }
             }
@@ -127,15 +125,15 @@ namespace Faktury.Windows
         {
             if (LBVat.SelectedItem != null)
             {
-                if (MainForm.Instance.Settings.PropertiesVat.Find(n => n.Equals(LBVat.Text)) != null)
+                var editorSettings = _settingsAccessor.GetSettings();
+                if (editorSettings.PropertiesVat.Find(n => n.Equals(LBVat.Text)) != null)
                 {
-                    MainForm.Instance.Settings.PropertiesVat.Remove(LBVat.Text);
+                    editorSettings.PropertiesVat.Remove(LBVat.Text);
                     ReloadLists();
                 }
                 else
                 {
                     MessageBox.Show("Zbiór nie zawiera wartości!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
             }
             else MessageBox.Show("Wybierz z listy wartość do usunięcia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -145,15 +143,15 @@ namespace Faktury.Windows
         {
             if (LBUnit.SelectedItem != null)
             {
-                if (MainForm.Instance.Settings.PropertiesUnit.Find(n => n.Equals(LBUnit.Text)) != null)
+                var editorSettings = _settingsAccessor.GetSettings();
+                if (editorSettings.PropertiesUnit.Find(n => n.Equals(LBUnit.Text)) != null)
                 {
-                    MainForm.Instance.Settings.PropertiesUnit.Remove(LBUnit.Text);
+                    editorSettings.PropertiesUnit.Remove(LBUnit.Text);
                     ReloadLists();
                 }
                 else
                 {
                     MessageBox.Show("Zbiór nie zawiera wartości!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
             }
             else MessageBox.Show("Wybierz z listy wartość do usunięcia!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -166,10 +164,11 @@ namespace Faktury.Windows
 
         public void BSetOwnerData_Click(object sender, EventArgs e)
         {
-            if (MainForm.Instance.Settings.OwnerCompany == null) MainForm.Instance.Settings.OwnerCompany = new Company();
-            CompanyWindow dialog = new CompanyWindow();
-            MainForm.Instance.Settings.OwnerCompany.Bank = true;
-            dialog.Company = (MainForm.Instance.Settings.OwnerCompany);
+            var editorSettings = _settingsAccessor.GetSettings();
+            if (editorSettings.OwnerCompany == null) editorSettings.OwnerCompany = new Company();
+            CompanyWindow dialog = new CompanyWindow(ModelStore);
+            editorSettings.OwnerCompany.Bank = true;
+            dialog.Company = (editorSettings.OwnerCompany);
 
             dialog.AddToCollection = false;
             dialog.ShowDialog(); 
@@ -177,14 +176,14 @@ namespace Faktury.Windows
 
         private void BBackupSettings_Click(object sender, EventArgs e)
         {
-            new BackupSettings().ShowDialog();
+            new BackupSettings(_settingsAccessor).ShowDialog();
         }
         
         private void OptionsReset_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Na pewno?", "Przywróć ustawienia domyślne", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                MainForm.Instance.Settings = new EditorSettings();
+                _settingsAccessor.SetSettings(new EditorSettings());
                 MainForm.Instance.RunFirstUseWizard();
             }   
 
@@ -194,7 +193,7 @@ namespace Faktury.Windows
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                MainForm.Instance.SaveSettingsToFile(saveFileDialog1.FileName);
+                _storeLoader.SaveSettingsToFile(saveFileDialog1.FileName);
             }
         }
 
@@ -202,7 +201,7 @@ namespace Faktury.Windows
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                MainForm.Instance.LoadSettingsFromFile(openFileDialog1.FileName);
+                _storeLoader.LoadSettingsFromFile(openFileDialog1.FileName);
             }
         }
     }

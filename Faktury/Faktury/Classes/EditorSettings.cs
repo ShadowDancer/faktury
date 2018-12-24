@@ -1,35 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Faktury.Classes
 {
-
-    public class CommonDocuments
-    {
-        [DllImport("shell32.dll")]
-        private static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken,
-           uint dwFlags, [Out] StringBuilder pszPath);
-
-        public static string GetCommonDocumentsFolder()
-        {
-            int sidlCommonDocuments = 0x002e;
-            StringBuilder sb = new StringBuilder();
-            SHGetFolderPath(IntPtr.Zero, sidlCommonDocuments, IntPtr.Zero, 0x0000, sb);
-            return sb.ToString();
-        }
-    }
-
     public class EditorSettings
     {
         public Company OwnerCompany = null;
-
-        //SQL database
-        public string SqlAdress = "";
-        public string SqlUser = "";
-        public string SqlPass = "";
-        public string SqlName = "";
 
         //backup
         public bool LocalBackup = true;
@@ -39,7 +15,6 @@ namespace Faktury.Classes
         public bool DeviceBackup = true;
         public string DeviceBackupLabel = "";
         public int DeviceRandomNumber = -1;
-        public int DeviceBackupTotalSpace = 0;
         public int DeviceBackupPeriod = 0;
         public DateTime DeviceBackupLastTime = DateTime.Now;
 
@@ -77,7 +52,5 @@ namespace Faktury.Classes
         public int DocumentFilterDateDayValue = DateTime.Now.Day;
         public int DocumentFilterDateMonthValue = DateTime.Now.Month;
         public int DocumentFilterDateYearValue = DateTime.Now.Year;
-
-        
     }
 }

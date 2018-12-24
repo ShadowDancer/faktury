@@ -1,11 +1,15 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
+
+namespace Faktury.Windows
 {
     partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -660,61 +664,61 @@
         #endregion
 
 
-        private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStrip toolStrip;
-        private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem printSetupToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fileMenu;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editMenu;
-        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolBarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem statusBarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem windowsMenu;
-        private System.Windows.Forms.ToolStripMenuItem closeAllToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpMenu;
-        private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton newToolStripButton;
-        private System.Windows.Forms.ToolStripButton openDocumentToolStripButton;
-        private System.Windows.Forms.ToolStripButton saveToolStripButton;
-        private System.Windows.Forms.ToolStripButton printToolStripButton;
-        private System.Windows.Forms.ToolStripButton printPreviewToolStripButton;
-        private System.Windows.Forms.ToolStripButton helpToolStripButton;
-        private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.ToolStripMenuItem closeCurrentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        public System.Windows.Forms.ToolStripMenuItem opcjeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-        public System.Windows.Forms.ToolStripMenuItem dokumentyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton openCompanyToolStripButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
-        public System.Windows.Forms.ToolStripMenuItem kontrahenciToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton newCompanyToolStripButton;
-        public System.Windows.Forms.ToolStripMenuItem usługiToolStripMenuItem;
-        public WeifenLuo.WinFormsUI.Docking.DockPanel MainDockPanel;
-        public System.Windows.Forms.FolderBrowserDialog OpenDataFolder;
+        private MenuStrip menuStrip;
+        private ToolStrip toolStrip;
+        private StatusStrip statusStrip;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem printSetupToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripStatusLabel toolStripStatusLabel;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem fileMenu;
+        private ToolStripMenuItem newToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem printToolStripMenuItem;
+        private ToolStripMenuItem printPreviewToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem editMenu;
+        private ToolStripMenuItem undoToolStripMenuItem;
+        private ToolStripMenuItem redoToolStripMenuItem;
+        private ToolStripMenuItem cutToolStripMenuItem;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem pasteToolStripMenuItem;
+        private ToolStripMenuItem selectAllToolStripMenuItem;
+        private ToolStripMenuItem viewMenu;
+        private ToolStripMenuItem toolBarToolStripMenuItem;
+        private ToolStripMenuItem statusBarToolStripMenuItem;
+        private ToolStripMenuItem windowsMenu;
+        private ToolStripMenuItem closeAllToolStripMenuItem;
+        private ToolStripMenuItem helpMenu;
+        private ToolStripMenuItem contentsToolStripMenuItem;
+        private ToolStripMenuItem indexToolStripMenuItem;
+        private ToolStripMenuItem searchToolStripMenuItem;
+        private ToolStripButton newToolStripButton;
+        private ToolStripButton openDocumentToolStripButton;
+        private ToolStripButton saveToolStripButton;
+        private ToolStripButton printToolStripButton;
+        private ToolStripButton printPreviewToolStripButton;
+        private ToolStripButton helpToolStripButton;
+        private ToolTip toolTip;
+        private ToolStripMenuItem closeCurrentToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        public ToolStripMenuItem opcjeToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator11;
+        public ToolStripMenuItem dokumentyToolStripMenuItem;
+        private ToolStripButton openCompanyToolStripButton;
+        private ToolStripSeparator toolStripSeparator12;
+        public ToolStripMenuItem kontrahenciToolStripMenuItem;
+        private ToolStripButton newCompanyToolStripButton;
+        public ToolStripMenuItem usługiToolStripMenuItem;
+        public DockPanel MainDockPanel;
+        public FolderBrowserDialog OpenDataFolder;
     }
 }
 

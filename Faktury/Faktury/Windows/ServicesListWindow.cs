@@ -1,21 +1,27 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
+using Faktury.Classes;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
-    public partial class ServicesListWindow : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class ServicesListWindow : DockContent
     {
-        public ServicesListWindow()
+        private ModelStore _modelStore;
+
+        public ServicesListWindow(ModelStore modelStore)
         {
+            _modelStore = modelStore;
             InitializeComponent();
         }
 
         public void Reload()
         {
             LVServices.Items.Clear();
-            foreach (Classes.Service service in MainForm.Instance.Services)
+            foreach (Service service in _modelStore.Services)
             {
-                LVServices.Items.Add(new ListViewItem(new string[] {service.Id.ToString(), service.Name.ToString(), service.Jm.ToString(), service.Price.ToString()} ));
+                LVServices.Items.Add(new ListViewItem(new[] {service.Id.ToString(), service.Name, service.Jm, service.Price.ToString(CultureInfo.CurrentCulture)} ));
             }
         }
 
@@ -47,8 +53,8 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Classes.Service serviceToEdit = null;
-                    serviceToEdit = MainForm.Instance.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    Service serviceToEdit = null;
+                    serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.EditService(serviceToEdit);
@@ -65,8 +71,8 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    Classes.Service serviceToEdit = null;
-                    serviceToEdit = MainForm.Instance.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    Service serviceToEdit = null;
+                    serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.DeleteService(serviceToEdit);

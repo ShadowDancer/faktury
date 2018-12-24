@@ -1,11 +1,14 @@
-﻿namespace Faktury.Windows
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Faktury.Windows
 {
     partial class DocumentListWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -518,47 +521,47 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.NumericUpDown nUDYear;
-        private System.Windows.Forms.CheckBox cBYearFilter;
-        private System.Windows.Forms.GroupBox groupBoxDateFilter;
-        private System.Windows.Forms.CheckBox cBDateFilter;
-        private System.Windows.Forms.TextBox TBName;
-        private System.Windows.Forms.ComboBox CBCompanyTag;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ListView LVDocuments;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem edytujToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem odświeżToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem zamknijToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nowyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cBAutoRefreshList;
-        private System.Windows.Forms.ToolStripMenuItem pokażFiltryToolStripMenuItem;
-        private System.Windows.Forms.RadioButton RBOlderThan;
-        private System.Windows.Forms.RadioButton RBFromDay;
-        private System.Windows.Forms.RadioButton RBYoungerThan;
-        private System.Windows.Forms.CheckBox CxBNameFilter;
-        private System.Windows.Forms.CheckBox CxBCompanyTagFilter;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem płatnośćToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem oznaczJakoZapłaconeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem oznaczJakoNiezapłaconeToolStripMenuItem;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.DateTimePicker DTPDateFilter;
-        private System.Windows.Forms.CheckBox CxBPaidFilter;
-        private System.Windows.Forms.GroupBox GBPaynamentFilter;
-        private System.Windows.Forms.RadioButton RBUnpaidFilter;
-        private System.Windows.Forms.RadioButton RBPaidFilter;
+        private GroupBox groupBox1;
+        private NumericUpDown nUDYear;
+        private CheckBox cBYearFilter;
+        private GroupBox groupBoxDateFilter;
+        private CheckBox cBDateFilter;
+        private TextBox TBName;
+        private ComboBox CBCompanyTag;
+        private GroupBox groupBox3;
+        private ListView LVDocuments;
+        private Panel panel1;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader6;
+        private Panel panel2;
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripMenuItem edytujToolStripMenuItem;
+        private ToolStripMenuItem usuńToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem odświeżToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem zamknijToolStripMenuItem;
+        private ToolStripMenuItem nowyToolStripMenuItem;
+        private ToolStripMenuItem cBAutoRefreshList;
+        private ToolStripMenuItem pokażFiltryToolStripMenuItem;
+        private RadioButton RBOlderThan;
+        private RadioButton RBFromDay;
+        private RadioButton RBYoungerThan;
+        private CheckBox CxBNameFilter;
+        private CheckBox CxBCompanyTagFilter;
+        private ColumnHeader columnHeader5;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem płatnośćToolStripMenuItem;
+        private ToolStripMenuItem oznaczJakoZapłaconeToolStripMenuItem;
+        private ToolStripMenuItem oznaczJakoNiezapłaconeToolStripMenuItem;
+        private Panel panel3;
+        private DateTimePicker DTPDateFilter;
+        private CheckBox CxBPaidFilter;
+        private GroupBox GBPaynamentFilter;
+        private RadioButton RBUnpaidFilter;
+        private RadioButton RBPaidFilter;
     }
 }
