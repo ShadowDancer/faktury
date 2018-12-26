@@ -2,9 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using static System.String;
 
-namespace Faktury.Print_Framework
+namespace Faktury.Classes
 {
     internal class NumberToWordConventer
     {
@@ -55,7 +54,7 @@ namespace Faktury.Print_Framework
         {
             if (n == 0)
             {
-                return Empty;
+                return String.Empty;
             }
             
             StringBuilder valueInWords = new StringBuilder();
@@ -158,9 +157,9 @@ namespace Faktury.Print_Framework
             return valueInWords.ToString();
         }
 
-        public static string ConvertValues(float value)
+        public static string ConvertValues(decimal value)
         {
-            string stringVal = value.ToString(CultureInfo.CurrentCulture);
+            string stringVal = value.ToString(CultureInfo.InvariantCulture);
             string[] data = { stringVal };
             if (stringVal.Contains('.'))
             {

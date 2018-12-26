@@ -22,9 +22,9 @@ namespace Faktury.Windows
 
         private void Reload()
         {
-            float totalNetto = 0;
-            float totalBrutto = 0;
-            float totalVat = 0;
+            decimal totalNetto = 0;
+            decimal totalBrutto = 0;
+            decimal totalVat = 0;
 
             for (int i = 0; i < LVEServices.Items.Count; i++)
             {
@@ -34,17 +34,18 @@ namespace Faktury.Windows
                     LVEServices.Items[i].Text = (i + 1).ToString();
 
                     //Wartość Netto
-                    float netto = (float)Math.Round((Convert.ToSingle(LVEServices.Items[i].SubItems[2].Text) * Convert.ToSingle(LVEServices.Items[i].SubItems[3].Text)), 2);
+                    decimal netto = Math.Round(Convert.ToDecimal(LVEServices.Items[i].SubItems[2].Text) * Convert.ToDecimal(LVEServices.Items[i].SubItems[3].Text), 2, MidpointRounding.AwayFromZero);
                     totalNetto += netto;
                     LVEServices.Items[i].SubItems[5].Text = netto.ToString("0.00");
 
                     //vat
-                    float vat = (float)Math.Round(netto * (float.Parse(LVEServices.Items[i].SubItems[8].Text) / 100), 2);
+                    var rate = VatRate.FromString(LVEServices.Items[i].SubItems[8].Text);
+                    decimal vat = Math.Round(netto * (rate.VatPercent / 100.0m), 2, MidpointRounding.AwayFromZero);
                     totalVat += vat;
                     LVEServices.Items[i].SubItems[6].Text = vat.ToString("0.00");
 
                     //Wartość Brutto
-                    float brutto = (float)Math.Round(netto + vat, 2);
+                    decimal brutto = Math.Round(netto + vat, 2, MidpointRounding.AwayFromZero);
                     totalBrutto += brutto;
                     LVEServices.Items[i].SubItems[7].Text = brutto.ToString("0.00");
                 }
@@ -54,9 +55,9 @@ namespace Faktury.Windows
                 }
             }
 
-            totalNetto = (float)Math.Round(totalNetto, 2);
-            totalVat = (float)Math.Round(totalVat, 2);
-            totalBrutto = (float)Math.Round(totalBrutto, 2);
+            totalNetto = Math.Round(totalNetto, 2);
+            totalVat = Math.Round(totalVat, 2);
+            totalBrutto = Math.Round(totalBrutto, 2);
 
             TBTotalNetto.Text = totalNetto.ToString("0.00");
             TBTotalVAT.Text = totalVat.ToString("0.00");
@@ -82,13 +83,13 @@ namespace Faktury.Windows
             {
                 ListViewItem newItem = new ListViewItem();
                 newItem.SubItems.Add(currentRecord.Name);
-                newItem.SubItems.Add(currentRecord.Cost.ToString(CultureInfo.CurrentCulture));
-                newItem.SubItems.Add(currentRecord.Count.ToString(CultureInfo.CurrentCulture));
+                newItem.SubItems.Add(currentRecord.PriceNet.ToString(CultureInfo.CurrentCulture));
+                newItem.SubItems.Add(currentRecord.Quantity.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add(currentRecord.Unit);
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
-                newItem.SubItems.Add(currentRecord.VatPercent.ToString(CultureInfo.CurrentCulture));
+                newItem.SubItems.Add(currentRecord.VatRate.ToString());
                 
                 LVEServices.Items.Add(newItem);
             }
@@ -99,9 +100,9 @@ namespace Faktury.Windows
         public void Save(Document document)
         {
             DocumentSummary documentSummary = document.DocumentSummary;
-            documentSummary.Brutto =  Convert.ToSingle(TBTotalBrutto.Text);
-            documentSummary.Netto =  Convert.ToSingle(TBTotalNetto.Text);
-            documentSummary.TotalVat =  Convert.ToSingle(TBTotalVAT.Text);
+            documentSummary.TotalGross =  Convert.ToDecimal(TBTotalBrutto.Text);
+            documentSummary.TotalNet =  Convert.ToDecimal(TBTotalNetto.Text);
+            documentSummary.TotalVat =  Convert.ToDecimal(TBTotalVAT.Text);
 
             documentSummary.InWords = TBSlownie.Text;
 
@@ -111,13 +112,13 @@ namespace Faktury.Windows
                 DocumentItem newRecord = new DocumentItem
                 {
                     Name = currentItem.SubItems[1].Text,
-                    Cost = Convert.ToSingle(currentItem.SubItems[2].Text),
-                    Count = Convert.ToSingle(currentItem.SubItems[3].Text),
+                    PriceNet = Convert.ToDecimal(currentItem.SubItems[2].Text),
+                    Quantity = Convert.ToDecimal(currentItem.SubItems[3].Text),
                     Unit = currentItem.SubItems[4].Text,
-                    Netto = Convert.ToSingle(currentItem.SubItems[5].Text),
-                    Vat = Convert.ToSingle(currentItem.SubItems[6].Text),
-                    Brutto = Convert.ToSingle(currentItem.SubItems[7].Text),
-                    VatPercent = Convert.ToSingle(currentItem.SubItems[8].Text)
+                    SumNet = Convert.ToDecimal(currentItem.SubItems[5].Text),
+                    SumVat = Convert.ToDecimal(currentItem.SubItems[6].Text),
+                    VatRate = VatRate.FromString(currentItem.SubItems[8].Text),
+                    SumGross = Convert.ToDecimal(currentItem.SubItems[7].Text),
                 };
 
                 document.Items.Add(newRecord);
@@ -155,10 +156,10 @@ namespace Faktury.Windows
 
         private void RecordAdd_Click(object sender, EventArgs e)
         {
-            Service check;
+            Service service;
             try
             {
-                check = ModelStore.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                service = ModelStore.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
 
             }
             catch
@@ -170,14 +171,14 @@ namespace Faktury.Windows
             Changed = true;
             ListViewItem newItem = new ListViewItem("");
             {
-                newItem.SubItems.Add(check.Name);
-                newItem.SubItems.Add(check.Price.ToString(CultureInfo.CurrentCulture));
+                newItem.SubItems.Add(service.Name);
+                newItem.SubItems.Add(service.PriceNet.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add("0");
-                newItem.SubItems.Add(check.Jm);
+                newItem.SubItems.Add(service.Unit);
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
-                newItem.SubItems.Add(check.Vat.ToString());
+                newItem.SubItems.Add(service.Vat.ToString());
             }
 
             LVEServices.Items.Add(newItem);
@@ -202,8 +203,8 @@ namespace Faktury.Windows
             if (LVEServices.SelectedItems.Count > 0)
             {
                 LVEServices.SelectedItems[0].SubItems[1].Text = check.Name;
-                LVEServices.SelectedItems[0].SubItems[2].Text = check.Price.ToString(CultureInfo.CurrentCulture);
-                LVEServices.SelectedItems[0].SubItems[4].Text = check.Jm;
+                LVEServices.SelectedItems[0].SubItems[2].Text = check.PriceNet.ToString(CultureInfo.CurrentCulture);
+                LVEServices.SelectedItems[0].SubItems[4].Text = check.Unit;
                 LVEServices.SelectedItems[0].SubItems[8].Text = check.Vat.ToString();
 
                 Reload();

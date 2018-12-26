@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
-using Faktury.Classes.Printing;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -35,16 +34,11 @@ namespace Faktury.Windows
 
                 if(Document.IssueDate != DTPIssueDate.Value) return true;
                 if(Document.SellDate != DTPSellDate.Value) return true;
-                if(Document.Payment != CBPaynament.Text) return true;
+                if(Document.PaymentType != CBPaynament.Text) return true;
                 if(Document.PaymentTime != TBPaynamentTime.Text) return true;
-
-                if(Document.Name != TBName.Text) return true;
-                if(Document.DefaultName != cBDefaultName.Checked) return true;
 
                 if(Document.Number != (int)nUDNumber.Value) return true;
                 if(Document.Year != (int)nUDYear.Value) return true;
-
-                if (Document.Paid != CxBPaid.Checked) return true;
 
                 if (documentProperties.Changed) return true;
 
@@ -90,32 +84,18 @@ namespace Faktury.Windows
 
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
-            document.Payment = CBPaynament.Text;
+            document.PaymentType = CBPaynament.Text;
             document.PaymentTime = TBPaynamentTime.Text;
-
-            document.Name = TBName.Text;
-            document.DefaultName = cBDefaultName.Checked;
 
             document.Number = (int)nUDNumber.Value;
             document.Year = (int)nUDYear.Value;
-
-            document.Paid = CxBPaid.Checked;
-
-
+            
             documentProperties.Save(document);
         }
 
         private void DocumentWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !OrderClose();
-        }
-
-        private void SetDefaultName()
-        {
-            if (cBDefaultName.Checked)
-            {
-                TBName.Text = nUDNumber.Value.ToString(CultureInfo.CurrentCulture) + ": " + CBCompanyTag.Text + " " + DTPIssueDate.Value.ToLongDateString();
-            }
         }
 
         public void ReloadCompanyCombobox()
@@ -127,17 +107,6 @@ namespace Faktury.Windows
         {
             _modelStore.UpdateHighestDocumentId();
             nUDNumber.Value = _oldNumberValue = _modelStore.NewDocumentId((int)nUDYear.Value);
-        }
-
-        private void cBDefaultName_CheckedChanged(object sender, EventArgs e)
-        {
-            TBName.Enabled = !cBDefaultName.Checked;
-            SetDefaultName();
-        }
-
-        private void CBCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetDefaultName();
         }
 
         private void nUDNumber_ValueChanged(object sender, EventArgs e)
@@ -182,7 +151,6 @@ namespace Faktury.Windows
             }
 
             _oldNumberValue = (int)nUDNumber.Value;
-            SetDefaultName();
         }
 
         private void nUDYear_ValueChanged(object sender, EventArgs e)
@@ -206,7 +174,6 @@ namespace Faktury.Windows
                 Document = Document.CreateNewDocument();
                 nUDYear.Value = DateTime.Today.Year;
                 UpdateId();
-                Document.DefaultName = editorSettings.DocumentSetDefaultNames;
                 CxBSimilarDates.Checked = editorSettings.DocumentCreationDateSameAsSellDate;
                 nUDYear.Enabled = true;
             }
@@ -235,14 +202,8 @@ namespace Faktury.Windows
             DTPIssueDate.Value = Document.IssueDate;
             DTPSellDate.Value = Document.SellDate;
 
-            CBPaynament.Text = Document.Payment;
+            CBPaynament.Text = Document.PaymentType;
             TBPaynamentTime.Text = Document.PaymentTime;
-
-            TBName.Text = Document.Name;
-            cBDefaultName.Checked = Document.DefaultName;
-            TBName.Enabled = !Document.DefaultName;
-
-            CxBPaid.Checked = Document.Paid;
 
             documentProperties.Initialize(Document);
         }

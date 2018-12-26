@@ -21,7 +21,7 @@ namespace Faktury.Windows
             LVServices.Items.Clear();
             foreach (Service service in _modelStore.Services)
             {
-                LVServices.Items.Add(new ListViewItem(new[] {service.Id.ToString(), service.Name, service.Jm, service.Price.ToString(CultureInfo.CurrentCulture)} ));
+                LVServices.Items.Add(new ListViewItem(new[] {service.Id.ToString(), service.Name, service.Unit, service.PriceNet.ToString(CultureInfo.CurrentCulture)} ));
             }
         }
 
@@ -37,7 +37,7 @@ namespace Faktury.Windows
 
         private void MaterialListWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MainForm.Instance.usługiToolStripMenuItem.Checked = false;
+            MainForm.Instance.servicesToolStripMenuItem.Checked = false;
         }
 
         #region ContextMenu

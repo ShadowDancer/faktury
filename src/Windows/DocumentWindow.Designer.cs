@@ -43,13 +43,9 @@ namespace Faktury.Windows
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.DTPIssueDate = new System.Windows.Forms.DateTimePicker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.CxBPaid = new System.Windows.Forms.CheckBox();
             this.TBPaynamentTime = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.CBPaynament = new System.Windows.Forms.ComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cBDefaultName = new System.Windows.Forms.CheckBox();
-            this.TBName = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.CBCompanyTag = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
@@ -61,7 +57,6 @@ namespace Faktury.Windows
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -185,26 +180,15 @@ namespace Faktury.Windows
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.CxBPaid);
             this.groupBox2.Controls.Add(this.TBPaynamentTime);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.CBPaynament);
-            this.groupBox2.Location = new System.Drawing.Point(224, 90);
+            this.groupBox2.Location = new System.Drawing.Point(224, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(206, 71);
+            this.groupBox2.Size = new System.Drawing.Size(206, 59);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Płatność";
-            // 
-            // CxBPaid
-            // 
-            this.CxBPaid.AutoSize = true;
-            this.CxBPaid.Location = new System.Drawing.Point(6, 46);
-            this.CxBPaid.Name = "CxBPaid";
-            this.CxBPaid.Size = new System.Drawing.Size(79, 17);
-            this.CxBPaid.TabIndex = 3;
-            this.CxBPaid.Text = "Zapłacona";
-            this.CxBPaid.UseVisualStyleBackColor = true;
             // 
             // TBPaynamentTime
             // 
@@ -226,39 +210,10 @@ namespace Faktury.Windows
             // 
             this.CBPaynament.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CBPaynament.FormattingEnabled = true;
-            this.CBPaynament.Location = new System.Drawing.Point(6, 19);
+            this.CBPaynament.Location = new System.Drawing.Point(6, 31);
             this.CBPaynament.Name = "CBPaynament";
             this.CBPaynament.Size = new System.Drawing.Size(95, 21);
             this.CBPaynament.TabIndex = 0;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.cBDefaultName);
-            this.groupBox3.Controls.Add(this.TBName);
-            this.groupBox3.Location = new System.Drawing.Point(224, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(206, 72);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Nazwa (opcjonalnie)";
-            // 
-            // cBDefaultName
-            // 
-            this.cBDefaultName.AutoSize = true;
-            this.cBDefaultName.Location = new System.Drawing.Point(6, 45);
-            this.cBDefaultName.Name = "cBDefaultName";
-            this.cBDefaultName.Size = new System.Drawing.Size(72, 17);
-            this.cBDefaultName.TabIndex = 1;
-            this.cBDefaultName.Text = "Domyślna";
-            this.cBDefaultName.UseVisualStyleBackColor = true;
-            this.cBDefaultName.CheckedChanged += new System.EventHandler(this.cBDefaultName_CheckedChanged);
-            // 
-            // TBName
-            // 
-            this.TBName.Location = new System.Drawing.Point(6, 19);
-            this.TBName.Name = "TBName";
-            this.TBName.Size = new System.Drawing.Size(192, 20);
-            this.TBName.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -277,9 +232,7 @@ namespace Faktury.Windows
             this.CBCompanyTag.Location = new System.Drawing.Point(9, 19);
             this.CBCompanyTag.Name = "CBCompanyTag";
             this.CBCompanyTag.Size = new System.Drawing.Size(286, 21);
-            this.CBCompanyTag.Sorted = true;
             this.CBCompanyTag.TabIndex = 3;
-            this.CBCompanyTag.SelectedIndexChanged += new System.EventHandler(this.CBCompanyTag_SelectedIndexChanged);
             // 
             // Ok
             // 
@@ -304,6 +257,7 @@ namespace Faktury.Windows
             // documentProperties
             // 
             this.documentProperties.Location = new System.Drawing.Point(12, 197);
+            this.documentProperties.ModelStore = null;
             this.documentProperties.Name = "documentProperties";
             this.documentProperties.Size = new System.Drawing.Size(725, 284);
             this.documentProperties.TabIndex = 12;
@@ -318,18 +272,17 @@ namespace Faktury.Windows
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
-            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DocumentWindow";
             this.Text = "DocumentWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DocumentWindow_FormClosing);
-            this.Load += new System.EventHandler((sender, e) => this.DocumentWindow_Load(sender, e));
+            this.Load += new System.EventHandler(this.DocumentWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nUDNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDYear)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -339,8 +292,6 @@ namespace Faktury.Windows
             this.groupBox5.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -355,9 +306,6 @@ namespace Faktury.Windows
         private TextBox TBPaynamentTime;
         private Label label3;
         private ComboBox CBPaynament;
-        private GroupBox groupBox3;
-        private CheckBox cBDefaultName;
-        private TextBox TBName;
         private GroupBox groupBox4;
         private ComboBox CBCompanyTag;
         private GroupBox groupBox6;
@@ -366,7 +314,6 @@ namespace Faktury.Windows
         private Button Cancel;
         public NumericUpDown nUDNumber;
         public NumericUpDown nUDYear;
-        private CheckBox CxBPaid;
         private DateTimePicker DTPIssueDate;
         private CheckBox CxBSimilarDates;
         private DateTimePicker DTPSellDate;

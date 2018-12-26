@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
-using Faktury.Print_Framework;
+using Faktury.Classes;
 
-namespace Faktury.Classes.Printing
+namespace Faktury.Print_Framework
 {
     public class DocumentPrinter : IPrintable
     {
@@ -98,14 +99,17 @@ namespace Faktury.Classes.Printing
 
             // number
             element.AddText("Faktura VAT nr: " + _document.Number + "/" + _document.Year, new PointF(50, middlePartPosition + 10));
-
+            if (_document.Items.Any(n => n.VatRate.IsInverseVat))
+            {
+                element.AddText("Odwrotne obciążenie", new PointF(50, middlePartPosition + 40));
+            }
             // dates
             element.AddText($"Data wystawienia: {_document.IssueDate.Day:00}.{_document.IssueDate.Month:00}.{_document.IssueDate.Year}", new PointF(420, middlePartPosition + 30));
             element.AddText(
                 $"Data sprzedaży: {NumberToWordConventer.ConvertNumberToMonth(_document.SellDate.Month.ToString())} {_document.SellDate.Year.ToString()}", new PointF(420, middlePartPosition + 60));
-
+            
             // payment
-            string[] paymentTexts = { "Forma płatności: " + _document.Payment, "Termin płatności: " + _document.PaymentTime };
+            string[] paymentTexts = { "Forma płatności: " + _document.PaymentType, "Termin płatności: " + _document.PaymentTime };
             float[] paymentLengths = { TextRenderer.MeasureText(paymentTexts[0], PrintEngine.Instane.DefaultFont).Width, Graphics.FromHwnd(new IntPtr()).MeasureString(paymentTexts[1], PrintEngine.Instane.DefaultFont).Width };
             PointF[] paymentPositions = { new PointF(475, middlePartPosition + 185), new PointF(475, middlePartPosition + 215) };
 
@@ -169,12 +173,12 @@ namespace Faktury.Classes.Printing
                 input.Add(lp.ToString());
                 input.Add(documentItems[i].Name);
                 input.Add(documentItems[i].Unit);
-                input.Add(documentItems[i].Count.ToString(CultureInfo.CurrentCulture));
-                input.Add(documentItems[i].Cost.ToString("0.00"));
-                input.Add(documentItems[i].Netto.ToString("0.00"));
-                input.Add(documentItems[i].VatPercent.ToString(CultureInfo.CurrentCulture));
-                input.Add(documentItems[i].Vat.ToString("0.00"));
-                input.Add(documentItems[i].Brutto.ToString("0.00"));
+                input.Add(documentItems[i].Quantity.ToString(CultureInfo.CurrentCulture));
+                input.Add(documentItems[i].PriceNet.ToString("0.00"));
+                input.Add(documentItems[i].SumNet.ToString("0.00"));
+                input.Add(documentItems[i].VatRate.ToString());
+                input.Add(documentItems[i].SumVat.ToString("0.00"));
+                input.Add(documentItems[i].SumGross.ToString("0.00"));
 
                 PrintItem(element, position1, fieldSizes, input.ToArray(), extraSmall);
 
@@ -201,13 +205,14 @@ namespace Faktury.Classes.Printing
 
             offset += (int)linePos.Width;
             linePos = new RectangleF(325 + offset, middlePartPosition + 550, 90, 50);
-            element.AddText(_document.DocumentSummary.Netto.ToString("0.00"), sf, extraSmall, null, linePos);
+            element.AddText(_document.DocumentSummary.TotalNet.ToString("0.00"), sf, extraSmall, null, linePos);
             linePos.Y += 50;
-            element.AddText(_document.DocumentSummary.Netto.ToString("0.00"), sf, extraSmall, null, linePos);
+            element.AddText(_document.DocumentSummary.TotalNet.ToString("0.00"), sf, extraSmall, null, linePos);
 
             offset += (int)linePos.Width;
             linePos = new RectangleF(325 + offset, middlePartPosition + 550, 55, 50);
-            element.AddText(23.ToString(), sf, extraSmall, null, linePos);//TODO
+            element.AddText("X", sf, extraSmall, null, linePos);//TODO
+
             linePos.Y += 50;
             element.AddText(23.ToString(), sf, extraSmall, null, linePos);//TODO
 
@@ -219,9 +224,9 @@ namespace Faktury.Classes.Printing
 
             offset += (int)linePos.Width;
             linePos = new RectangleF(325 + offset, middlePartPosition + 550, 100, 50);
-            element.AddText(_document.DocumentSummary.Brutto.ToString("0.00"), sf, extraSmall, null, linePos);
+            element.AddText(_document.DocumentSummary.TotalGross.ToString("0.00"), sf, extraSmall, null, linePos);
             linePos.Y += 50;
-            element.AddText(_document.DocumentSummary.Brutto.ToString("0.00"), sf, extraSmall, null, linePos);
+            element.AddText(_document.DocumentSummary.TotalGross.ToString("0.00"), sf, extraSmall, null, linePos);
 
 
             ////////////////////////

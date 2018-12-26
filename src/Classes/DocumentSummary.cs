@@ -2,9 +2,9 @@
 {
     public class DocumentSummary
     {
-        public float Netto { get; set; }
-        public float TotalVat { get; set; }
-        public float Brutto { get; set; }
+        public decimal TotalNet { get; set; }
+        public decimal TotalVat { get; set; }
+        public decimal TotalGross { get; set; }
 
         public string InWords { get; set; } = "";
     }

@@ -3,22 +3,22 @@
     public class DocumentItem
     {
         /// <summary>
-        /// szt / m / m^2 etc.
+        ///     szt / m / m^2 etc.
         /// </summary>
         public string Unit { get; set; }
 
         public string Name { get; set; }
 
-        public float Cost { get; set; }
+        public decimal PriceNet { get; set; }
 
-        public float Count { get; set; }
+        public decimal Quantity { get; set; }
 
-        public float Netto { get; set; }
-        
-        public float Vat { get; set; }
+        public decimal SumNet { get; set; }
 
-        public float Brutto { get; set; }
+        public decimal SumGross { get; set; }
 
-        public float VatPercent { get; set; }
+        public decimal SumVat { get; set; }
+
+        public VatRate VatRate { get; set; }
     }
 }

@@ -15,8 +15,8 @@ namespace Faktury.Data.Xml
             {
                 Name = xmlElement["Name"].InnerText,
                 Tag = xmlElement["Tag"].InnerText,
-                Jm = xmlElement["jm"].InnerText,
-                Price = Convert.ToSingle(xmlElement["Price"].InnerText),
+                Unit = xmlElement["jm"].InnerText,
+                PriceNet = Convert.ToDecimal(xmlElement["Price"].InnerText),
                 Vat = Convert.ToInt32(xmlElement["Vat"].InnerText),
                 Id = Convert.ToInt32(xmlElement["ID"].InnerText)
             };
@@ -51,8 +51,8 @@ namespace Faktury.Data.Xml
 
             name.InnerText = service.Name;
             tag.InnerText = service.Tag;
-            jm.InnerText = service.Jm;
-            price.InnerText = service.Price.ToString(CultureInfo.CurrentCulture);
+            jm.InnerText = service.Unit;
+            price.InnerText = service.PriceNet.ToString(CultureInfo.CurrentCulture);
             vat.InnerText = service.Vat.ToString();
             idElem.InnerText = service.Id.ToString();
 

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Faktury</RootNamespace>
     <AssemblyName>Faktury</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Paste.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -58,17 +58,16 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.3.1.24483, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>.\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Printing\DocumentPrinter.cs" />
+    <Compile Include="Classes\VatRate.cs" />
+    <Compile Include="Data\Xml\VatRateXmlSerializer.cs" />
+    <Compile Include="Print Framework\DocumentPrinter.cs" />
     <Compile Include="Data\Xml\CompanyToXmlSerializer.cs" />
     <Compile Include="Data\Xml\DocumentXmlSerializer.cs" />
     <Compile Include="Classes\DocumentItem.cs" />
-    <Compile Include="Data\Xml\MoneyDataXmlSerializer.cs" />
-    <Compile Include="Data\Xml\MoneyDataRecordXmlSerializer.cs" />
+    <Compile Include="Data\Xml\DocumentSummaryXmlSerializer.cs" />
+    <Compile Include="Data\Xml\DocumentItemXmlSerializer.cs" />
     <Compile Include="Data\Xml\ServiceToXmlSerializer.cs" />
     <Compile Include="Data\Xml\BackupManager.cs">
       <SubType>Code</SubType>
@@ -112,7 +111,7 @@
     <Compile Include="Windows\CompanyListWindow.Designer.cs">
       <DependentUpon>CompanyListWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Print Framework\NumberToWordConventer.cs" />
+    <Compile Include="Classes\NumberToWordConventer.cs" />
     <Compile Include="Print Framework\Normal\IPrintPrimitive.cs" />
     <Compile Include="Print Framework\Normal\Primitives\PrintRectangle.cs" />
     <Compile Include="Print Framework\Normal\Primitives\PrintHorizontalLine.cs" />
@@ -239,7 +238,11 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="DockPanelSuite">
+      <Version>3.0.6</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -116,10 +116,7 @@ namespace Faktury.Data.Xml
                 _modelStoreLoader.SaveDataToDirectory(restorePath);
 
                 // Delete data
-                MainForm.Instance.CleanCompanies();
-                MainForm.Instance.CleanDocuments();
-                MainForm.Instance.CleanServices();
-
+                MainForm.Instance.RemoveAllData();
 
                 // Load backup
                 if (Directory.Exists(path))

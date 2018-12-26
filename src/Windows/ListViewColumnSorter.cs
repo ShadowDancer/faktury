@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Faktury.Windows
 {
@@ -13,11 +14,7 @@ namespace Faktury.Windows
         /// <summary>
         /// Specifies the column to be sorted
         /// </summary>
-        public int ColumnToSort;
-        /// <summary>
-        /// Specifies the order in which to sort (i.e. 'Ascending').
-        /// </summary>
-        private SortOrder _orderOfSort;
+        private int _columnToSort;
 
         /// <summary>
         /// Case insensitive comparer object
@@ -31,10 +28,10 @@ namespace Faktury.Windows
         public ListViewColumnSorter()
         {
             // Initialize the column to '0'
-            ColumnToSort = 0;
+            _columnToSort = 0;
             // Initialize the sort order to 'none'
             //OrderOfSort = SortOrder.None;
-            _orderOfSort = SortOrder.Ascending;
+            Order = SortOrder.Ascending;
             // Initialize my implementationof CaseInsensitiveComparer object
             _objectCompare = new NumberCaseInsensitiveComparer();
             _firstObjectCompare = new ImageTextComparer();
@@ -54,7 +51,7 @@ namespace Faktury.Windows
             // Cast the objects to be compared to ListViewItem objects
             var listViewX = (ListViewItem)x;
             var listViewY = (ListViewItem)y;
-            if (ColumnToSort == 0)
+            if (_columnToSort == 0)
             {
                 compareResult = _firstObjectCompare.Compare(x, y);
             }
@@ -62,25 +59,25 @@ namespace Faktury.Windows
             {
                 // Compare the two items
                 compareResult =
-                  _objectCompare.Compare(listViewX.SubItems[ColumnToSort].Text, listViewY.SubItems[ColumnToSort].Text);
+                  _objectCompare.Compare(listViewX.SubItems[_columnToSort].Text, listViewY.SubItems[_columnToSort].Text);
             }
 
-            if (compareResult == 0 && ColumnToSort == 1 && SortByPrev) 
+            if (compareResult == 0 && _columnToSort == 1 && SortByPrev) 
             {
 
-                compareResult =_objectCompare.Compare(listViewX.SubItems[ColumnToSort-1].Text, listViewY.SubItems[ColumnToSort-1].Text);
+                compareResult =_objectCompare.Compare(listViewX.SubItems[_columnToSort-1].Text, listViewY.SubItems[_columnToSort-1].Text);
 
             }
 
             // Calculate correct return value based on object comparison
-            if (_orderOfSort == SortOrder.Ascending)
+            if (Order == SortOrder.Ascending)
             {
                 // Ascending sort is selected,
                 // return normal result of compare operation
                 return compareResult;
             }
 
-            if (_orderOfSort == SortOrder.Descending)
+            if (Order == SortOrder.Descending)
             {
                 // Descending sort is selected,
                 // return negative result of compare operation
@@ -97,18 +94,14 @@ namespace Faktury.Windows
         /// </summary>
         public int SortColumn
         {
-            set => ColumnToSort = value;
-            get => ColumnToSort;
+            set => _columnToSort = value;
+            get => _columnToSort;
         }
         /// <summary>
         /// Gets or sets the order of sorting to apply
         /// (for example, 'Ascending' or 'Descending').
         /// </summary>
-        public SortOrder Order
-        {
-            set => _orderOfSort = value;
-            get => _orderOfSort;
-        }
+        public SortOrder Order { set; get; }
 
     }
     public class ImageTextComparer : IComparer
@@ -148,11 +141,20 @@ namespace Faktury.Windows
         {
             // in case x,y are strings and actually number,
             // convert them to int and use the base.Compare for comparison
-            if ((x is String) && IsWholeNumber((string)x)
-               && (y is String) && IsWholeNumber((string)y))
+            if (x is string s && y is string s1)
             {
-                return base.Compare(Convert.ToInt32(x),
-                                       Convert.ToInt32(y));
+                if (IsWholeNumber(s) && IsWholeNumber(s1))
+                {
+                    return base.Compare(Convert.ToInt32(x),
+                        Convert.ToInt32(y));
+                }
+                else
+                {
+                    return string.Compare(
+                        new string(s.Where(char.IsLetterOrDigit).ToArray()),
+                        new string(s1.Where(char.IsLetterOrDigit).ToArray())
+                        , StringComparison.OrdinalIgnoreCase);
+                }
             }
 
             return base.Compare(x, y);

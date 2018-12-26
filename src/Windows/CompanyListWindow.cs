@@ -28,7 +28,7 @@ namespace Faktury.Windows
                 ListViewItem newItem = new ListViewItem(new[]
                 {
                     currentCompany.Id.ToString(),
-                    currentCompany.Tag,
+                    currentCompany.ShortName,
                     currentCompany.Name,
                     " " + currentCompany.Nip,
                     currentCompany.CreationDate.ToString(CultureInfo.CurrentCulture),
@@ -43,7 +43,7 @@ namespace Faktury.Windows
                         currentCompany.Address.ToLower().Contains(_filter) ||
                         currentCompany.Street.ToLower().Contains(_filter) ||
                         currentCompany.Nip.ToLower().Contains(_filter) ||
-                        currentCompany.Tag.ToLower().Contains(_filter))
+                        currentCompany.ShortName.ToLower().Contains(_filter))
                     {
                         LVCompanies.Items.Add(newItem);
                     }
@@ -62,7 +62,7 @@ namespace Faktury.Windows
 
         private void CompanyListWindow_Load(object sender, EventArgs e)
         {
-            _lvwColumnSorter = new ListViewColumnSorter();
+            _lvwColumnSorter = new ListViewColumnSorter {SortColumn = 1};
             LVCompanies.ListViewItemSorter = _lvwColumnSorter;
 
             Reload();
@@ -70,7 +70,7 @@ namespace Faktury.Windows
 
         private void CompanyListWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MainForm.Instance.kontrahenciToolStripMenuItem.Checked = false;
+            MainForm.Instance.companiesToolStripMenuItem.Checked = false;
         }
 
         #region ContextMenu

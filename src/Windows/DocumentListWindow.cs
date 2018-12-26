@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
-using Faktury.Classes.Printing;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -24,20 +23,18 @@ namespace Faktury.Windows
 
         private void DocumentListWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MainForm.Instance.dokumentyToolStripMenuItem.Checked = false;
+            MainForm.Instance.documentListToolStripMenuItem.Checked = false;
         }
 
         private ListViewItem GetListViewItemFromDocument(Document document)
         {
             ListViewItem newItem = new ListViewItem(document.Number.ToString());
             newItem.SubItems.Add(document.Year.ToString());
-            newItem.SubItems.Add(document.Name);
             Company currentCompany = _modelStore.Companies.Find(n => n.Id == document.CompanyId);
             if (currentCompany != null)
             {
-                newItem.SubItems.Add(currentCompany.Tag);
+                newItem.SubItems.Add(currentCompany.ShortName);
                 newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
-                newItem.SubItems.Add(document.Paid ? "Tak" : "Nie");
 
                 return newItem;
             }
@@ -70,15 +67,6 @@ namespace Faktury.Windows
                     if(CxBCompanyTagFilter.Checked)
                         if (currentDocument.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) continue;
 
-                    if (CxBNameFilter.Checked)
-                        if (currentDocument.Name.ToLower().IndexOf(TBName.Text.ToLower(), StringComparison.Ordinal) == -1) continue;
-
-                    if (CxBPaidFilter.Checked)
-                    {
-                        if (currentDocument.Paid && !RBPaidFilter.Checked) continue;
-                        if (!currentDocument.Paid && RBPaidFilter.Checked) continue;
-                    }
-
                     //if no exceptions add item
                     ListViewItem newItem = GetListViewItemFromDocument(currentDocument);
                     if(newItem != null)
@@ -100,27 +88,19 @@ namespace Faktury.Windows
         {
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
 
-            _lvwColumnSorter = new ListViewColumnSorter {SortByPrev = true, ColumnToSort = 1};
+            _lvwColumnSorter = new ListViewColumnSorter {SortByPrev = true, SortColumn = 1, Order = SortOrder.Descending};
             LVDocuments.ListViewItemSorter = _lvwColumnSorter;
             LVDocuments.Sort();
 
             #region InitButtons
             //main filters checkboxes
             var editorSettings = _settingsAccessor.GetSettings();
-            CxBNameFilter.Checked = editorSettings.DocumentFilterName;
-            CxBNameFilter_CheckedChanged(null, null);
             CxBCompanyTagFilter.Checked = editorSettings.DocumentFilterCompany;
             CxBCompanyTagFilter_CheckedChanged(null, null);
             cBYearFilter.Checked = editorSettings.DocumentFilterYear;
             cBYearFilter_CheckedChanged(null, null);
 
-            //paynament filters
-            CxBPaidFilter.Checked = GBPaynamentFilter.Enabled = editorSettings.DocumentFilterPaynament;
-            if (editorSettings.DocumentFilterPaidOnly)RBPaidFilter.Checked = true;
-            else RBUnpaidFilter.Checked = true;
-            //main filters values
             nUDYear.Value = editorSettings.DocumentFilterYearValue;
-            TBName.Text = editorSettings.DocumentFilterNameValue;
             foreach(ComboBoxItem item in CBCompanyTag.Items)
             {
                 if (item.Id == editorSettings.DocumentFilterCompanyValue)
@@ -198,14 +178,7 @@ namespace Faktury.Windows
             _settingsAccessor.GetSettings().DocumentFilterCompany = CxBCompanyTagFilter.Checked;
             AutoReload();
         }
-
-        private void CxBNameFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            TBName.Enabled = CxBNameFilter.Checked;
-            _settingsAccessor.GetSettings().DocumentFilterName = CxBNameFilter.Checked;
-            AutoReload();
-        }
-
+        
         #endregion
 
         #region AutoRefresh
@@ -223,14 +196,7 @@ namespace Faktury.Windows
             editorSettings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
             AutoReload();
         }
-
-        private void TBName_TextChanged(object sender, EventArgs e)
-        {
-            var editorSettings = _settingsAccessor.GetSettings();
-            editorSettings.DocumentFilterNameValue = TBName.Text;
-            AutoReload();
-        }
-
+        
         private void DTPDateFilter_ValueChanged(object sender, EventArgs e)
         {
             var editorSettings = _settingsAccessor.GetSettings();
@@ -311,47 +277,6 @@ namespace Faktury.Windows
             AutoReload();
         }
 
-        private void oznaczJakoZapłaconeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (LVDocuments.SelectedItems.Count > 0)
-            {
-                foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
-                {
-                    try
-                    {
-                        Document doc = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
-                        doc.Paid = true;
-                        Reload();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Błąd otwierania plików:", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            else MessageBox.Show("Wybierz z listy dokumenty do edycji!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void oznaczJakoNiezapłaconeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (LVDocuments.SelectedItems.Count > 0)
-            {
-                foreach (ListViewItem currentItem in LVDocuments.SelectedItems)
-                {
-                    try
-                    {
-                        Document doc = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
-                        doc.Paid = false;
-                        Reload();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Błąd otwierania plików:", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            else MessageBox.Show("Wybierz z listy dokumenty do edycji!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
         #endregion
 
 
@@ -394,34 +319,7 @@ namespace Faktury.Windows
             }
             else MessageBox.Show("Wybierz z listy dokumenty do druku!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
-        private void CxBPaidOnlyFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            _settingsAccessor.GetSettings().DocumentFilterPaynament = CxBPaidFilter.Checked;
-            GBPaynamentFilter.Enabled = CxBPaidFilter.Checked;
-            AutoReload();
-        }
-
-        private void RBPaidFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            _settingsAccessor.GetSettings().DocumentFilterPaidOnly = RBPaidFilter.Checked;
-            AutoReload();
-        }
-
-        public void ShowUnpaidDocuments(String company)
-        {
-            cBDateFilter.Checked = cBYearFilter.Checked = CxBNameFilter.Checked = false;
-            CxBPaidFilter.Checked = RBUnpaidFilter.Checked = CxBCompanyTagFilter.Checked = true;
-            foreach (ComboBoxItem item in CBCompanyTag.Items)
-            {
-                if (item.Text == company)
-                {
-                    CBCompanyTag.SelectedItem = item;
-                    break;
-                }
-            }
-        }
-
+        
         private ListViewColumnSorter _lvwColumnSorter;
 
         private void LVDocuments_ColumnClick(object sender, ColumnClickEventArgs e)

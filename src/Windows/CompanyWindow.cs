@@ -38,7 +38,7 @@ namespace Faktury.Windows
             TBNip.Text = Company.Nip;
             TBOwner.Text = Company.Owner;
             TBPhone.Text = Company.PhoneNumber;
-            TBTag.Text = Company.Tag;
+            TBTag.Text = Company.ShortName;
 
             GBBank.Visible = Company.Bank;
             TBTag.Visible = LTag.Visible = !Company.Bank;
@@ -57,7 +57,7 @@ namespace Faktury.Windows
                 Company.Nip = TBNip.Text;
                 Company.Owner = TBOwner.Text;
                 Company.PhoneNumber = TBPhone.Text;
-                Company.Tag = TBTag.Text;
+                Company.ShortName = TBTag.Text;
 
                 Company.ModificationDate = DateTime.Now;
 

@@ -34,21 +34,6 @@ namespace Faktury.Windows
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin3 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin3 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient7 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient15 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient16 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient8 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient17 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient18 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient19 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient9 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient20 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient21 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +46,14 @@ namespace Faktury.Windows
             this.printSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.documentListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.companiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,14 +63,6 @@ namespace Faktury.Windows
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opcjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.dokumentyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.kontrahenciToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.usługiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.closeCurrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,7 +73,7 @@ namespace Faktury.Windows
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.newDocumentToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openDocumentToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -102,8 +87,8 @@ namespace Faktury.Windows
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.MainDockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.OpenDataFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.MainDockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -113,8 +98,8 @@ namespace Faktury.Windows
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
-            this.editMenu,
             this.viewMenu,
+            this.editMenu,
             this.windowsMenu,
             this.helpMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -221,6 +206,77 @@ namespace Faktury.Windows
             this.exitToolStripMenuItem.Text = "Wyjście";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolsStripMenuItem_Click);
             // 
+            // viewMenu
+            // 
+            this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBarToolStripMenuItem,
+            this.statusBarToolStripMenuItem,
+            this.optionsToolStripMenuItem,
+            this.toolStripSeparator11,
+            this.documentListToolStripMenuItem,
+            this.companiesToolStripMenuItem,
+            this.servicesToolStripMenuItem});
+            this.viewMenu.Name = "viewMenu";
+            this.viewMenu.Size = new System.Drawing.Size(53, 20);
+            this.viewMenu.Text = "Widok";
+            // 
+            // toolBarToolStripMenuItem
+            // 
+            this.toolBarToolStripMenuItem.Checked = true;
+            this.toolBarToolStripMenuItem.CheckOnClick = true;
+            this.toolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolBarToolStripMenuItem.Name = "toolBarToolStripMenuItem";
+            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toolBarToolStripMenuItem.Text = "&Pasek Narzędzi";
+            this.toolBarToolStripMenuItem.Click += new System.EventHandler(this.ToolBarToolStripMenuItem_Click);
+            // 
+            // statusBarToolStripMenuItem
+            // 
+            this.statusBarToolStripMenuItem.Checked = true;
+            this.statusBarToolStripMenuItem.CheckOnClick = true;
+            this.statusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.statusBarToolStripMenuItem.Name = "statusBarToolStripMenuItem";
+            this.statusBarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.statusBarToolStripMenuItem.Text = "&Pasek Stanu";
+            this.statusBarToolStripMenuItem.Click += new System.EventHandler(this.StatusBarToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.CheckOnClick = true;
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Text = "&Opcje";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(177, 6);
+            // 
+            // documentListToolStripMenuItem
+            // 
+            this.documentListToolStripMenuItem.CheckOnClick = true;
+            this.documentListToolStripMenuItem.Name = "documentListToolStripMenuItem";
+            this.documentListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.documentListToolStripMenuItem.Text = "&Dokumenty";
+            this.documentListToolStripMenuItem.Click += new System.EventHandler(this.documentListToolStripMenuItem_Click);
+            // 
+            // companiesToolStripMenuItem
+            // 
+            this.companiesToolStripMenuItem.CheckOnClick = true;
+            this.companiesToolStripMenuItem.Name = "companiesToolStripMenuItem";
+            this.companiesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.companiesToolStripMenuItem.Text = "&Kontrahenci";
+            this.companiesToolStripMenuItem.Click += new System.EventHandler(this.companiesToolStripMenuItem_Click);
+            // 
+            // servicesToolStripMenuItem
+            // 
+            this.servicesToolStripMenuItem.CheckOnClick = true;
+            this.servicesToolStripMenuItem.Name = "servicesToolStripMenuItem";
+            this.servicesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.servicesToolStripMenuItem.Text = "&Usługi";
+            this.servicesToolStripMenuItem.Click += new System.EventHandler(this.servicesToolStripMenuItem_Click);
+            // 
             // editMenu
             // 
             this.editMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -299,77 +355,6 @@ namespace Faktury.Windows
             this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
             // 
-            // viewMenu
-            // 
-            this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolBarToolStripMenuItem,
-            this.statusBarToolStripMenuItem,
-            this.opcjeToolStripMenuItem,
-            this.toolStripSeparator11,
-            this.dokumentyToolStripMenuItem,
-            this.kontrahenciToolStripMenuItem,
-            this.usługiToolStripMenuItem});
-            this.viewMenu.Name = "viewMenu";
-            this.viewMenu.Size = new System.Drawing.Size(53, 20);
-            this.viewMenu.Text = "Widok";
-            // 
-            // toolBarToolStripMenuItem
-            // 
-            this.toolBarToolStripMenuItem.Checked = true;
-            this.toolBarToolStripMenuItem.CheckOnClick = true;
-            this.toolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolBarToolStripMenuItem.Name = "toolBarToolStripMenuItem";
-            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.toolBarToolStripMenuItem.Text = "&Pasek Narzędzi";
-            this.toolBarToolStripMenuItem.Click += new System.EventHandler(this.ToolBarToolStripMenuItem_Click);
-            // 
-            // statusBarToolStripMenuItem
-            // 
-            this.statusBarToolStripMenuItem.Checked = true;
-            this.statusBarToolStripMenuItem.CheckOnClick = true;
-            this.statusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.statusBarToolStripMenuItem.Name = "statusBarToolStripMenuItem";
-            this.statusBarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.statusBarToolStripMenuItem.Text = "&Pasek Stanu";
-            this.statusBarToolStripMenuItem.Click += new System.EventHandler(this.StatusBarToolStripMenuItem_Click);
-            // 
-            // opcjeToolStripMenuItem
-            // 
-            this.opcjeToolStripMenuItem.CheckOnClick = true;
-            this.opcjeToolStripMenuItem.Name = "opcjeToolStripMenuItem";
-            this.opcjeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.opcjeToolStripMenuItem.Text = "&Opcje";
-            this.opcjeToolStripMenuItem.Click += new System.EventHandler(this.opcjeToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(149, 6);
-            // 
-            // dokumentyToolStripMenuItem
-            // 
-            this.dokumentyToolStripMenuItem.CheckOnClick = true;
-            this.dokumentyToolStripMenuItem.Name = "dokumentyToolStripMenuItem";
-            this.dokumentyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.dokumentyToolStripMenuItem.Text = "&Dokumenty";
-            this.dokumentyToolStripMenuItem.Click += new System.EventHandler(this.dokumentyToolStripMenuItem_Click);
-            // 
-            // kontrahenciToolStripMenuItem
-            // 
-            this.kontrahenciToolStripMenuItem.CheckOnClick = true;
-            this.kontrahenciToolStripMenuItem.Name = "kontrahenciToolStripMenuItem";
-            this.kontrahenciToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.kontrahenciToolStripMenuItem.Text = "&Kontrahenci";
-            this.kontrahenciToolStripMenuItem.Click += new System.EventHandler(this.kontrahenciToolStripMenuItem_Click);
-            // 
-            // usługiToolStripMenuItem
-            // 
-            this.usługiToolStripMenuItem.CheckOnClick = true;
-            this.usługiToolStripMenuItem.Name = "usługiToolStripMenuItem";
-            this.usługiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.usługiToolStripMenuItem.Text = "&Usługi";
-            this.usługiToolStripMenuItem.Click += new System.EventHandler(this.usługiToolStripMenuItem_Click);
-            // 
             // windowsMenu
             // 
             this.windowsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -382,14 +367,14 @@ namespace Faktury.Windows
             // closeCurrentToolStripMenuItem
             // 
             this.closeCurrentToolStripMenuItem.Name = "closeCurrentToolStripMenuItem";
-            this.closeCurrentToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.closeCurrentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeCurrentToolStripMenuItem.Text = "&Zamknij";
             this.closeCurrentToolStripMenuItem.Click += new System.EventHandler(this.closeCurrentToolStripMenuItem_Click);
             // 
             // closeAllToolStripMenuItem
             // 
             this.closeAllToolStripMenuItem.Name = "closeAllToolStripMenuItem";
-            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeAllToolStripMenuItem.Text = "Zamknij &Wszystkie";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.CloseAllToolStripMenuItem_Click);
             // 
@@ -444,7 +429,7 @@ namespace Faktury.Windows
             // toolStrip
             // 
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripButton,
+            this.newDocumentToolStripButton,
             this.openDocumentToolStripButton,
             this.saveToolStripButton,
             this.toolStripSeparator12,
@@ -461,16 +446,16 @@ namespace Faktury.Windows
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "ToolStrip";
             // 
-            // newToolStripButton
+            // newDocumentToolStripButton
             // 
-            this.newToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.newToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripButton.Image")));
-            this.newToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
-            this.newToolStripButton.Name = "newToolStripButton";
-            this.newToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.newToolStripButton.Text = "Nowy";
-            this.newToolStripButton.ToolTipText = "Nowy dokument";
-            this.newToolStripButton.Click += new System.EventHandler(this.NewDocument);
+            this.newDocumentToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.newDocumentToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("newDocumentToolStripButton.Image")));
+            this.newDocumentToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
+            this.newDocumentToolStripButton.Name = "newDocumentToolStripButton";
+            this.newDocumentToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.newDocumentToolStripButton.Text = "Nowy";
+            this.newDocumentToolStripButton.ToolTipText = "Nowy dokument";
+            this.newDocumentToolStripButton.Click += new System.EventHandler(this.NewDocument);
             // 
             // openDocumentToolStripButton
             // 
@@ -576,64 +561,18 @@ namespace Faktury.Windows
             this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
             this.toolStripStatusLabel.Text = "Status";
             // 
-            // MainDockPanel
-            // 
-            this.MainDockPanel.ActiveAutoHideContent = null;
-            this.MainDockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainDockPanel.DockBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.MainDockPanel.Location = new System.Drawing.Point(0, 49);
-            this.MainDockPanel.Name = "MainDockPanel";
-            this.MainDockPanel.ShowDocumentIcon = true;
-            this.MainDockPanel.Size = new System.Drawing.Size(632, 382);
-            dockPanelGradient7.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient7.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin3.DockStripGradient = dockPanelGradient7;
-            tabGradient15.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient15.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient15.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin3.TabGradient = tabGradient15;
-            dockPanelSkin3.AutoHideStripSkin = autoHideStripSkin3;
-            tabGradient16.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient16.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient16.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient3.ActiveTabGradient = tabGradient16;
-            dockPanelGradient8.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient8.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient3.DockStripGradient = dockPanelGradient8;
-            tabGradient17.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient17.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient17.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient3.InactiveTabGradient = tabGradient17;
-            dockPaneStripSkin3.DocumentGradient = dockPaneStripGradient3;
-            tabGradient18.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient18.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient18.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient18.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient3.ActiveCaptionGradient = tabGradient18;
-            tabGradient19.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient19.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient19.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient3.ActiveTabGradient = tabGradient19;
-            dockPanelGradient9.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient9.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient3.DockStripGradient = dockPanelGradient9;
-            tabGradient20.EndColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient20.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient20.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient20.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient3.InactiveCaptionGradient = tabGradient20;
-            tabGradient21.EndColor = System.Drawing.Color.Transparent;
-            tabGradient21.StartColor = System.Drawing.Color.Transparent;
-            tabGradient21.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient3.InactiveTabGradient = tabGradient21;
-            dockPaneStripSkin3.ToolWindowGradient = dockPaneStripToolWindowGradient3;
-            dockPanelSkin3.DockPaneStripSkin = dockPaneStripSkin3;
-            this.MainDockPanel.Skin = dockPanelSkin3;
-            this.MainDockPanel.TabIndex = 5;
-            // 
             // OpenDataFolder
             // 
             this.OpenDataFolder.Description = "Wybierz folder zawierający dane";
+            // 
+            // MainDockPanel
+            // 
+            this.MainDockPanel.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.MainDockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainDockPanel.Location = new System.Drawing.Point(0, 49);
+            this.MainDockPanel.Name = "MainDockPanel";
+            this.MainDockPanel.Size = new System.Drawing.Size(632, 382);
+            this.MainDockPanel.TabIndex = 8;
             // 
             // MainForm
             // 
@@ -700,7 +639,7 @@ namespace Faktury.Windows
         private ToolStripMenuItem contentsToolStripMenuItem;
         private ToolStripMenuItem indexToolStripMenuItem;
         private ToolStripMenuItem searchToolStripMenuItem;
-        private ToolStripButton newToolStripButton;
+        private ToolStripButton newDocumentToolStripButton;
         private ToolStripButton openDocumentToolStripButton;
         private ToolStripButton saveToolStripButton;
         private ToolStripButton printToolStripButton;
@@ -709,16 +648,16 @@ namespace Faktury.Windows
         private ToolTip toolTip;
         private ToolStripMenuItem closeCurrentToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
-        public ToolStripMenuItem opcjeToolStripMenuItem;
+        public ToolStripMenuItem optionsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator11;
-        public ToolStripMenuItem dokumentyToolStripMenuItem;
+        public ToolStripMenuItem documentListToolStripMenuItem;
         private ToolStripButton openCompanyToolStripButton;
         private ToolStripSeparator toolStripSeparator12;
-        public ToolStripMenuItem kontrahenciToolStripMenuItem;
+        public ToolStripMenuItem companiesToolStripMenuItem;
         private ToolStripButton newCompanyToolStripButton;
-        public ToolStripMenuItem usługiToolStripMenuItem;
-        public DockPanel MainDockPanel;
+        public ToolStripMenuItem servicesToolStripMenuItem;
         public FolderBrowserDialog OpenDataFolder;
+        private DockPanel MainDockPanel;
     }
 }
 

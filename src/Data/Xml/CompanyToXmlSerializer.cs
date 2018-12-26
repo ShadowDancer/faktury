@@ -31,7 +31,7 @@ namespace Faktury.Data.Xml
             address.InnerText = company.Address;
             address2.InnerText = company.Street;
             nip.InnerText = company.Nip;
-            tag.InnerText = company.Tag;
+            tag.InnerText = company.ShortName;
             bank.InnerText = Convert.ToString(company.Bank);
             bankAccount.InnerText = company.BankAccount;
             bankSection.InnerText = company.BankSection;
@@ -104,7 +104,7 @@ namespace Faktury.Data.Xml
                 Nip = xmlElement["Nip"].InnerText,
                 Owner = xmlElement["Owner"].InnerText,
                 PhoneNumber = xmlElement["PhoneNumber"].InnerText,
-                Tag = xmlElement["Tag"].InnerText,
+                ShortName = xmlElement["Tag"].InnerText,
                 Id = int.Parse(xmlElement["ID"].InnerText)
             };
 

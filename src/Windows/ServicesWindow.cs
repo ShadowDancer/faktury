@@ -51,17 +51,17 @@ namespace Faktury.Windows
             //load data
             TBName.Text = Service.Name;
             TBTag.Text = Service.Tag;
-            nUDPrice.Value = (decimal)Service.Price;
+            nUDPrice.Value = (decimal)Service.PriceNet;
             CBVat.Text = Service.Vat.ToString();
-            CBJm.Text = Service.Jm;
+            CBJm.Text = Service.Unit;
         }
 
         private void SaveData()
         {
             Service.Vat = int.Parse(CBVat.Text);
-            Service.Jm = CBJm.Text;
+            Service.Unit = CBJm.Text;
             Service.Name = TBName.Text;
-            Service.Price = (float)nUDPrice.Value;
+            Service.PriceNet = nUDPrice.Value;
             Service.Tag = TBTag.Text;
 
             Service.ModificationDate = DateTime.Now;

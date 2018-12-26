@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml;
 using Faktury.Classes;
-using Faktury.Print_Framework;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -65,20 +64,12 @@ namespace Faktury.Data.Xml
             #endregion
 
             XmlElement payment = xmlDoc.CreateElement("Paynament");
-            payment.InnerText = document.Payment;
+            payment.InnerText = document.PaymentType;
             documentElement.AppendChild(payment);
 
             XmlElement paymentTime = xmlDoc.CreateElement("PaynamentTime");
             paymentTime.InnerText = document.PaymentTime;
             documentElement.AppendChild(paymentTime);
-
-            XmlElement name = xmlDoc.CreateElement("Name");
-            name.InnerText = document.Name;
-            documentElement.AppendChild(name);
-
-            XmlElement defaultName = xmlDoc.CreateElement("DefaultName");
-            defaultName.InnerText = Convert.ToString(document.DefaultName);
-            documentElement.AppendChild(defaultName);
 
             XmlElement number = xmlDoc.CreateElement("Number");
             number.InnerText = Convert.ToString(document.Number);
@@ -87,12 +78,8 @@ namespace Faktury.Data.Xml
             XmlElement yearElem = xmlDoc.CreateElement("Year");
             yearElem.InnerText = Convert.ToString(document.Year);
             documentElement.AppendChild(yearElem);
-
-            XmlElement paidElem = xmlDoc.CreateElement("Paid");
-            paidElem.InnerText = Convert.ToString(document.Paid);
-            documentElement.AppendChild(paidElem);
-
-            documentElement.AppendChild(MoneyDataXmlSerializer.GetXmlElement(document, xmlDoc));
+            
+            documentElement.AppendChild(DocumentSummaryXmlSerializer.GetXmlElement(document, xmlDoc));
 
             return documentElement;
         }
@@ -105,7 +92,7 @@ namespace Faktury.Data.Xml
             if (element["CompanyTag"] != null)
             {
                 string text = element["CompanyTag"].InnerText;
-                Company comp = _modelStore.Companies.Find(n => n.Tag == text);
+                Company comp = _modelStore.Companies.Find(n => n.ShortName == text);
                 newDocument.CompanyId = comp.Id;
             }
 
@@ -113,16 +100,12 @@ namespace Faktury.Data.Xml
             newDocument.IssueDate = new DateTime(int.Parse(element["IssueDate"]["Year"].InnerText), int.Parse(element["IssueDate"]["Month"].InnerText), int.Parse(element["IssueDate"]["Day"].InnerText));
             newDocument.SellDate = new DateTime(int.Parse(element["SellDate"]["Year"].InnerText), NumberToWordConventer.ConvertMonthToNumber(element["SellDate"]["Month"].InnerText), int.Parse(element["SellDate"]["Day"].InnerText));
 
-            newDocument.Payment = element["Paynament"].InnerText;
+            newDocument.PaymentType = element["Paynament"].InnerText;
             newDocument.PaymentTime = element["PaynamentTime"].InnerText;
-            newDocument.Name = element["Name"].InnerText;
-            newDocument.DefaultName = Convert.ToBoolean(element["DefaultName"].InnerText);
             newDocument.Number = Convert.ToInt32 (element["Number"].InnerText);
             newDocument.Year = Convert.ToInt32(element["Year"].InnerText);
 
-            if(element["Paid"] != null)newDocument.Paid = Convert.ToBoolean(element["Paid"].InnerText);//to remove
-
-            newDocument.DocumentSummary = MoneyDataXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
+            newDocument.DocumentSummary = DocumentSummaryXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
 
             return newDocument;
         }

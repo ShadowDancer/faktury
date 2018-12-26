@@ -1,10 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using Faktury.Classes;
-using Faktury.Classes.Printing;
+﻿using Faktury.Classes;
 using Faktury.Data.Xml;
 using Faktury.Print_Framework;
+using System;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
@@ -12,18 +13,17 @@ namespace Faktury.Windows
     {
         private int _childFormNumber;
 
-        public MainForm()
+        public MainForm(string applicationDirectory)
         {
-            
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
 
             Instance = this;
 
-            string applicationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), "Faktury");
             ModelStore = new ModelStore();
-            BackupManager = new BackupManager(SettingsAccessor, ModelStoreLoader, Path.Combine(applicationDirectory, "Backup"));
             ModelStoreLoader = new ModelStoreLoader(SettingsAccessor, ModelStore, applicationDirectory);
+            BackupManager = new BackupManager(SettingsAccessor, ModelStoreLoader,
+                Path.Combine(applicationDirectory, "Backup"));
 
             if (!ModelStoreLoader.ConfigExists())
             {
@@ -31,65 +31,84 @@ namespace Faktury.Windows
             }
         }
 
-        #region Properties
-    //singleton
-    public static MainForm Instance;
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
 
-    //data
+        #region Properties
+
+        //singleton
+        public static MainForm Instance;
+
+        //data
 
         private BackupManager BackupManager { get; }
 
         private ModelStore ModelStore { get; }
 
-        private SettingsAccessor SettingsAccessor { get; }= new SettingsAccessor();
+        private SettingsAccessor SettingsAccessor { get; } = new SettingsAccessor();
 
         private ModelStoreLoader ModelStoreLoader { get; }
 
         //printing
         private PrintEngine PrintEngine { get; } = new PrintEngine();
-        
+
         #region Actions
 
         public void EditCompany(Company companyToEdit)
         {
-            CompanyWindow childForm = new CompanyWindow(ModelStore);
-            if (companyToEdit == SettingsAccessor.GetSettings().OwnerCompany && SettingsAccessor.GetSettings().OwnerCompany != null)
+            var childForm = new CompanyWindow(ModelStore);
+            var editorSettings = SettingsAccessor.GetSettings();
+            if (companyToEdit == editorSettings.OwnerCompany &&
+                editorSettings.OwnerCompany != null)
+            {
                 childForm.AddToCollection = false;
-            else childForm.AddToCollection = true;
+            }
+            else
+            {
+                childForm.AddToCollection = true;
+            }
 
             childForm.MdiParent = this;
 
-            childForm.Text = _childFormNumber++ + ": Edycja " + companyToEdit.Tag;
+            childForm.Text = _childFormNumber++ + ": Edycja " + companyToEdit.ShortName;
             childForm.Company = companyToEdit;
             childForm.Show(MainDockPanel);
         }
+
         public void DeleteService(Service serviceToRemove)
         {
-            if (MessageBox.Show("Na pewno?", "Usuwanie usługi...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Na pewno?", "Usuwanie usługi...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                DialogResult.Yes)
             {
                 ModelStore.Services.Remove(serviceToRemove);
             }
         }
+
         public void DeleteCompany(Company companyToRemove)
         {
-            if (MessageBox.Show("Na pewno?", "Usuwanie firmy...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Na pewno?", "Usuwanie firmy...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                DialogResult.Yes)
             {
                 ModelStore.Companies.Remove(companyToRemove);
                 ReloadCompanyComboboxesInChildWindows();
             }
         }
+
         public void ReloadCompanyCombobox(ComboBox comboBox)
         {
             comboBox.Items.Clear();
-            foreach (Company currentCompany in ModelStore.Companies)
+            foreach (var currentCompany in ModelStore.Companies.OrderBy(n => n.ShortNameStripped))
             {
-                comboBox.Items.Add(new ComboBoxItem(currentCompany.Tag, currentCompany.Id));
+                comboBox.Items.Add(new ComboBoxItem(currentCompany.ShortName, currentCompany.Id));
             }
+
             if (comboBox.Items.Count > 0) comboBox.SelectedIndex = 0;
         }
+
         public void ReloadCompanyComboboxesInChildWindows()
         {
-            DocumentListWindow?.UpdateCompanyCombobox();
+            _documentListWindow?.UpdateCompanyCombobox();
 
             //update w child window
             foreach (var currentChild in MdiChildren)
@@ -100,9 +119,10 @@ namespace Faktury.Windows
                 }
             }
         }
+
         public void AddService()
         {
-            ServiceWindow childForm = new ServiceWindow(ModelStore, SettingsAccessor)
+            var childForm = new ServiceWindow(ModelStore, SettingsAccessor)
             {
                 MdiParent = this,
                 Text = _childFormNumber++ + ": Nowa usługa"
@@ -111,9 +131,10 @@ namespace Faktury.Windows
 
             childForm.Show(MainDockPanel);
         }
+
         public void EditService(Service serviceToEdit)
         {
-            ServiceWindow childForm = new ServiceWindow(ModelStore, SettingsAccessor)
+            var childForm = new ServiceWindow(ModelStore, SettingsAccessor)
             {
                 MdiParent = this,
                 Text = _childFormNumber++ + ": Edycja " + serviceToEdit.Name,
@@ -122,43 +143,46 @@ namespace Faktury.Windows
 
             childForm.Show(MainDockPanel);
         }
-        public void CleanServices()
-        {
-            foreach (var childForm in MdiChildren)
-            {
-                if (childForm is ServiceWindow)
-                {
-                    childForm.Close();
-                }
-            }
 
-            ModelStore.Services.Clear();
-        }
         public void AddCompany()
         {
-            CompanyWindow childForm = new CompanyWindow(ModelStore)
+            var childForm = new CompanyWindow(ModelStore)
             {
-                MdiParent = this, Text = _childFormNumber++ + ": Nowa firma"
+                MdiParent = this,
+                Text = _childFormNumber++ + ": Nowa firma"
             };
-            
+
             childForm.Show(MainDockPanel);
         }
+
         public void OpenDocument(Document document)
         {
             if (document != null)
             {
-                DocumentWindow childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor)
+                var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor)
                 {
                     MdiParent = this,
-                    Text = document.Number + "//" + document.Year + " " + document.Name,
+                    Text = document.Number + "//" + document.Year,
                     Document = document
                 };
 
                 childForm.Show(MainDockPanel);
             }
-            else throw new Exception();
+            else
+            {
+                throw new Exception();
+            }
         }
-        public void CleanCompanies()
+
+        public void RemoveAllData()
+        {
+            CleanCompanies();
+            CleanDocuments();
+            CleanServices();
+            ReloadCompanyComboboxesInChildWindows();
+        }
+
+        private void CleanCompanies()
         {
             foreach (var childForm in MdiChildren)
             {
@@ -170,13 +194,26 @@ namespace Faktury.Windows
 
             ModelStore.Companies.Clear();
         }
-        public void CleanDocuments()
+
+        private void CleanServices()
+        {
+            foreach (var childForm in MdiChildren)
+            {
+                if (childForm is ServiceWindow)
+                {
+                    childForm.Close();
+                }
+            }
+
+            ModelStore.Services.Clear();
+        }
+
+        private void CleanDocuments()
         {
             foreach (var childForm in MdiChildren)
             {
                 if (childForm is DocumentWindow window)
                 {
-                    //TODO
                     window.ForceClose = true;
                     window.Close();
                 }
@@ -184,21 +221,26 @@ namespace Faktury.Windows
 
             ModelStore.Documents.Clear();
         }
+
         public bool SaveDocument(DocumentWindow window)
         {
-            Document document = window.Document;
+            var document = window.Document;
 
             try
             {
-                Document check = ModelStore.Documents.Find(n => (n.Number == window.nUDNumber.Value && n.Year == window.nUDYear.Value));
+                var check = ModelStore.Documents.Find(n =>
+                    n.Number == window.nUDNumber.Value && n.Year == window.nUDYear.Value);
                 if (check == null)
                 {
-                    if (ModelStore.Documents.Find(n => n == window.Document) == null) ModelStore.Documents.Add(document);
+                    if (ModelStore.Documents.Find(n => n == window.Document) == null)
+                        ModelStore.Documents.Add(document);
                 }
                 else
                 {
                     if (check != window.Document)
+                    {
                         throw new Exception("Dokument o danym numerze już istnieje!");
+                    }
                 }
             }
             catch (Exception ex)
@@ -218,14 +260,15 @@ namespace Faktury.Windows
 
 
         #region Windows
+
         //options
-        public OptionsWindow OptionsWindow;
+        private OptionsWindow _optionsWindow;
 
         //document list
-        public DocumentListWindow DocumentListWindow;
+        private DocumentListWindow _documentListWindow;
 
         //company list
-        public CompanyListWindow CompanyListWindow;
+        private CompanyListWindow _companyListWindow;
 
         //Services list
         public ServicesListWindow ServicesListWindow;
@@ -243,26 +286,43 @@ namespace Faktury.Windows
 
         public void RunFirstUseWizard()
         {
-            if (MessageBox.Show("Program faktury został uruchomiony po raz pierwszy. Kreator pierwszego uruchomienia przeprowadzi Cię przez proces konfigurowania aplikacji. Kontynuować?", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            if (MessageBox.Show(
+                    "Program faktury został uruchomiony po raz pierwszy. Kreator pierwszego uruchomienia przeprowadzi Cię przez proces konfigurowania aplikacji. Kontynuować?",
+                    "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
+                DialogResult.Yes)
             {
                 //Import data
-                if (MessageBox.Show("Chcesz zaimportować dane?\nWybierz nie, jeśli nie posiadasz danych stworzonych przez tą aplikację.", "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                if (MessageBox.Show(
+                        "Chcesz zaimportować dane?\nWybierz nie, jeśli nie posiadasz danych stworzonych przez tą aplikację.",
+                        "Kreator pierwszego uruchomienia", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
-                    OptionsWindow.DataImport_Click(null, null);
+                    _optionsWindow.DataImport_Click(null, null);
                 }
 
                 //Owner data
-                MessageBox.Show("Dane wystawiającego są to dane osoby, na którą wystawiane będą faktury. Dane te można zmienić w menu opcje.", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader).BSetOwnerData_Click(null, null);
+                MessageBox.Show(
+                    "Dane wystawiającego są to dane osoby, na którą wystawiane będą faktury. Dane te można zmienić w menu opcje.",
+                    "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader).BSetOwnerData_Click(
+                    null, null);
 
                 //Backup
-                MessageBox.Show("Kopia zapasowa, to mechanizm, który zabezpicza Cię przed utratą danych, na wskutek awarii sprzętu lub systemu. Dostępne są dwie metody tworzenia kopii - lokalna (na dysku twardym) i na zewnętrznym nośniku/komputerze(zabezpiecza ona dane w przypadku awarii dysku).", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Kopia zapasowa, to mechanizm, który zabezpicza Cię przed utratą danych, na wskutek awarii sprzętu lub systemu. Dostępne są dwie metody tworzenia kopii - lokalna (na dysku twardym) i na zewnętrznym nośniku/komputerze(zabezpiecza ona dane w przypadku awarii dysku).",
+                    "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 new BackupSettings(SettingsAccessor).ShowDialog();
                 if (SettingsAccessor.GetSettings().DeviceBackup)
-                    MessageBox.Show("Włączono kopię na zewnętrznym nośniku - po upłynięciu wyznaczonego okresu zostanie wyświetlona proźba o włożenie nośinka.", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+                {
+                    MessageBox.Show(
+                        "Włączono kopię na zewnętrznym nośniku - po upłynięciu wyznaczonego okresu zostanie wyświetlona proźba o włożenie nośinka.",
+                        "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
                 //Finish
-                MessageBox.Show("Dziękuję za wybranie aplikacji Faktury. Naciśnij OK, aby zakończyć działanie kreatora.", "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Dziękuję za wybranie aplikacji Faktury. Naciśnij OK, aby zakończyć działanie kreatora.",
+                    "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -274,11 +334,18 @@ namespace Faktury.Windows
         {
             ModelStoreLoader.LoadEverythingFromDirectory();
             ReloadCompanyComboboxesInChildWindows();
+
+            OpenDocumentList(null, null);
+            OpenCompaniesWindow();
+
+            _companyListWindow.Hide();
+            _companyListWindow.Show(MainDockPanel, DockState.DockRight);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(MessageBox.Show("Zapisać dane firm i dokumentów?", "Zamykanie...", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (MessageBox.Show("Zapisać dane firm i dokumentów?", "Zamykanie...", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 BackupManager.ExitingApplication = true;
                 ModelStoreLoader.SaveEverythingToDirectoryWithBackup(BackupManager);
@@ -288,49 +355,65 @@ namespace Faktury.Windows
 
         #region View
 
-        private void opcjeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (opcjeToolStripMenuItem.Checked)
+            if (optionsToolStripMenuItem.Checked)
             {
-                OptionsWindow = new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader);
-                OptionsWindow.Show(MainDockPanel);
+                _optionsWindow = new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader);
+                _optionsWindow.Show(MainDockPanel);
             }
             else
-                OptionsWindow.Close();
+            {
+                _optionsWindow.Close();
+            }
         }
 
-        public void dokumentyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void documentListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dokumentyToolStripMenuItem.Checked)
+            if (documentListToolStripMenuItem.Checked)
             {
-                    DocumentListWindow = new DocumentListWindow(ModelStore, PrintEngine, SettingsAccessor);
-                    DocumentListWindow.Show(MainDockPanel);
+                _documentListWindow = new DocumentListWindow(ModelStore, PrintEngine, SettingsAccessor);
+                _documentListWindow.Show(MainDockPanel);
+                documentListToolStripMenuItem.Checked = true;
             }
             else
-                DocumentListWindow.Close();
+            {
+                _documentListWindow.Close();
+            }
         }
 
-        private void kontrahenciToolStripMenuItem_Click(object sender, EventArgs e)
+        private void companiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (kontrahenciToolStripMenuItem.Checked)
+            if (companiesToolStripMenuItem.Checked)
             {
-                CompanyListWindow = new CompanyListWindow(ModelStore);
-                CompanyListWindow.Show(MainDockPanel);
+                OpenCompaniesWindow();
             }
             else
-                CompanyListWindow.Close();
+            {
+                _companyListWindow.Close();
+            }
         }
 
-        private void usługiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenCompaniesWindow()
         {
-            if (usługiToolStripMenuItem.Checked)
+            _companyListWindow = new CompanyListWindow(ModelStore);
+            _companyListWindow.Show(MainDockPanel);
+            companiesToolStripMenuItem.Checked = true;
+        }
+
+        private void servicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (servicesToolStripMenuItem.Checked)
             {
                 ServicesListWindow = new ServicesListWindow(ModelStore);
                 ServicesListWindow.Show(MainDockPanel);
             }
             else
+            {
                 ServicesListWindow.Close();
+            }
         }
+
         private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStrip.Visible = toolBarToolStripMenuItem.Checked;
@@ -342,9 +425,9 @@ namespace Faktury.Windows
         }
 
         #endregion
+
         #endregion
 
-        //Okna
         #region Windows
 
         private void closeCurrentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -354,7 +437,7 @@ namespace Faktury.Windows
 
         private void CloseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (Form childForm in MdiChildren)
+            foreach (var childForm in MdiChildren)
             {
                 childForm.Close();
             }
@@ -362,44 +445,46 @@ namespace Faktury.Windows
 
         #endregion
 
-        //Plik
         #region File
 
         public void NewDocument(object sender, EventArgs e)
         {
-            DocumentWindow childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor) {MdiParent = this, Text = "Nowy Dokument"};
+            var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor)
+            { MdiParent = this, Text = "Nowy Dokument" };
 
 
             _childFormNumber++;
             if (_childFormNumber > 1)
+            {
                 childForm.Text += " (" + _childFormNumber + ")";
+            }
 
             childForm.Show(MainDockPanel);
         }
 
         private void OpenDocumentList(object sender, EventArgs e)
         {
-            if (DocumentListWindow != null && !DocumentListWindow.IsDisposed)
+            if (_documentListWindow != null && !_documentListWindow.IsDisposed)
             {
-                DocumentListWindow.Activate();
+                _documentListWindow.Activate();
             }
             else
             {
-                dokumentyToolStripMenuItem.Checked = true;
-                dokumentyToolStripMenuItem_Click(null, null);
+                documentListToolStripMenuItem.Checked = true;
+                documentListToolStripMenuItem_Click(null, null);
             }
         }
-        
+
         private void openCompanyToolStripButton_Click(object sender, EventArgs e)
         {
-            if (CompanyListWindow != null && !CompanyListWindow.IsDisposed)
+            if (_companyListWindow != null && !_companyListWindow.IsDisposed)
             {
-                CompanyListWindow.Activate();
+                _companyListWindow.Activate();
             }
             else
             {
-                kontrahenciToolStripMenuItem.Checked = true;
-                kontrahenciToolStripMenuItem_Click(null, null);
+                companiesToolStripMenuItem.Checked = true;
+                companiesToolStripMenuItem_Click(null, null);
             }
         }
 
@@ -417,6 +502,7 @@ namespace Faktury.Windows
             {
                 currentChild.Close();
             }
+
             if (CanEndApplication()) Close();
         }
 
@@ -424,7 +510,9 @@ namespace Faktury.Windows
         {
             AddCompany();
         }
+
         #endregion
+
         #region Printing
 
         private void printSetupToolStripMenuItem_Click(object sender, EventArgs e)
@@ -452,6 +540,7 @@ namespace Faktury.Windows
                 SaveDocument(window);
                 PrintEngine.AddPrintObject(new DocumentPrinter(ModelStore, SettingsAccessor, window.Document));
             }
+
             PrintEngine.ShowPrintDialog();
             PrintEngine.ClearPrintingObjects();
         }
@@ -470,11 +559,5 @@ namespace Faktury.Windows
         }
 
         #endregion
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

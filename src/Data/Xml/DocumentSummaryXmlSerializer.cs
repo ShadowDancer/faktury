@@ -6,14 +6,14 @@ using Faktury.Classes;
 
 namespace Faktury.Data.Xml
 {
-    public class MoneyDataXmlSerializer
+    public class DocumentSummaryXmlSerializer
     {
         public static XmlElement GetXmlElement(Document document, XmlDocument xmlDoc)
         {
             var moneyDataElement = xmlDoc.CreateElement("MoneyData");
             var documentSummary = document.DocumentSummary;
             var netto = xmlDoc.CreateElement("Netto");
-            netto.InnerText = documentSummary.Netto.ToString(CultureInfo.InvariantCulture);
+            netto.InnerText = documentSummary.TotalNet.ToString(CultureInfo.InvariantCulture);
             moneyDataElement.AppendChild(netto);
 
             var vat = xmlDoc.CreateElement("TotalVAT");
@@ -21,7 +21,7 @@ namespace Faktury.Data.Xml
             moneyDataElement.AppendChild(vat);
 
             var brutto = xmlDoc.CreateElement("Brutto");
-            brutto.InnerText = documentSummary.Brutto.ToString(CultureInfo.InvariantCulture);
+            brutto.InnerText = documentSummary.TotalGross.ToString(CultureInfo.InvariantCulture);
             moneyDataElement.AppendChild(brutto);
 
             var inWords = xmlDoc.CreateElement("InWords");
@@ -32,7 +32,7 @@ namespace Faktury.Data.Xml
             moneyDataElement.AppendChild(records);
 
             foreach (var currentRecord in document.Items)
-                records.AppendChild(MoneyDataRecordXmlSerializer.GetXmlElement(currentRecord, xmlDoc));
+                records.AppendChild(DocumentItemXmlSerializer.GetXmlElement(currentRecord, xmlDoc));
 
             return moneyDataElement;
         }
@@ -41,22 +41,22 @@ namespace Faktury.Data.Xml
         {
             var newMoneyData = new DocumentSummary
             {
-                Netto = float.Parse(xmlElement["Netto"].InnerText),
-                TotalVat = float.Parse(xmlElement["TotalVAT"].InnerText),
-                Brutto = float.Parse(xmlElement["Brutto"].InnerText),
+                TotalNet = decimal.Parse(xmlElement["Netto"].InnerText, CultureInfo.InvariantCulture),
+                TotalVat = decimal.Parse(xmlElement["TotalVAT"].InnerText, CultureInfo.InvariantCulture),
+                TotalGross = decimal.Parse(xmlElement["Brutto"].InnerText, CultureInfo.InvariantCulture),
                 InWords = xmlElement["InWords"].InnerText
             };
 
 
             foreach (XmlElement currentElement in xmlElement["Records"])
-                document.Items.Add(MoneyDataRecordXmlSerializer.GetRecordFromXml(currentElement));
+                document.Items.Add(DocumentItemXmlSerializer.GetRecordFromXml(currentElement));
 
             if (xmlElement["Vat"] != null)
             {
                 int vat = int.Parse(xmlElement["Vat"].InnerText);
                 foreach (var item in document.Items)
                 {
-                    item.Vat = vat;
+                    item.SumVat = vat;
                 }
                     
             }

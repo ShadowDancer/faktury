@@ -82,8 +82,8 @@ namespace Faktury.Windows
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Tag";
-            this.columnHeader1.Width = 88;
+            this.columnHeader1.Text = "Nazwa skrócona";
+            this.columnHeader1.Width = 135;
             // 
             // columnHeader2
             // 

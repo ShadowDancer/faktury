@@ -25,7 +25,7 @@ namespace Faktury.Windows
         #region LoadingManaging
         private void OptionsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MainForm.Instance.opcjeToolStripMenuItem.Checked = false;
+            MainForm.Instance.optionsToolStripMenuItem.Checked = false;
         }
 
         public void DataImport_Click(object sender, EventArgs e)
@@ -49,10 +49,7 @@ namespace Faktury.Windows
         {
             if (MessageBox.Show("Czy na pewno?\r\n", "Wyczyść dane", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                MainForm.Instance.CleanCompanies();
-                MainForm.Instance.CleanDocuments();
-                MainForm.Instance.CleanServices();
-                MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
+                MainForm.Instance.RemoveAllData();
                 MessageBox.Show("Aby przywrócić dane użyj przycisku \"Wczytaj kopię bezpieczeństwa\" w menu opcji.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }

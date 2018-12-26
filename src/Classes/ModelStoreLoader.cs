@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using Faktury.Data.Xml;
@@ -28,10 +27,9 @@ namespace Faktury.Classes
         {
             LoadSettingsFromFile(_configPath);
 
-            LoadCompaniesFromFile(_dataPath);
-            LoadDocumentsFromFile(_dataPath);
-            LoadServicesFromFile(_dataPath);
-
+            LoadCompaniesFromFile(Path.Combine(_dataPath, "Companies.xml"));
+            LoadDocumentsFromFile(Path.Combine(_dataPath, "Documents.xml"));
+            LoadServicesFromFile(Path.Combine(_dataPath, "Services.xml"));
         }
 
         public bool ConfigExists()
@@ -62,16 +60,17 @@ namespace Faktury.Classes
             {
                 if (!Directory.Exists(_dataPath)) Directory.CreateDirectory(_dataPath);
 
-                SaveCompaniesToFile(_dataPath);
-                SaveDocumentsToFile(_dataPath);
-                SaveServicesToFile(_dataPath);
+                SaveCompaniesToFile(Path.Combine(_dataPath, "Companies.xml"));
+                SaveDocumentsToFile(Path.Combine(_dataPath, "Documents.xml"));
+                SaveServicesToFile(Path.Combine(_dataPath, "Services.xml"));
+
                 backupManager.SaveLocalBackup();
                 backupManager.SaveDeviceBackup();
                 SaveSettingsToFile(_configPath);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Błąd podczas zapisywania plików:\n" + ex.Message, "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new InvalidOperationException("Błąd podczas zapisywania plików!", ex);
             }
         }
 
@@ -113,14 +112,17 @@ namespace Faktury.Classes
                     {
                         _modelStore.Companies.Add(newCompany);
                     }
-                    else MessageBox.Show("Kolekcja zawiera już element o ID " + newCompany.Id + "!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else
+                    {
+                        throw new InvalidOperationException("Kolekcja zawiera już element o ID " + newCompany.Id + "!");
+                    }
                 }
 
                 _modelStore.UpdateHigestCompanyId();
             }
             catch
             {
-                MessageBox.Show("Nie można wczytać pliku z kontrahentami!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new InvalidOperationException("Nie można wczytać pliku z kontrahentami!");
             }
         }
 
@@ -139,9 +141,9 @@ namespace Faktury.Classes
 
                 _modelStore.UpdateHighestDocumentId();
             }
-            catch
+            catch(Exception ex)
             {
-                MessageBox.Show("Nie można wczytać pliku z dokumentami!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new InvalidOperationException("Nie można wczytać pliku z dokumentami!", ex);
             }
 
         }
@@ -162,7 +164,7 @@ namespace Faktury.Classes
             }
             catch
             {
-                MessageBox.Show("Nie można wczytać pliku z usługami!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new InvalidOperationException("Nie można wczytać pliku z usługami!");
             }
         }
 
