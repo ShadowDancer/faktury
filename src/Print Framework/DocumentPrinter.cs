@@ -10,6 +10,10 @@ namespace Faktury.Print_Framework
 {
     public class DocumentPrinter : IPrintable
     {
+        /// <summary>
+        /// Summary height
+        /// </summary>
+        private const int Sh = 30;
         private readonly ModelStore _modelStore;
         private readonly SettingsAccessor _settingsAccessor;
         private readonly Document _document;
@@ -185,48 +189,32 @@ namespace Faktury.Print_Framework
                 position1.Y += 60;
             }
 
-
             //summary lines
+            
+            DrawSummaryTable(element, middlePartPosition, sf, footerFont, extraSmall);
+
+
             RectangleF linePos = new RectangleF(325, middlePartPosition + 550, 775, middlePartPosition + 550);
             element.AddLine(linePos);
-            linePos.Y += 50; linePos.Height += 50;
-            element.AddLine(linePos);
-            linePos.Y += 50; linePos.Height += 50;
-            element.AddLine(linePos);
-            linePos.Y += 25; linePos.Height += 25;
+            linePos.Y += Sh; linePos.Height += Sh;
             element.AddLine(linePos);
 
-            // summary table
-            int offset = 0;
-            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 120, 50);
-            element.AddText("Razem:", sf, footerFont, null, linePos);
-            linePos.Y += 50;
-            element.AddText("w tym:", sf, footerFont, null, linePos);
 
-            offset += (int)linePos.Width;
-            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 90, 50);
-            element.AddText(_document.DocumentSummary.TotalNet.ToString("0.00"), sf, extraSmall, null, linePos);
-            linePos.Y += 50;
-            element.AddText(_document.DocumentSummary.TotalNet.ToString("0.00"), sf, extraSmall, null, linePos);
+            List<(string symbol, decimal net, decimal vat, decimal gross)> vatSummaries = _document.Items.GroupBy(n => n.VatRate.Symbol)
+                .Select(n => (n.Key, n.Sum(m => m.SumNet), n.Sum(m => m.SumVat), n.Sum(m => m.SumGross))).ToList();
 
-            offset += (int)linePos.Width;
-            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 55, 50);
-            element.AddText("X", sf, extraSmall, null, linePos);//TODO
+            int index = 1;
+            foreach (var (symbol, net, vat, gross) in vatSummaries)
+            {
+                DrawVatSummary(element, middlePartPosition, sf, extraSmall, index, net, vat, gross, symbol);
 
-            linePos.Y += 50;
-            element.AddText(23.ToString(), sf, extraSmall, null, linePos);//TODO
+                linePos.Y += Sh; linePos.Height += Sh;
+                element.AddLine(linePos);
+                index++;
+            }
 
-            offset += (int)linePos.Width;
-            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 85, 50);
-            element.AddText(_document.DocumentSummary.TotalVat.ToString("0.00"), sf, extraSmall, null, linePos);
-            linePos.Y += 50;
-            element.AddText(_document.DocumentSummary.TotalVat.ToString("0.00"), sf, extraSmall, null, linePos);
-
-            offset += (int)linePos.Width;
-            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 100, 50);
-            element.AddText(_document.DocumentSummary.TotalGross.ToString("0.00"), sf, extraSmall, null, linePos);
-            linePos.Y += 50;
-            element.AddText(_document.DocumentSummary.TotalGross.ToString("0.00"), sf, extraSmall, null, linePos);
+            linePos.Y = linePos.Height = middlePartPosition + 550 + 100 + 25;
+            element.AddLine(linePos);
 
 
             ////////////////////////
@@ -274,6 +262,54 @@ namespace Faktury.Print_Framework
             element.AddLine(new RectangleF(x, footerPartPosition + 190, x + length, footerPartPosition + 190));
             x = 500;
             element.AddLine(new RectangleF(x, footerPartPosition + 190, x + length, footerPartPosition + 190));
+        }
+
+        private void DrawSummaryTable(PrintElement element, int middlePartPosition, StringFormat sf, Font footerFont,
+            Font extraSmall)
+        {
+            int offset = 0;
+            var linePos = new RectangleF(325 + offset, middlePartPosition + 550, 120, Sh);
+            element.AddText("Razem:", sf, footerFont, null, linePos);
+            linePos.Y += Sh;
+            element.AddText("w tym:", sf, footerFont, null, linePos);
+
+            offset += (int) linePos.Width;
+            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 90, Sh);
+            element.AddText(_document.DocumentSummary.TotalNet.ToString("0.00"), sf, extraSmall, null, linePos);
+            
+            offset += (int) linePos.Width;
+            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 55, Sh);
+            //element.AddText("X", sf, extraSmall, null, linePos); //TODO
+
+            offset += (int) linePos.Width;
+            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 85, Sh);
+            element.AddText(_document.DocumentSummary.TotalVat.ToString("0.00"), sf, extraSmall, null, linePos);
+            
+            offset += (int) linePos.Width;
+            linePos = new RectangleF(325 + offset, middlePartPosition + 550, 100, Sh);
+            element.AddText(_document.DocumentSummary.TotalGross.ToString("0.00"), sf, extraSmall, null, linePos);
+        }
+
+
+        private void DrawVatSummary(PrintElement element, int middlePartPosition, StringFormat sf, Font extraSmall, int index, decimal sumNet, decimal sumTax, decimal sumGross, string taxSymbol)
+        {
+            int offsetX = 120;
+            int offsetY = middlePartPosition + 550 + index * Sh;
+
+            var linePos = new RectangleF(325 + offsetX, offsetY, 90, Sh);
+            element.AddText(sumNet.ToString("0.00"), sf, extraSmall, null, linePos);
+
+            offsetX += (int)linePos.Width;
+            linePos = new RectangleF(325 + offsetX, offsetY, 55, Sh);
+            element.AddText(taxSymbol, sf, extraSmall, null, linePos);
+
+            offsetX += (int)linePos.Width;
+            linePos = new RectangleF(325 + offsetX, offsetY, 85, Sh);
+            element.AddText(sumTax.ToString("0.00"), sf, extraSmall, null, linePos);
+
+            offsetX += (int)linePos.Width;
+            linePos = new RectangleF(325 + offsetX, offsetY, 100, Sh);
+            element.AddText(sumGross.ToString("0.00"), sf, extraSmall, null, linePos);
         }
 
         private void PrintItem(PrintElement element, PointF pos, int[] fieldSizes, string[] fieldNames, Font font)
