@@ -31,7 +31,9 @@ namespace Faktury.Windows
             ListViewItem newItem = new ListViewItem(document.Number.ToString());
             newItem.SubItems.Add(document.Year.ToString());
             newItem.SubItems.Add(document.Customer.ShortName ?? "");
-            newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
+            newItem.SubItems.Add(document.IssueDate.ToString("d", CultureInfo.CurrentCulture));
+            newItem.SubItems.Add(document.DocumentSummary.TotalNet.ToString("C", CultureInfo.CurrentCulture));
+
             return newItem;
         }
 

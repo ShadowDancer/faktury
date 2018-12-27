@@ -49,6 +49,7 @@ namespace Faktury.Windows
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nowyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.edytujToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -214,7 +215,8 @@ namespace Faktury.Windows
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader4,
-            this.columnHeader6});
+            this.columnHeader6,
+            this.columnHeader3});
             this.LVDocuments.ContextMenuStrip = this.contextMenuStrip;
             this.LVDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LVDocuments.FullRowSelect = true;
@@ -231,7 +233,8 @@ namespace Faktury.Windows
             // columnHeader1
             // 
             this.columnHeader1.Text = "Nr";
-            this.columnHeader1.Width = 31;
+            this.columnHeader1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader1.Width = 44;
             // 
             // columnHeader2
             // 
@@ -241,12 +244,18 @@ namespace Faktury.Windows
             // columnHeader4
             // 
             this.columnHeader4.Text = "Kontrahent";
-            this.columnHeader4.Width = 156;
+            this.columnHeader4.Width = 283;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "Data Wystawienia";
-            this.columnHeader6.Width = 121;
+            this.columnHeader6.Width = 104;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Suma Netto";
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader3.Width = 96;
             // 
             // contextMenuStrip
             // 
@@ -399,5 +408,6 @@ namespace Faktury.Windows
         private CheckBox CxBCompanyTagFilter;
         private ToolStripSeparator toolStripSeparator3;
         private DateTimePicker DTPDateFilter;
+        private ColumnHeader columnHeader3;
     }
 }
