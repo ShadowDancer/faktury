@@ -30,15 +30,9 @@ namespace Faktury.Windows
         {
             ListViewItem newItem = new ListViewItem(document.Number.ToString());
             newItem.SubItems.Add(document.Year.ToString());
-            Company currentCompany = _modelStore.Companies.Find(n => n.Id == document.CompanyId);
-            if (currentCompany != null)
-            {
-                newItem.SubItems.Add(currentCompany.ShortName);
-                newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
-
-                return newItem;
-            }
-            return null;
+            newItem.SubItems.Add(document.Customer.ShortName ?? "");
+            newItem.SubItems.Add(document.IssueDate.ToString(CultureInfo.CurrentCulture));
+            return newItem;
         }
 
         public void UpdateCompanyCombobox()
@@ -64,9 +58,11 @@ namespace Faktury.Windows
                         if (RBOlderThan.Checked && checkDate.CompareTo(DTPDateFilter.Value) <= 0) continue;
                     }
 
-                    if(CxBCompanyTagFilter.Checked)
-                        if (currentDocument.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) continue;
-
+                    if (CxBCompanyTagFilter.Checked)
+                    {
+                        if (currentDocument.Customer.Id != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) continue;
+                    }
+                    
                     //if no exceptions add item
                     ListViewItem newItem = GetListViewItemFromDocument(currentDocument);
                     if(newItem != null)
@@ -289,7 +285,7 @@ namespace Faktury.Windows
                         try
                         {
                             var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
-                            new DocumentPrinter(_modelStore, _settingsAccessor,  document).ShowPreview(_printEngine);
+                            new DocumentPrinter(document).ShowPreview(_printEngine);
                         }
                         catch (Exception ex)
                         {
@@ -309,7 +305,7 @@ namespace Faktury.Windows
                     try
                     {
                         var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
-                        new DocumentPrinter(_modelStore, _settingsAccessor, document).Print(_printEngine);
+                        new DocumentPrinter(document).Print(_printEngine);
                     }
                     catch (Exception ex)
                     {

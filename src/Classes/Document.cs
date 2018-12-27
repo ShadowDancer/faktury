@@ -5,7 +5,15 @@ namespace Faktury.Classes
 {
     public class Document
     {
-        public int CompanyId { get; set; }
+        /// <summary>
+        ///     Company issuing document
+        /// </summary>
+        public Company Issuer { get; set; }
+
+        /// <summary>
+        ///     Company buying goods/services
+        /// </summary>
+        public Company Customer { get; set; }
 
         public DateTime IssueDate { get; set; }
 
@@ -14,7 +22,7 @@ namespace Faktury.Classes
         public string PaymentType { get; set; }
 
         public string PaymentTime { get; set; }
-        
+
         /// <summary>
         ///     Document number
         /// </summary>
@@ -28,7 +36,7 @@ namespace Faktury.Classes
         public List<DocumentItem> Items { get; } = new List<DocumentItem>();
 
         public DocumentSummary DocumentSummary { get; set; } = new DocumentSummary();
-        
+
         public static Document CreateNewDocument()
         {
             var newDocument = new Document

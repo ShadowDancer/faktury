@@ -32,7 +32,7 @@ namespace Faktury.Windows
         {
             if (MainForm.Instance.OpenDataFolder.ShowDialog() == DialogResult.OK)
             {
-                _storeLoader.LoadDataFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
+                _storeLoader.LoadDataFromDirectory(MainForm.Instance.OpenDataFolder.SelectedPath);
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
             }
         }

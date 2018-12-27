@@ -19,11 +19,6 @@ namespace Faktury.Data.Xml
         {
             XmlElement documentElement = xmlDoc.CreateElement("Document");
 
-            XmlElement companyTag = xmlDoc.CreateElement("CompanyID");
-            companyTag.InnerText = document.CompanyId.ToString();
-            documentElement.AppendChild(companyTag);
-
-
             #region IssueDate
 
             XmlElement issueDateElement = xmlDoc.CreateElement("IssueDate");
@@ -78,34 +73,73 @@ namespace Faktury.Data.Xml
             XmlElement yearElem = xmlDoc.CreateElement("Year");
             yearElem.InnerText = Convert.ToString(document.Year);
             documentElement.AppendChild(yearElem);
-            
+
+            XmlElement customerElement = CompanyToXmlSerializer.GetXmlElement(document.Customer, xmlDoc, "Customer");
+            documentElement.AppendChild(customerElement);
+
+            XmlElement issuerElement = CompanyToXmlSerializer.GetXmlElement(document.Issuer, xmlDoc, "Issuer");
+            documentElement.AppendChild(issuerElement);
+
             documentElement.AppendChild(DocumentSummaryXmlSerializer.GetXmlElement(document, xmlDoc));
 
             return documentElement;
         }
 
-        public Document GetDocumentFromXml(XmlNode element)
+        public Document GetDocumentFromXml(XmlNode element, ModelStore modelStore, SettingsAccessor settingsAccessor)
         {
-            Document newDocument = new Document();
-
-            if(element["CompanyID"] != null) newDocument.CompanyId = int.Parse(element["CompanyID"].InnerText);
-            if (element["CompanyTag"] != null)
+            Document newDocument = new Document
             {
-                string text = element["CompanyTag"].InnerText;
-                Company comp = _modelStore.Companies.Find(n => n.ShortName == text);
-                newDocument.CompanyId = comp.Id;
-            }
+                IssueDate = new DateTime(int.Parse(element["IssueDate"]["Year"].InnerText),
+                    int.Parse(element["IssueDate"]["Month"].InnerText),
+                    int.Parse(element["IssueDate"]["Day"].InnerText)),
+                SellDate = new DateTime(int.Parse(element["SellDate"]["Year"].InnerText),
+                    NumberToWordConventer.ConvertMonthToNumber(element["SellDate"]["Month"].InnerText),
+                    int.Parse(element["SellDate"]["Day"].InnerText)),
+                PaymentType = element["Paynament"].InnerText,
+                PaymentTime = element["PaynamentTime"].InnerText,
+                Number = Convert.ToInt32(element["Number"].InnerText),
+                Year = Convert.ToInt32(element["Year"].InnerText)
+            };
 
 
-            newDocument.IssueDate = new DateTime(int.Parse(element["IssueDate"]["Year"].InnerText), int.Parse(element["IssueDate"]["Month"].InnerText), int.Parse(element["IssueDate"]["Day"].InnerText));
-            newDocument.SellDate = new DateTime(int.Parse(element["SellDate"]["Year"].InnerText), NumberToWordConventer.ConvertMonthToNumber(element["SellDate"]["Month"].InnerText), int.Parse(element["SellDate"]["Day"].InnerText));
 
-            newDocument.PaymentType = element["Paynament"].InnerText;
-            newDocument.PaymentTime = element["PaynamentTime"].InnerText;
-            newDocument.Number = Convert.ToInt32 (element["Number"].InnerText);
-            newDocument.Year = Convert.ToInt32(element["Year"].InnerText);
+
 
             newDocument.DocumentSummary = DocumentSummaryXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
+
+            var customerElement = element["Customer"];
+            if (customerElement != null)
+            {
+                newDocument.Customer = CompanyToXmlSerializer.GetCompanyFromXml(customerElement);
+            }
+            else
+            {
+                var companyIdElement = element["CompanyID"];
+                if (companyIdElement != null)
+                {
+                    var companyId = int.Parse(companyIdElement.InnerText);
+                    newDocument.Customer = modelStore.Companies.Find(n => n.Id == companyId);
+                }
+                else
+                {
+                    if (element["CompanyTag"] != null)
+                    {
+                        string text = element["CompanyTag"].InnerText;
+                        Company comp = _modelStore.Companies.Find(n => n.ShortName == text);
+                        newDocument.Customer = comp;
+                    }
+                }
+            }
+
+            var issuerElement = element["Issuer"];
+            if (issuerElement != null)
+            {
+                newDocument.Issuer = CompanyToXmlSerializer.GetCompanyFromXml(issuerElement);
+            }
+            else
+            {
+                newDocument.Issuer = settingsAccessor.GetSettings().OwnerCompany;
+            }
 
             return newDocument;
         }

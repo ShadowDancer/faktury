@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Faktury.Classes;
@@ -31,8 +32,8 @@ namespace Faktury.Data.Xml
                     {
                         Directory.CreateDirectory(BackupPath);
                     }
-                    string mainDirectoryPath = Path.Combine(BackupPath, DateTime.Now.ToShortDateString().Replace('\\', '-').Replace('/', '-'));
-                    mainDirectoryPath = Path.Combine(mainDirectoryPath, DateTime.Now.ToLongTimeString().Replace(':', '-'));
+                    string mainDirectoryPath = Path.Combine(BackupPath, DateTime.Now.ToString("d", CultureInfo.InvariantCulture).Replace('\\', '-').Replace('/', '-'));
+                    mainDirectoryPath = Path.Combine(mainDirectoryPath, DateTime.Now.ToString("T", CultureInfo.InvariantCulture).Replace(':', '-'));
                     Directory.CreateDirectory(mainDirectoryPath);
 
                     _modelStoreLoader.SaveDataToDirectory(mainDirectoryPath);
@@ -121,14 +122,14 @@ namespace Faktury.Data.Xml
                 // Load backup
                 if (Directory.Exists(path))
                 {
-                    _modelStoreLoader.LoadDataFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
+                    _modelStoreLoader.LoadDataFromDirectory(MainForm.Instance.OpenDataFolder.SelectedPath);
                     MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
                 }
             }
             catch
             {
                 // Restore if failed
-                _modelStoreLoader.LoadDataFromFile(MainForm.Instance.OpenDataFolder.SelectedPath);
+                _modelStoreLoader.LoadDataFromDirectory(MainForm.Instance.OpenDataFolder.SelectedPath);
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();
 
                 result = false;

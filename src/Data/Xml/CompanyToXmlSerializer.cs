@@ -8,9 +8,9 @@ namespace Faktury.Data.Xml
 {
     public class CompanyToXmlSerializer
     {
-        public static XmlElement GetXmlElement(Company company, XmlDocument xmlDoc)
+        public static XmlElement GetXmlElement(Company company, XmlDocument xmlDoc, string xmlElementName = "Company")
         {
-            XmlElement companyElement = xmlDoc.CreateElement("Company");
+            XmlElement companyElement = xmlDoc.CreateElement(xmlElementName);
 
             XmlElement name = xmlDoc.CreateElement("Name");
             XmlElement owner = xmlDoc.CreateElement("Owner");

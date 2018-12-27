@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows.Forms;
 using Faktury.Classes;
 using Faktury.Print_Framework;
@@ -30,7 +29,7 @@ namespace Faktury.Windows
         {
             get
             {
-                if(Document.CompanyId != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) return true;
+                if(Document.Customer.Id != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) return true;
 
                 if(Document.IssueDate != DTPIssueDate.Value) return true;
                 if(Document.SellDate != DTPSellDate.Value) return true;
@@ -80,8 +79,8 @@ namespace Faktury.Windows
 
         public void SaveDataFromControls(Document document)
         {
-            document.CompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
-
+            document.Customer = _modelStore.Companies.Find(n => n.Id == ((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
+            document.Issuer = _settingsAccessor.GetSettings().OwnerCompany;
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
             document.PaymentType = CBPaynament.Text;
@@ -101,6 +100,7 @@ namespace Faktury.Windows
         public void ReloadCompanyCombobox()
         {
             MainForm.Instance.ReloadCompanyCombobox(CBCompanyTag);
+            UpdateCustomerInfo();
         }
 
         private void UpdateId()
@@ -192,7 +192,7 @@ namespace Faktury.Windows
 
             foreach (ComboBoxItem item in CBCompanyTag.Items)
             {
-                if (item.Id == Document.CompanyId)
+                if (item.Id == Document.Customer.Id)
                 {
                     CBCompanyTag.SelectedItem = item;
                     break;
@@ -206,6 +206,8 @@ namespace Faktury.Windows
             TBPaynamentTime.Text = Document.PaymentTime;
 
             documentProperties.Initialize(Document);
+
+            UpdateCustomerInfo();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -232,12 +234,12 @@ namespace Faktury.Windows
             SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (_modelStore.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
+            if (targetDocument.Issuer == null || targetDocument.Customer == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            new DocumentPrinter(_modelStore, _settingsAccessor, targetDocument).Print(_printEngine);
+            new DocumentPrinter(targetDocument).Print(_printEngine);
         }
 
         public void ShowPreview()
@@ -249,12 +251,12 @@ namespace Faktury.Windows
             SaveDataFromControls(targetDocument);
 
             //check for errors
-            if (_modelStore.Companies.Find(n => n.Id == targetDocument.CompanyId) == null)
+            if (targetDocument.Issuer == null || targetDocument.Customer == null)
             {
                 MessageBox.Show("Kontrahent nieznany!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            new DocumentPrinter(_modelStore, _settingsAccessor, targetDocument).ShowPreview(_printEngine);
+            new DocumentPrinter(targetDocument).ShowPreview(_printEngine);
         }
 
         private void CxBSimilarDates_CheckedChanged(object sender, EventArgs e)
@@ -270,8 +272,30 @@ namespace Faktury.Windows
                 DTPSellDate.Value = DTPIssueDate.Value;
             }
         }
+
+        private void CBCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateCustomerInfo();
+        }
+
+        private void UpdateCustomerInfo()
+        {
+            var selectedCompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem)?.Id;
+            if (selectedCompanyId != null)
+            {
+                Company company = _modelStore.Companies.Find(n => n.Id == selectedCompanyId);
+                if (company != null)
+                {
+                    tbCompanyInfoText.Text = string.Join(Environment.NewLine, company.Name, company.Address,
+                        company.Street, "", "NIP: " + company.Nip);
+                    return;
+                }
+            }
+
+            tbCompanyInfoText.Text = "";
+        }
     }
-       
+
     public class ComboBoxItem
     {
         public ComboBoxItem(string text, int data)

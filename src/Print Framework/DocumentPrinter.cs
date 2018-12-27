@@ -14,21 +14,17 @@ namespace Faktury.Print_Framework
         /// Summary height
         /// </summary>
         private const int Sh = 30;
-        private readonly ModelStore _modelStore;
-        private readonly SettingsAccessor _settingsAccessor;
         private readonly Document _document;
 
-        public DocumentPrinter(ModelStore modelStore, SettingsAccessor settingsAccessor, Document document)
+        public DocumentPrinter(Document document)
         {
-            _modelStore = modelStore;
-            _settingsAccessor = settingsAccessor;
             _document = document;
         }
 
         public void Print(PrintElement element)
         {
-            Company company = _modelStore.Companies.Find(n => n.Id == _document.CompanyId);
-            Company ownerCompany = _settingsAccessor.GetSettings().OwnerCompany;
+            Company company = _document.Customer;
+            Company ownerCompany = _document.Issuer;
             if (company == null || ownerCompany == null)
             {
                 MessageBox.Show("Nie znaleziono firmy! Błąd jest prawdopodobnie spowodowany usunięciem kontrahenta", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);

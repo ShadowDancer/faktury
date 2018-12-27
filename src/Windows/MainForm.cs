@@ -538,7 +538,7 @@ namespace Faktury.Windows
             if (ActiveMdiChild != null && ActiveMdiChild is DocumentWindow window)
             {
                 SaveDocument(window);
-                PrintEngine.AddPrintObject(new DocumentPrinter(ModelStore, SettingsAccessor, window.Document));
+                PrintEngine.AddPrintObject(new DocumentPrinter(window.Document));
             }
 
             PrintEngine.ShowPrintDialog();

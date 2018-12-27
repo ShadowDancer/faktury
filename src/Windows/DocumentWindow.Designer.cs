@@ -47,6 +47,7 @@ namespace Faktury.Windows
             this.label3 = new System.Windows.Forms.Label();
             this.CBPaynament = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tbCompanyInfoText = new System.Windows.Forms.TextBox();
             this.CBCompanyTag = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
@@ -217,13 +218,23 @@ namespace Faktury.Windows
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.tbCompanyInfoText);
             this.groupBox4.Controls.Add(this.CBCompanyTag);
             this.groupBox4.Location = new System.Drawing.Point(436, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(301, 52);
+            this.groupBox4.Size = new System.Drawing.Size(301, 124);
             this.groupBox4.TabIndex = 7;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Odbiorca";
+            // 
+            // tbCompanyInfoText
+            // 
+            this.tbCompanyInfoText.Location = new System.Drawing.Point(9, 43);
+            this.tbCompanyInfoText.Multiline = true;
+            this.tbCompanyInfoText.Name = "tbCompanyInfoText";
+            this.tbCompanyInfoText.ReadOnly = true;
+            this.tbCompanyInfoText.Size = new System.Drawing.Size(286, 75);
+            this.tbCompanyInfoText.TabIndex = 4;
             // 
             // CBCompanyTag
             // 
@@ -233,6 +244,7 @@ namespace Faktury.Windows
             this.CBCompanyTag.Name = "CBCompanyTag";
             this.CBCompanyTag.Size = new System.Drawing.Size(286, 21);
             this.CBCompanyTag.TabIndex = 3;
+            this.CBCompanyTag.SelectedIndexChanged += new System.EventHandler(this.CBCompanyTag_SelectedIndexChanged);
             // 
             // Ok
             // 
@@ -293,6 +305,7 @@ namespace Faktury.Windows
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -318,5 +331,6 @@ namespace Faktury.Windows
         private CheckBox CxBSimilarDates;
         private DateTimePicker DTPSellDate;
         private DocumentProperties documentProperties;
+        private TextBox tbCompanyInfoText;
     }
 }

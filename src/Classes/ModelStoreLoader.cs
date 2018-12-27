@@ -27,9 +27,7 @@ namespace Faktury.Classes
         {
             LoadSettingsFromFile(_configPath);
 
-            LoadCompaniesFromFile(Path.Combine(_dataPath, "Companies.xml"));
-            LoadDocumentsFromFile(Path.Combine(_dataPath, "Documents.xml"));
-            LoadServicesFromFile(Path.Combine(_dataPath, "Services.xml"));
+            LoadDataFromDirectory(_dataPath);
         }
 
         public bool ConfigExists()
@@ -60,9 +58,7 @@ namespace Faktury.Classes
             {
                 if (!Directory.Exists(_dataPath)) Directory.CreateDirectory(_dataPath);
 
-                SaveCompaniesToFile(Path.Combine(_dataPath, "Companies.xml"));
-                SaveDocumentsToFile(Path.Combine(_dataPath, "Documents.xml"));
-                SaveServicesToFile(Path.Combine(_dataPath, "Services.xml"));
+                SaveDataToDirectory(_dataPath);
 
                 backupManager.SaveLocalBackup();
                 backupManager.SaveDeviceBackup();
@@ -88,7 +84,7 @@ namespace Faktury.Classes
         }
 
 
-        public void LoadDataFromFile(string directory)
+        public void LoadDataFromDirectory(string directory)
         {
             LoadCompaniesFromFile(Path.Combine(directory, "Companies.xml"));
             LoadDocumentsFromFile(Path.Combine(directory, "Documents.xml"));
@@ -135,7 +131,7 @@ namespace Faktury.Classes
                 // ReSharper disable once PossibleNullReferenceException
                 foreach (XmlNode currentNode in doc["Documents"])
                 {
-                    Document newDocument = new DocumentXmlSerializer(_modelStore).GetDocumentFromXml(currentNode);
+                    Document newDocument = new DocumentXmlSerializer(_modelStore).GetDocumentFromXml(currentNode, _modelStore, _settingsAccessor);
                     _modelStore.Documents.Add(newDocument);
                 }
 
