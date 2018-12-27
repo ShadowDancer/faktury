@@ -38,7 +38,7 @@ namespace Faktury.Windows
             this.TBOwner = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.TBAdress = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelNIP = new System.Windows.Forms.Label();
             this.TBNip = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.TBAdress2 = new System.Windows.Forms.TextBox();
@@ -57,6 +57,7 @@ namespace Faktury.Windows
             this.label7 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
+            this.NIPValidation = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.GBBank.SuspendLayout();
@@ -110,14 +111,14 @@ namespace Faktury.Windows
             this.TBAdress.Size = new System.Drawing.Size(334, 20);
             this.TBAdress.TabIndex = 5;
             // 
-            // label4
+            // labelNIP
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 177);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(28, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "NIP:";
+            this.labelNIP.AutoSize = true;
+            this.labelNIP.Location = new System.Drawing.Point(6, 177);
+            this.labelNIP.Name = "labelNIP";
+            this.labelNIP.Size = new System.Drawing.Size(28, 13);
+            this.labelNIP.TabIndex = 6;
+            this.labelNIP.Text = "NIP:";
             // 
             // TBNip
             // 
@@ -125,9 +126,11 @@ namespace Faktury.Windows
             this.TBNip.Name = "TBNip";
             this.TBNip.Size = new System.Drawing.Size(334, 20);
             this.TBNip.TabIndex = 7;
+            this.TBNip.TextChanged += new System.EventHandler(this.TBNip_TextChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.NIPValidation);
             this.groupBox1.Controls.Add(this.TBAdress2);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.TBTag);
@@ -135,7 +138,7 @@ namespace Faktury.Windows
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.TBNip);
             this.groupBox1.Controls.Add(this.TBName);
-            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.labelNIP);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.TBAdress);
             this.groupBox1.Controls.Add(this.TBOwner);
@@ -289,6 +292,16 @@ namespace Faktury.Windows
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
+            // NIPValidation
+            // 
+            this.NIPValidation.AutoSize = true;
+            this.NIPValidation.ForeColor = System.Drawing.Color.Red;
+            this.NIPValidation.Location = new System.Drawing.Point(160, 177);
+            this.NIPValidation.Name = "NIPValidation";
+            this.NIPValidation.Size = new System.Drawing.Size(0, 13);
+            this.NIPValidation.TabIndex = 13;
+            this.NIPValidation.Visible = false;
+            // 
             // CompanyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -326,7 +339,7 @@ namespace Faktury.Windows
         private TextBox TBOwner;
         private Label label3;
         private TextBox TBAdress;
-        private Label label4;
+        private Label labelNIP;
         private TextBox TBNip;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
@@ -345,5 +358,6 @@ namespace Faktury.Windows
         private Button Cancel;
         private TextBox TBAdress2;
         private Label label10;
+        private Label NIPValidation;
     }
 }

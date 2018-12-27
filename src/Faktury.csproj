@@ -98,6 +98,7 @@
     <Compile Include="Classes\ModelStore.cs" />
     <Compile Include="Classes\SettingsAccessor.cs" />
     <Compile Include="Classes\ModelStoreLoader.cs" />
+    <Compile Include="Classes\NipValidator.cs" />
     <Compile Include="Windows\ServicesListWindow.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -42,6 +42,7 @@ namespace Faktury.Windows
 
             GBBank.Visible = Company.Bank;
             TBTag.Visible = LTag.Visible = !Company.Bank;
+            ValidateNIP();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -77,6 +78,51 @@ namespace Faktury.Windows
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void TBNip_TextChanged(object sender, EventArgs e)
+        {
+            ValidateNIP();
+        }
+
+        private void ValidateNIP()
+        {
+            string valueToValidate = TBNip.Text;
+
+            if (!string.IsNullOrEmpty(valueToValidate))
+            {
+                int digits = 0;
+                foreach (var c in valueToValidate)
+                {
+                    if (c != '-')
+                    {
+                        if (!char.IsDigit(c))
+                        {
+                            NIPValidation.Visible = true;
+                            NIPValidation.Text = "Nieprawidłowe znaki";
+                            return;
+                        }
+
+                        digits++;
+                    }
+                }
+
+                if (digits != 10)
+                {
+                    NIPValidation.Visible = true;
+                    NIPValidation.Text = "Nieprawidlowa długość";
+                    return;
+                }
+
+                if (!NipValidator.IsNipValid(valueToValidate))
+                {
+                    NIPValidation.Visible = true;
+                    NIPValidation.Text = "Nieprawidłowy NIP";
+                    return;
+                }
+            }
+
+            NIPValidation.Visible = false;
         }
     }
 }
