@@ -190,7 +190,7 @@ namespace Faktury.Windows
             Service check;
             try
             {
-                check = ModelStore.Services.Find(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                check = ModelStore.FindService(((ComboBoxItem)CBService.SelectedItem).Id);
                 if (check == null) throw new Exception();
             }
             catch

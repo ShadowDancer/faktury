@@ -51,7 +51,7 @@ namespace Faktury.Windows
             //load data
             TBName.Text = Service.Name;
             TBTag.Text = Service.Tag;
-            nUDPrice.Value = (decimal)Service.PriceNet;
+            nUDPrice.Value = Service.PriceNet;
             CBVat.Text = Service.Vat.ToString();
             CBJm.Text = Service.Unit;
         }
@@ -79,9 +79,9 @@ namespace Faktury.Windows
                 return;
             }
 
-            if (_modelStore.Services.Find(n => n.Id == Service.Id) == null)
+            if (_modelStore.FindService(Service.Id) == null)
             {
-                _modelStore.Services.Add(Service);
+                _modelStore.AddService(Service);
             }
 
             if (MainForm.Instance.ServicesListWindow != null && !MainForm.Instance.ServicesListWindow.IsDisposed)

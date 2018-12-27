@@ -53,7 +53,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    var serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.FindService(int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.EditService(serviceToEdit);
@@ -70,7 +70,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    var serviceToEdit = _modelStore.Services.Find(n => n.Id == int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.FindService(int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.DeleteService(serviceToEdit);

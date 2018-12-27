@@ -64,9 +64,8 @@ namespace Faktury.Windows
 
                 if (AddToCollection)
                 {
-                    Company check = _modelStore.Companies.Find(n => n.Id == Company.Id);
-                    if (check == null)
-                        _modelStore.Companies.Add(Company);
+                    if (_modelStore.FindCompany(Company.Id) == null)
+                        _modelStore.AddCompany(Company);
                 }
 
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();

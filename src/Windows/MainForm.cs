@@ -81,7 +81,7 @@ namespace Faktury.Windows
             if (MessageBox.Show("Na pewno?", "Usuwanie usługi...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                 DialogResult.Yes)
             {
-                ModelStore.Services.Remove(serviceToRemove);
+                ModelStore.RemoveService(serviceToRemove);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Faktury.Windows
             if (MessageBox.Show("Na pewno?", "Usuwanie firmy...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                 DialogResult.Yes)
             {
-                ModelStore.Companies.Remove(companyToRemove);
+                ModelStore.RemoveCompany(companyToRemove);
                 ReloadCompanyComboboxesInChildWindows();
             }
         }
@@ -192,7 +192,7 @@ namespace Faktury.Windows
                 }
             }
 
-            ModelStore.Companies.Clear();
+            ModelStore.ClearCompanies();
         }
 
         private void CleanServices()
@@ -205,7 +205,7 @@ namespace Faktury.Windows
                 }
             }
 
-            ModelStore.Services.Clear();
+            ModelStore.ClearServices();
         }
 
         private void CleanDocuments()

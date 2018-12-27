@@ -118,16 +118,7 @@ namespace Faktury.Data.Xml
                 if (companyIdElement != null)
                 {
                     var companyId = int.Parse(companyIdElement.InnerText);
-                    newDocument.Customer = modelStore.Companies.Find(n => n.Id == companyId);
-                }
-                else
-                {
-                    if (element["CompanyTag"] != null)
-                    {
-                        string text = element["CompanyTag"].InnerText;
-                        Company comp = _modelStore.Companies.Find(n => n.ShortName == text);
-                        newDocument.Customer = comp;
-                    }
+                    newDocument.Customer = modelStore.FindCompany(companyId);
                 }
             }
 

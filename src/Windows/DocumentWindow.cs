@@ -79,7 +79,7 @@ namespace Faktury.Windows
 
         public void SaveDataFromControls(Document document)
         {
-            document.Customer = _modelStore.Companies.Find(n => n.Id == ((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
+            document.Customer = _modelStore.FindCompany(((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
             document.Issuer = _settingsAccessor.GetSettings().OwnerCompany;
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
@@ -283,7 +283,7 @@ namespace Faktury.Windows
             var selectedCompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem)?.Id;
             if (selectedCompanyId != null)
             {
-                Company company = _modelStore.Companies.Find(n => n.Id == selectedCompanyId);
+                Company company = _modelStore.FindCompany(selectedCompanyId.Value);
                 if (company != null)
                 {
                     tbCompanyInfoText.Text = string.Join(Environment.NewLine, company.Name, company.Address,

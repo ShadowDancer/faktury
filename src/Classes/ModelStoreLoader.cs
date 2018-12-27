@@ -104,9 +104,9 @@ namespace Faktury.Classes
                     if (currentNode.Name == "IssueCompany") continue;
 
                     Company newCompany = CompanyToXmlSerializer.GetCompanyFromXml(currentNode);
-                    if (_modelStore.Companies.Find(n => n.Id == newCompany.Id) == null)
+                    if (_modelStore.FindCompany(newCompany.Id) == null)
                     {
-                        _modelStore.Companies.Add(newCompany);
+                        _modelStore.AddCompany(newCompany);
                     }
                     else
                     {
@@ -114,7 +114,7 @@ namespace Faktury.Classes
                     }
                 }
 
-                _modelStore.UpdateHigestCompanyId();
+                _modelStore.UpdateHighestCompanyId();
             }
             catch
             {
@@ -153,7 +153,7 @@ namespace Faktury.Classes
                 // ReSharper disable once PossibleNullReferenceException
                 foreach (XmlNode currentNode in doc["Services"])
                 {
-                    _modelStore.Services.Add(ServiceToXmlSerializer.GetServiceFromXml(currentNode));
+                    _modelStore.AddService(ServiceToXmlSerializer.GetServiceFromXml(currentNode));
                 }
 
                 _modelStore.UpdateHigestServiceId();
