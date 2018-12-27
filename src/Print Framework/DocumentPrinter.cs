@@ -31,7 +31,8 @@ namespace Faktury.Print_Framework
                 return;
             }
 
-            Font footerFont = new Font("Times New Roman", 15);
+            Font smallFont = new Font("Times New Roman", 14);
+            Font extraSmall = new Font("Times New Roman", 11);
 
             StringFormat format = new StringFormat
             {
@@ -66,13 +67,13 @@ namespace Faktury.Print_Framework
 
             headerTextPosition = new RectangleF(425, 30, 400, 30);
 
-            element.AddText("NIP: " + ownerCompany.Nip, footerFont, headerTextPosition);
+            element.AddText("NIP: " + ownerCompany.Nip, smallFont, headerTextPosition);
             if (ownerCompany.Bank)
             {
                 headerTextPosition.Y += 20;
-                element.AddText("Bank: " + ownerCompany.BankSection, footerFont, headerTextPosition);
+                element.AddText("Bank: " + ownerCompany.BankSection, smallFont, headerTextPosition);
                 headerTextPosition.Y += 20;
-                element.AddText(ownerCompany.BankAccount, footerFont, headerTextPosition);
+                element.AddText(ownerCompany.BankAccount, smallFont, headerTextPosition);
             }
 
             headerTextPosition.Y += 17;
@@ -80,13 +81,13 @@ namespace Faktury.Print_Framework
             if (!string.IsNullOrEmpty(ownerCompany.PhoneNumber))
             {
                 headerTextPosition.Y += 17;                
-                element.AddText("Telefon: " + ownerCompany.PhoneNumber, footerFont, headerTextPosition);
+                element.AddText("Telefon: " + ownerCompany.PhoneNumber, smallFont, headerTextPosition);
 
             }
             if (!string.IsNullOrEmpty(ownerCompany.MobileNumber))
             {
                 headerTextPosition.Y += 17;
-                element.AddText("Komórka: " + ownerCompany.MobileNumber, footerFont, headerTextPosition);
+                element.AddText("Komórka: " + ownerCompany.MobileNumber, smallFont, headerTextPosition);
             }
 
             headerTextPosition.Y += 21;
@@ -136,11 +137,11 @@ namespace Faktury.Print_Framework
             // client
             element.AddText("Nabywca:", new PointF(50, middlePartPosition + 80));
 
-            element.AddText(company.Name, footerFont, new PointF(65, middlePartPosition + 120));
-            element.AddText(company.Owner, footerFont, new PointF(65, middlePartPosition + 140));
-            element.AddText(company.Address, footerFont, new PointF(65, middlePartPosition + 160));
-            element.AddText(company.Street, footerFont, new PointF(65, middlePartPosition + 180));
-            element.AddText("NIP:" + company.Nip, footerFont, new PointF(65, middlePartPosition + 210));
+            element.AddText(company.Name, smallFont, new PointF(65, middlePartPosition + 120));
+            element.AddText(company.Owner, smallFont, new PointF(65, middlePartPosition + 140));
+            element.AddText(company.Address, smallFont, new PointF(65, middlePartPosition + 160));
+            element.AddText(company.Street, smallFont, new PointF(65, middlePartPosition + 180));
+            element.AddText("NIP:" + company.Nip, smallFont, new PointF(65, middlePartPosition + 210));
 
             // border
             element.AddRectangle(new RectangleF(50, middlePartPosition + 250, 725, 475));
@@ -155,13 +156,19 @@ namespace Faktury.Print_Framework
             //table header
 
             //header separator
-            int[] fieldSizes = { 35, 150, 40, 50, 120, 90, 55, 85, 100 };
-            string[] fieldNames = { "LP", "Nazwa", "jm", "Ilość", "Cena jed.bez\npod. VAT", "Wartość bez VAT", "VAT\n%", "Kwota Vat", "Wartość z pod. VAT" };
+            int[] fieldSizes = { 30, 165, 35, 45, 120, 90, 55, 85, 100 };
+            string[] fieldNames = { "#", "Nazwa", "jm", "Ilość", "Cena jed.bez\npod. VAT", "Wartość bez VAT", "VAT\n%", "Kwota Vat", "Wartość z pod. VAT" };
 
-            Font extraSmall = new Font("Times New Roman", 12);
+            bool PKWiUColumn = _document.Items.Any(n => !string.IsNullOrWhiteSpace(n.PKWiU));
+            if (PKWiUColumn)
+            {
+                fieldSizes = new int[]{ 30, 100, 65, 35, 45, 120, 90, 55, 85, 100 };
+                fieldNames = new []{ "#", "Nazwa", "Symbol PKWiU", "jm", "Ilość", "Cena jed.bez\npod. VAT", "Wartość bez VAT", "VAT\n%", "Kwota Vat", "Wartość z pod. VAT" };
+
+            }
 
             //header texts
-            PrintItem(element, new PointF(50, middlePartPosition + 250), fieldSizes, fieldNames, footerFont);
+            PrintItem(element, new PointF(50, middlePartPosition + 250), fieldSizes, fieldNames, extraSmall);
             
             //items
             PointF position1 = new PointF(50, middlePartPosition + 300);
@@ -172,6 +179,10 @@ namespace Faktury.Print_Framework
                 int lp = i + 1;
                 input.Add(lp.ToString());
                 input.Add(documentItems[i].Name);
+                if (PKWiUColumn)
+                {
+                    input.Add(documentItems[i].PKWiU ?? "");
+                }
                 input.Add(documentItems[i].Unit);
                 input.Add(documentItems[i].Quantity.ToString(CultureInfo.CurrentCulture));
                 input.Add(documentItems[i].PriceNet.ToString("0.00"));
@@ -187,7 +198,7 @@ namespace Faktury.Print_Framework
 
             //summary lines
             
-            DrawSummaryTable(element, middlePartPosition, sf, footerFont, extraSmall);
+            DrawSummaryTable(element, middlePartPosition, sf, smallFont, extraSmall);
 
 
             RectangleF linePos = new RectangleF(325, middlePartPosition + 550, 775, middlePartPosition + 550);
@@ -229,7 +240,7 @@ namespace Faktury.Print_Framework
 
             // value in words
 
-            element.AddText("Słownie:", sf, footerFont, null, new RectangleF(50, middlePartPosition + 675, 100, 50));
+            element.AddText("Słownie:", sf, smallFont, null, new RectangleF(50, middlePartPosition + 675, 100, 50));
             format.Alignment = StringAlignment.Near;
 
             int size = TextRenderer.MeasureText(_document.DocumentSummary.InWords, extraSmall).Width;
@@ -250,9 +261,20 @@ namespace Faktury.Print_Framework
 
             // footer
             int footerPartPosition = 900;
-            element.AddText("Faktura jest wezwaniem do zapłaty\nPotwierdzenie odbioru faktury jest jednocześnie potwierdzeniem wykonania zlecenia.", footerFont, new PointF(50, footerPartPosition));
-            element.AddText("W/G oświadczenia\npodpis osoby uprawnionej do odbioru faktury", StringAlignment.Center, footerFont, new RectangleF(0, footerPartPosition + 70, 350, footerPartPosition + 70));
-            element.AddText("Podpis osoby uprawnionej\ndo wystawienia faktury", StringAlignment.Center, footerFont, new RectangleF(300, footerPartPosition + 70, 700, footerPartPosition + 70));
+            string footerText =
+                "Faktura jest wezwaniem do zapłaty\nPotwierdzenie odbioru faktury jest jednocześnie potwierdzeniem wykonania zlecenia.";
+
+            if (_document.Items.Any(n => n.VatRate.IsInverseVat))
+            {
+                footerText += "\r\nUwagi: Zgodnie z art. 17 ust. 1 pkt. 8 Ustawy o VAT podatek VAT rozlicza nabywca.";
+
+            }
+            element.AddText(footerText, extraSmall, new PointF(50, footerPartPosition));
+
+
+
+            element.AddText("W/G oświadczenia\npodpis osoby uprawnionej do odbioru faktury", StringAlignment.Center, smallFont, new RectangleF(0, footerPartPosition + 70, 350, footerPartPosition + 70));
+            element.AddText("Podpis osoby uprawnionej\ndo wystawienia faktury", StringAlignment.Center, smallFont, new RectangleF(300, footerPartPosition + 70, 700, footerPartPosition + 70));
             int length = 300;
             int x = 25;
             element.AddLine(new RectangleF(x, footerPartPosition + 190, x + length, footerPartPosition + 190));

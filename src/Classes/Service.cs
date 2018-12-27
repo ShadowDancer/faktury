@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace Faktury.Classes
 {
@@ -17,5 +18,6 @@ namespace Faktury.Classes
 
         public DateTime CreationDate;
         public DateTime ModificationDate;
+        public string PKWiU = "";
     }
 }

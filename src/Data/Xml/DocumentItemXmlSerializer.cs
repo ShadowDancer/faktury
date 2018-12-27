@@ -43,6 +43,14 @@ namespace Faktury.Data.Xml
             brutto.InnerText = moneyData.SumGross.ToString(CultureInfo.InvariantCulture);
             record.AppendChild(brutto);
 
+            if (!string.IsNullOrWhiteSpace(moneyData.PKWiU))
+            {
+                // ReSharper disable once IdentifierTypo
+                var pkwiu = xmlDoc.CreateElement("PKWiU");
+                pkwiu.InnerText = moneyData.PKWiU;
+                record.AppendChild(pkwiu);
+            }
+
             return record;
         }
 
@@ -56,9 +64,9 @@ namespace Faktury.Data.Xml
                 Quantity = decimal.Parse(xmlElement["Count"].InnerText, CultureInfo.InvariantCulture),
                 SumNet = decimal.Parse(xmlElement["Netto"].InnerText, CultureInfo.InvariantCulture),
                 SumVat = decimal.Parse(xmlElement["VAT"].InnerText, CultureInfo.InvariantCulture),
-                SumGross = decimal.Parse(xmlElement["Brutto"].InnerText, CultureInfo.InvariantCulture)
+                SumGross = decimal.Parse(xmlElement["Brutto"].InnerText, CultureInfo.InvariantCulture),
+                PKWiU = xmlElement["PKWiU"]?.InnerText
             };
-
 
             var vatRateElement = xmlElement[VatRateXmlSerializer.VatRateElement];
             if (vatRateElement != null)

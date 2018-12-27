@@ -2,6 +2,9 @@
 {
     public class DocumentItem
     {
+        // ReSharper disable once InconsistentNaming
+        public string PKWiU { get; set; }
+
         /// <summary>
         ///     szt / m / m^2 etc.
         /// </summary>

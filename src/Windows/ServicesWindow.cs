@@ -54,6 +54,7 @@ namespace Faktury.Windows
             nUDPrice.Value = Service.PriceNet;
             CBVat.Text = Service.Vat.ToString();
             CBJm.Text = Service.Unit;
+            TBpkwiu.Text = Service.PKWiU;
         }
 
         private void SaveData()
@@ -63,7 +64,7 @@ namespace Faktury.Windows
             Service.Name = TBName.Text;
             Service.PriceNet = nUDPrice.Value;
             Service.Tag = TBTag.Text;
-
+            Service.PKWiU = TBpkwiu.Text;
             Service.ModificationDate = DateTime.Now;
         }
 

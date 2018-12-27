@@ -34,20 +34,20 @@ namespace Faktury.Windows
                     LVEServices.Items[i].Text = (i + 1).ToString();
 
                     //Wartość Netto
-                    decimal netto = Math.Round(Convert.ToDecimal(LVEServices.Items[i].SubItems[2].Text) * Convert.ToDecimal(LVEServices.Items[i].SubItems[3].Text), 2, MidpointRounding.AwayFromZero);
+                    decimal netto = Math.Round(Convert.ToDecimal(LVEServices.Items[i].SubItems[3].Text) * Convert.ToDecimal(LVEServices.Items[i].SubItems[4].Text), 2, MidpointRounding.AwayFromZero);
                     totalNetto += netto;
-                    LVEServices.Items[i].SubItems[5].Text = netto.ToString("0.00");
+                    LVEServices.Items[i].SubItems[6].Text = netto.ToString("0.00");
 
                     //vat
-                    var rate = VatRate.FromString(LVEServices.Items[i].SubItems[8].Text);
+                    var rate = VatRate.FromString(LVEServices.Items[i].SubItems[9].Text);
                     decimal vat = Math.Round(netto * (rate.VatPercent / 100.0m), 2, MidpointRounding.AwayFromZero);
                     totalVat += vat;
-                    LVEServices.Items[i].SubItems[6].Text = vat.ToString("0.00");
+                    LVEServices.Items[i].SubItems[7].Text = vat.ToString("0.00");
 
                     //Wartość Brutto
                     decimal brutto = Math.Round(netto + vat, 2, MidpointRounding.AwayFromZero);
                     totalBrutto += brutto;
-                    LVEServices.Items[i].SubItems[7].Text = brutto.ToString("0.00");
+                    LVEServices.Items[i].SubItems[8].Text = brutto.ToString("0.00");
                 }
                 catch (Exception ex)
                 {
@@ -83,6 +83,7 @@ namespace Faktury.Windows
             {
                 ListViewItem newItem = new ListViewItem();
                 newItem.SubItems.Add(currentRecord.Name);
+                newItem.SubItems.Add(currentRecord.PKWiU);
                 newItem.SubItems.Add(currentRecord.PriceNet.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add(currentRecord.Quantity.ToString(CultureInfo.CurrentCulture));
                 newItem.SubItems.Add(currentRecord.Unit);
@@ -112,13 +113,14 @@ namespace Faktury.Windows
                 DocumentItem newRecord = new DocumentItem
                 {
                     Name = currentItem.SubItems[1].Text,
-                    PriceNet = Convert.ToDecimal(currentItem.SubItems[2].Text),
-                    Quantity = Convert.ToDecimal(currentItem.SubItems[3].Text),
-                    Unit = currentItem.SubItems[4].Text,
-                    SumNet = Convert.ToDecimal(currentItem.SubItems[5].Text),
-                    SumVat = Convert.ToDecimal(currentItem.SubItems[6].Text),
-                    VatRate = VatRate.FromString(currentItem.SubItems[8].Text),
-                    SumGross = Convert.ToDecimal(currentItem.SubItems[7].Text),
+                    PKWiU = currentItem.SubItems[2].Text,
+                    PriceNet = Convert.ToDecimal(currentItem.SubItems[3].Text),
+                    Quantity = Convert.ToDecimal(currentItem.SubItems[4].Text),
+                    Unit = currentItem.SubItems[5].Text,
+                    SumNet = Convert.ToDecimal(currentItem.SubItems[6].Text),
+                    SumVat = Convert.ToDecimal(currentItem.SubItems[7].Text),
+                    VatRate = VatRate.FromString(currentItem.SubItems[9].Text),
+                    SumGross = Convert.ToDecimal(currentItem.SubItems[8].Text),
                 };
 
                 document.Items.Add(newRecord);
@@ -131,7 +133,7 @@ namespace Faktury.Windows
             if (e.SubItem > 0 && e.SubItem < 5)
                 LVEServices.StartEditing(TBListViewExTB, e.Item, e.SubItem);
 
-            if (e.SubItem == 8)
+            if (e.SubItem == 9)
                 LVEServices.StartEditing(TBListViewExTB, e.Item, e.SubItem);
         }
 
@@ -172,8 +174,9 @@ namespace Faktury.Windows
             ListViewItem newItem = new ListViewItem("");
             {
                 newItem.SubItems.Add(service.Name);
+                newItem.SubItems.Add(service.PKWiU);
                 newItem.SubItems.Add(service.PriceNet.ToString(CultureInfo.CurrentCulture));
-                newItem.SubItems.Add("0");
+                newItem.SubItems.Add("1");
                 newItem.SubItems.Add(service.Unit);
                 newItem.SubItems.Add("0");
                 newItem.SubItems.Add("0");
@@ -187,13 +190,8 @@ namespace Faktury.Windows
 
         private void RecordEdit_Click(object sender, EventArgs e)
         {
-            Service check;
-            try
-            {
-                check = ModelStore.FindService(((ComboBoxItem)CBService.SelectedItem).Id);
-                if (check == null) throw new Exception();
-            }
-            catch
+            Service service = ModelStore.FindService(((ComboBoxItem)CBService.SelectedItem).Id);
+            if (service == null)
             {
                 MessageBox.Show("Wybierz szablon usługi z listy!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -202,10 +200,11 @@ namespace Faktury.Windows
             Changed = true;
             if (LVEServices.SelectedItems.Count > 0)
             {
-                LVEServices.SelectedItems[0].SubItems[1].Text = check.Name;
-                LVEServices.SelectedItems[0].SubItems[2].Text = check.PriceNet.ToString(CultureInfo.CurrentCulture);
-                LVEServices.SelectedItems[0].SubItems[4].Text = check.Unit;
-                LVEServices.SelectedItems[0].SubItems[8].Text = check.Vat.ToString();
+                LVEServices.SelectedItems[0].SubItems[1].Text = service.Name;
+                LVEServices.SelectedItems[0].SubItems[1].Text = service.PKWiU;
+                LVEServices.SelectedItems[0].SubItems[3].Text = service.PriceNet.ToString(CultureInfo.CurrentCulture);
+                LVEServices.SelectedItems[0].SubItems[5].Text = service.Unit;
+                LVEServices.SelectedItems[0].SubItems[9].Text = service.Vat.ToString();
 
                 Reload();
             }

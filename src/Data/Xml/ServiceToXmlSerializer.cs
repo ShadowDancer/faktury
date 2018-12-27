@@ -18,7 +18,8 @@ namespace Faktury.Data.Xml
                 Unit = xmlElement["jm"].InnerText,
                 PriceNet = Convert.ToDecimal(xmlElement["Price"].InnerText),
                 Vat = Convert.ToInt32(xmlElement["Vat"].InnerText),
-                Id = Convert.ToInt32(xmlElement["ID"].InnerText)
+                Id = Convert.ToInt32(xmlElement["ID"].InnerText),
+                PKWiU = xmlElement["pkwiu"]?.InnerText
             };
 
 
@@ -49,6 +50,15 @@ namespace Faktury.Data.Xml
             XmlElement vat = xmlDocument.CreateElement("Vat");
             XmlElement idElem = xmlDocument.CreateElement("ID");
 
+            if (!string.IsNullOrWhiteSpace(service.PKWiU))
+            {
+                // ReSharper disable once IdentifierTypo
+                XmlElement pkwiuElem = xmlDocument.CreateElement("pkwiu");
+                pkwiuElem.InnerText = service.PKWiU;
+                serviceElement.AppendChild(pkwiuElem);
+            }
+            
+
             name.InnerText = service.Name;
             tag.InnerText = service.Tag;
             jm.InnerText = service.Unit;
@@ -62,6 +72,7 @@ namespace Faktury.Data.Xml
             serviceElement.AppendChild(price);
             serviceElement.AppendChild(vat);
             serviceElement.AppendChild(idElem);
+            
 
             XmlElement creationDateElement = xmlDocument.CreateElement("CreationDate");
             {

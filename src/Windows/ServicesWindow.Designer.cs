@@ -43,6 +43,8 @@ namespace Faktury.Windows
             this.BCancel = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.TBTag = new System.Windows.Forms.TextBox();
+            this.TBpkwiu = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nUDPrice)).BeginInit();
             this.SuspendLayout();
             // 
@@ -152,18 +154,36 @@ namespace Faktury.Windows
             this.label5.TabIndex = 10;
             this.label5.Text = "Wyświetlana:";
             // 
-            // textBox1
+            // TBTag
             // 
             this.TBTag.Location = new System.Drawing.Point(13, 64);
-            this.TBTag.Name = "textBox1";
+            this.TBTag.Name = "TBTag";
             this.TBTag.Size = new System.Drawing.Size(134, 20);
             this.TBTag.TabIndex = 11;
+            // 
+            // TBpkwiu
+            // 
+            this.TBpkwiu.Location = new System.Drawing.Point(13, 222);
+            this.TBpkwiu.Name = "TBpkwiu";
+            this.TBpkwiu.Size = new System.Drawing.Size(134, 20);
+            this.TBpkwiu.TabIndex = 13;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 206);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "PKWiU:";
             // 
             // ServiceWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 215);
+            this.ClientSize = new System.Drawing.Size(248, 259);
+            this.Controls.Add(this.TBpkwiu);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.TBTag);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.BCancel);
@@ -200,6 +220,7 @@ namespace Faktury.Windows
         private Button BCancel;
         private Label label5;
         private TextBox TBTag;
-
+        private TextBox TBpkwiu;
+        private Label label6;
     }
 }
