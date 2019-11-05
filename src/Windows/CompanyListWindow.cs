@@ -152,12 +152,11 @@ namespace Faktury.Windows
             // Perform the sort with these new sort options.
             myListView.Sort();
         }
-
-        private void bSearch_Click(object sender, EventArgs e)
+        
+        private void tbFilter_TextChanged(object sender, EventArgs e)
         {
             _filter = tbFilter.Text.ToLower();
             Reload();
         }
-
     }
 }

@@ -49,7 +49,6 @@ namespace Faktury.Windows
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tbFilter = new System.Windows.Forms.TextBox();
-            this.bSearch = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -83,7 +82,7 @@ namespace Faktury.Windows
             // columnHeader1
             // 
             this.columnHeader1.Text = "Nazwa skrócona";
-            this.columnHeader1.Width = 135;
+            this.columnHeader1.Width = 119;
             // 
             // columnHeader2
             // 
@@ -107,6 +106,7 @@ namespace Faktury.Windows
             // 
             // contextMenuStrip
             // 
+            this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nowaToolStripMenuItem,
             this.edytujToolStripMenuItem,
@@ -160,7 +160,6 @@ namespace Faktury.Windows
             // panel1
             // 
             this.panel1.Controls.Add(this.tbFilter);
-            this.panel1.Controls.Add(this.bSearch);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -172,19 +171,9 @@ namespace Faktury.Windows
             this.tbFilter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbFilter.Location = new System.Drawing.Point(0, 0);
             this.tbFilter.Name = "tbFilter";
-            this.tbFilter.Size = new System.Drawing.Size(726, 20);
+            this.tbFilter.Size = new System.Drawing.Size(827, 20);
             this.tbFilter.TabIndex = 1;
-            // 
-            // bSearch
-            // 
-            this.bSearch.Dock = System.Windows.Forms.DockStyle.Right;
-            this.bSearch.Location = new System.Drawing.Point(726, 0);
-            this.bSearch.Name = "bSearch";
-            this.bSearch.Size = new System.Drawing.Size(101, 22);
-            this.bSearch.TabIndex = 0;
-            this.bSearch.Text = "Szukaj";
-            this.bSearch.UseVisualStyleBackColor = true;
-            this.bSearch.Click += new System.EventHandler(this.bSearch_Click);
+            this.tbFilter.TextChanged += new System.EventHandler(this.tbFilter_TextChanged);
             // 
             // CompanyListWindow
             // 
@@ -225,6 +214,5 @@ namespace Faktury.Windows
         private ColumnHeader columnHeader4;
         private Panel panel1;
         private TextBox tbFilter;
-        private Button bSearch;
     }
 }
