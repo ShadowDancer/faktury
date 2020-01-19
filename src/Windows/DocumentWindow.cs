@@ -29,17 +29,19 @@ namespace Faktury.Windows
         {
             get
             {
-                if(Document.Customer.Id != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) return true;
+                if (Document.Customer.Id != ((ComboBoxItem)CBCompanyTag.SelectedItem).Id) return true;
 
-                if(Document.IssueDate != DTPIssueDate.Value) return true;
-                if(Document.SellDate != DTPSellDate.Value) return true;
-                if(Document.PaymentType != CBPaynament.Text) return true;
-                if(Document.PaymentTime != TBPaynamentTime.Text) return true;
+                if (Document.IssueDate != DTPIssueDate.Value) return true;
+                if (Document.SellDate != DTPSellDate.Value) return true;
+                if (Document.PaymentType != CBPaynament.Text) return true;
+                if (Document.PaymentTime != TBPaynamentTime.Text) return true;
+                if (Document.ReverseVAT != CxBReverseVAT.Checked) return true;
 
-                if(Document.Number != (int)nUDNumber.Value) return true;
-                if(Document.Year != (int)nUDYear.Value) return true;
+                if (Document.Number != (int)nUDNumber.Value) return true;
+                if (Document.Year != (int)nUDYear.Value) return true;
 
                 if (documentProperties.Changed) return true;
+
 
                 return false;
             }
@@ -85,10 +87,11 @@ namespace Faktury.Windows
             document.SellDate = DTPSellDate.Value;
             document.PaymentType = CBPaynament.Text;
             document.PaymentTime = TBPaynamentTime.Text;
+            document.ReverseVAT = CxBReverseVAT.Checked;
 
             document.Number = (int)nUDNumber.Value;
             document.Year = (int)nUDYear.Value;
-            
+
             documentProperties.Save(document);
         }
 
@@ -155,8 +158,8 @@ namespace Faktury.Windows
 
         private void nUDYear_ValueChanged(object sender, EventArgs e)
         {
-            if(_oldYearValue != nUDYear.Value)
-            UpdateId();
+            if (_oldYearValue != nUDYear.Value)
+                UpdateId();
         }
 
         private void DocumentWindow_Load(object sender, EventArgs e)
@@ -190,15 +193,19 @@ namespace Faktury.Windows
                 nUDYear.Value = Document.Year;
             }
 
-            foreach (ComboBoxItem item in CBCompanyTag.Items)
+            if (Document.Customer != null)
             {
-                if (item.Id == Document.Customer.Id)
+                foreach (ComboBoxItem item in CBCompanyTag.Items)
                 {
-                    CBCompanyTag.SelectedItem = item;
-                    break;
+                    if (item.Id == Document.Customer.Id)
+                    {
+                        CBCompanyTag.SelectedItem = item;
+                        break;
+                    }
                 }
             }
 
+            CxBReverseVAT.Checked = Document.ReverseVAT;
             DTPIssueDate.Value = Document.IssueDate;
             DTPSellDate.Value = Document.SellDate;
 
@@ -293,6 +300,11 @@ namespace Faktury.Windows
             }
 
             tbCompanyInfoText.Text = "";
+        }
+
+        private void cbReverseVAT_CheckedChanged(object sender, EventArgs e)
+        {
+            documentProperties.ReverseVATChanged(CxBReverseVAT.Checked);
         }
     }
 

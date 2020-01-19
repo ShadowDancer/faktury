@@ -32,6 +32,7 @@ namespace Faktury.Classes
 
         public void UpdateHighestDocumentId()
         {
+            _highestDocumentInYearId.Clear();
             foreach (var currentDocument in Documents)
             {
                 if (_highestDocumentInYearId.ContainsKey(currentDocument.Year))

@@ -33,6 +33,7 @@ namespace Faktury.Print_Framework
 
             Font smallFont = new Font("Times New Roman", 14);
             Font extraSmall = new Font("Times New Roman", 11);
+            Font extraExtraSmall = new Font("Times New Roman", 9);
 
             StringFormat format = new StringFormat
             {
@@ -100,7 +101,7 @@ namespace Faktury.Print_Framework
 
             // number
             element.AddText("Faktura VAT nr: " + _document.Number + "/" + _document.Year, new PointF(50, middlePartPosition + 10));
-            if (_document.Items.Any(n => n.VatRate.IsInverseVat))
+            if (_document.ReverseVAT)
             {
                 element.AddText("Odwrotne obciążenie", new PointF(50, middlePartPosition + 40));
             }
@@ -155,15 +156,22 @@ namespace Faktury.Print_Framework
 
             //table header
 
+
             //header separator
             int[] fieldSizes = { 30, 165, 35, 45, 120, 90, 55, 85, 100 };
+
+
+
             string[] fieldNames = { "#", "Nazwa", "jm", "Ilość", "Cena jed.bez\npod. VAT", "Wartość bez VAT", "VAT\n%", "Kwota Vat", "Wartość z pod. VAT" };
+
+            // table constants
+            var summaryTableStart = fieldSizes.Take(5).Sum();
 
             bool PKWiUColumn = _document.Items.Any(n => !string.IsNullOrWhiteSpace(n.PKWiU));
             if (PKWiUColumn)
             {
                 fieldSizes = new int[]{ 30, 100, 65, 35, 45, 120, 90, 55, 85, 100 };
-                fieldNames = new []{ "#", "Nazwa", "Symbol PKWiU", "jm", "Ilość", "Cena jed.bez\npod. VAT", "Wartość bez VAT", "VAT\n%", "Kwota Vat", "Wartość z pod. VAT" };
+                fieldNames = new []{ "#", "Nazwa", "Symbol PKWiU", "jm", "Ilość", "Cena jedn.\nnetto (zł)", "Wartość\nnetto (zł)", "VAT\n%", "Kwota VAT", "Wartość\nbrutto (zł)" };
 
             }
 
@@ -187,11 +195,26 @@ namespace Faktury.Print_Framework
                 input.Add(documentItems[i].Quantity.ToString(CultureInfo.CurrentCulture));
                 input.Add(documentItems[i].PriceNet.ToString("0.00"));
                 input.Add(documentItems[i].SumNet.ToString("0.00"));
-                input.Add(documentItems[i].VatRate.ToString());
+
+                if (_document.ReverseVAT)
+                {
+                    input.Add("-");
+                }
+                else
+                {
+                    input.Add(documentItems[i].VatRate.ToString());
+                }
                 input.Add(documentItems[i].SumVat.ToString("0.00"));
                 input.Add(documentItems[i].SumGross.ToString("0.00"));
 
-                PrintItem(element, position1, fieldSizes, input.ToArray(), extraSmall);
+
+                var fonts = Enumerable.Repeat(extraSmall, input.Count).ToArray();
+                if (PKWiUColumn)
+                {
+                    fonts[2] = extraExtraSmall;
+                }
+
+                PrintItem(element, position1, fieldSizes, input.ToArray(), fonts);
 
                 position1.Y += 60;
             }
@@ -206,6 +229,8 @@ namespace Faktury.Print_Framework
             linePos.Y += Sh; linePos.Height += Sh;
             element.AddLine(linePos);
 
+            if(!_document.ReverseVAT)
+            {
 
             List<(string symbol, decimal net, decimal vat, decimal gross)> vatSummaries = _document.Items.GroupBy(n => n.VatRate.Symbol)
                 .Select(n => (n.Key, n.Sum(m => m.SumNet), n.Sum(m => m.SumVat), n.Sum(m => m.SumGross))).ToList();
@@ -213,11 +238,17 @@ namespace Faktury.Print_Framework
             int index = 1;
             foreach (var (symbol, net, vat, gross) in vatSummaries)
             {
-                DrawVatSummary(element, middlePartPosition, sf, extraSmall, index, net, vat, gross, symbol);
+                string s = symbol;
+                if (_document.ReverseVAT)
+                {
+                    s = "-";
+                }
+                DrawVatSummary(element, middlePartPosition, sf, extraSmall, index, net, vat, gross, s);
 
                 linePos.Y += Sh; linePos.Height += Sh;
                 element.AddLine(linePos);
                 index++;
+            }
             }
 
             linePos.Y = linePos.Height = middlePartPosition + 550 + 100 + 25;
@@ -264,7 +295,7 @@ namespace Faktury.Print_Framework
             string footerText =
                 "Faktura jest wezwaniem do zapłaty\nPotwierdzenie odbioru faktury jest jednocześnie potwierdzeniem wykonania zlecenia.";
 
-            if (_document.Items.Any(n => n.VatRate.IsInverseVat))
+            if (_document.ReverseVAT)
             {
                 footerText += "\r\nUwagi: Zgodnie z art. 17 ust. 1 pkt. 8 Ustawy o VAT podatek VAT rozlicza nabywca.";
 
@@ -289,7 +320,12 @@ namespace Faktury.Print_Framework
             var linePos = new RectangleF(325 + offset, middlePartPosition + 550, 120, Sh);
             element.AddText("Razem:", sf, footerFont, null, linePos);
             linePos.Y += Sh;
-            element.AddText("w tym:", sf, footerFont, null, linePos);
+            if(!_document.ReverseVAT)
+            {
+                element.AddText("w tym:", sf, footerFont, null, linePos);
+            }
+
+            
 
             offset += (int) linePos.Width;
             linePos = new RectangleF(325 + offset, middlePartPosition + 550, 90, Sh);
@@ -332,6 +368,11 @@ namespace Faktury.Print_Framework
 
         private void PrintItem(PrintElement element, PointF pos, int[] fieldSizes, string[] fieldNames, Font font)
         {
+            PrintItem(element, pos, fieldSizes, fieldNames, Enumerable.Repeat(font, fieldNames.Length).ToArray());
+        }
+
+        private void PrintItem(PrintElement element, PointF pos, int[] fieldSizes, string[] fieldNames, Font[] fonts)
+        {
             // print names
             RectangleF position = new RectangleF(pos.X, pos.Y, 0, 50);
             for (int i = 0; i < fieldSizes.Length; i++)
@@ -341,7 +382,7 @@ namespace Faktury.Print_Framework
                 {
                     Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center
                 };
-                element.AddText(fieldNames[i], sf, font, PrintEngine.Instane.DefaultBrush, position);
+                element.AddText(fieldNames[i], sf, fonts[i], PrintEngine.Instane.DefaultBrush, position);
                 position.X += fieldSizes[i];
             }
 

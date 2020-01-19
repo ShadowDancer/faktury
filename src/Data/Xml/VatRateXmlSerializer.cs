@@ -7,20 +7,18 @@ namespace Faktury.Data.Xml
 {
     public class VatRateXmlSerializer
     {
-        public const string VatRateElement = "VATRate";
+        public const string VatRateElement = "VatRate";
 
         public XmlElement GetXmlElement(VatRate document, XmlDocument xmlDoc)
         {
-            var vatRateXml = xmlDoc.CreateElement("VatRate");
-
-
-            var inverseVat = xmlDoc.CreateElement("InverseVat");
+            var vatRateXml = xmlDoc.CreateElement(VatRateElement);
             var symbol = xmlDoc.CreateElement("Symbol");
-            var vatPercent = xmlDoc.CreateElement("VatPercent");
-
-            vatPercent.InnerText = document.VatPercent.ToString(CultureInfo.InvariantCulture);
             symbol.InnerText = document.Symbol;
-            inverseVat.InnerText = Convert.ToString(document.IsInverseVat);
+            vatRateXml.AppendChild(symbol);
+
+            var vatPercent = xmlDoc.CreateElement("VatPercent");
+            vatPercent.InnerText = document.VatPercent.ToString(CultureInfo.InvariantCulture);
+            vatRateXml.AppendChild(vatPercent);
 
             return vatRateXml;
         }
@@ -31,8 +29,7 @@ namespace Faktury.Data.Xml
             var symbol = xmlElement["Symbol"];
             var vatPercent = xmlElement["VatPercent"];
 
-            return new VatRate(symbol.InnerText, Convert.ToDecimal(vatPercent.InnerText),
-                Convert.ToBoolean(inverseVat.InnerText));
+            return new VatRate(symbol.InnerText, Convert.ToDecimal(vatPercent.InnerText));
         }
     }
 }

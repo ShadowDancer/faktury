@@ -33,6 +33,7 @@ namespace Faktury.Windows
             newItem.SubItems.Add(document.Customer.ShortName ?? "");
             newItem.SubItems.Add(document.IssueDate.ToString("d", CultureInfo.CurrentCulture));
             newItem.SubItems.Add(document.DocumentSummary.TotalNet.ToString("C", CultureInfo.CurrentCulture));
+            newItem.SubItems.Add(document.ReverseVAT ? "TAK" : "NIE");
 
             return newItem;
         }

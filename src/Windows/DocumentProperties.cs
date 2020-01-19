@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Faktury.Classes;
-using Faktury.Print_Framework;
 using ListViewEx;
 
 namespace Faktury.Windows
@@ -18,6 +17,18 @@ namespace Faktury.Windows
         public DocumentProperties()
         {
             InitializeComponent();
+        }
+
+
+        private bool reverseVAT { get; set; }
+
+        /// <summary>
+        /// Notifies control that reverse VAT property has changed
+        /// </summary>
+        public void ReverseVATChanged(bool newValue)
+        {
+            reverseVAT = newValue;
+            Reload();
         }
 
         private void Reload()
@@ -37,9 +48,14 @@ namespace Faktury.Windows
                     decimal netto = Math.Round(Convert.ToDecimal(LVEServices.Items[i].SubItems[3].Text) * Convert.ToDecimal(LVEServices.Items[i].SubItems[4].Text), 2, MidpointRounding.AwayFromZero);
                     totalNetto += netto;
                     LVEServices.Items[i].SubItems[6].Text = netto.ToString("0.00");
-
+                    
                     //vat
                     var rate = VatRate.FromString(LVEServices.Items[i].SubItems[9].Text);
+                    if (reverseVAT)
+                    {
+                        rate = new VatRate(0);
+                    }
+
                     decimal vat = Math.Round(netto * (rate.VatPercent / 100.0m), 2, MidpointRounding.AwayFromZero);
                     totalVat += vat;
                     LVEServices.Items[i].SubItems[7].Text = vat.ToString("0.00");
@@ -54,7 +70,7 @@ namespace Faktury.Windows
                     MessageBox.Show(ex.Message, "Wiersz " + (i + 1), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
+            
             totalNetto = Math.Round(totalNetto, 2);
             totalVat = Math.Round(totalVat, 2);
             totalBrutto = Math.Round(totalBrutto, 2);

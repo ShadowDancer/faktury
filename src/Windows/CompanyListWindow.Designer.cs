@@ -65,6 +65,7 @@ namespace Faktury.Windows
             this.LVCompanies.ContextMenuStrip = this.contextMenuStrip;
             this.LVCompanies.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LVCompanies.FullRowSelect = true;
+            this.LVCompanies.HideSelection = false;
             this.LVCompanies.Location = new System.Drawing.Point(0, 22);
             this.LVCompanies.Name = "LVCompanies";
             this.LVCompanies.Size = new System.Drawing.Size(827, 500);

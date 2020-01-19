@@ -86,10 +86,11 @@ namespace Faktury.Windows
             this.LVEServices.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LVEServices.DoubleClickActivation = true;
             this.LVEServices.FullRowSelect = true;
+            this.LVEServices.HideSelection = false;
             this.LVEServices.Location = new System.Drawing.Point(0, 0);
             this.LVEServices.MultiSelect = false;
             this.LVEServices.Name = "LVEServices";
-            this.LVEServices.Size = new System.Drawing.Size(718, 356);
+            this.LVEServices.Size = new System.Drawing.Size(876, 356);
             this.LVEServices.TabIndex = 0;
             this.LVEServices.UseCompatibleStateImageBehavior = false;
             this.LVEServices.View = System.Windows.Forms.View.Details;
@@ -132,18 +133,21 @@ namespace Faktury.Windows
             // 
             // columnHeader7
             // 
+            this.columnHeader7.DisplayIndex = 8;
             this.columnHeader7.Text = "Kwota VAT";
             this.columnHeader7.Width = 98;
             // 
             // columnHeader8
             // 
+            this.columnHeader8.DisplayIndex = 9;
             this.columnHeader8.Text = "Wartość z VAT";
             this.columnHeader8.Width = 166;
             // 
             // VAT
             // 
+            this.VAT.DisplayIndex = 7;
             this.VAT.Text = "VAT %";
-            this.VAT.Width = 117;
+            this.VAT.Width = 45;
             // 
             // contextMenuStrip
             // 
@@ -225,7 +229,7 @@ namespace Faktury.Windows
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel3.Location = new System.Drawing.Point(0, 356);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(718, 51);
+            this.panel3.Size = new System.Drawing.Size(876, 51);
             this.panel3.TabIndex = 2;
             // 
             // TBSlownie
@@ -315,7 +319,7 @@ namespace Faktury.Windows
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(718, 356);
+            this.panel2.Size = new System.Drawing.Size(876, 356);
             this.panel2.TabIndex = 3;
             // 
             // DocumentProperties
@@ -325,7 +329,7 @@ namespace Faktury.Windows
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel3);
             this.Name = "DocumentProperties";
-            this.Size = new System.Drawing.Size(718, 407);
+            this.Size = new System.Drawing.Size(876, 407);
             this.contextMenuStrip.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();

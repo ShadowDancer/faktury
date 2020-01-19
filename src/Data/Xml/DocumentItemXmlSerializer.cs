@@ -81,7 +81,7 @@ namespace Faktury.Data.Xml
                 }
                 else
                 {
-                    newRecord.VatRate = new VatRate(22);
+                    newRecord.VatRate = new VatRate(23);
                 }
             }
 

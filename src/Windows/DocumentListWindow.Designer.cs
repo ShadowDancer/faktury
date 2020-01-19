@@ -62,6 +62,7 @@ namespace Faktury.Windows
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.reverseVAT = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.groupBoxDateFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nUDYear)).BeginInit();
@@ -216,7 +217,8 @@ namespace Faktury.Windows
             this.columnHeader2,
             this.columnHeader4,
             this.columnHeader6,
-            this.columnHeader3});
+            this.columnHeader3,
+            this.reverseVAT});
             this.LVDocuments.ContextMenuStrip = this.contextMenuStrip;
             this.LVDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LVDocuments.FullRowSelect = true;
@@ -352,6 +354,11 @@ namespace Faktury.Windows
             this.panel2.Size = new System.Drawing.Size(703, 505);
             this.panel2.TabIndex = 3;
             // 
+            // reverseVAT
+            // 
+            this.reverseVAT.Text = "Odwr. VAT";
+            this.reverseVAT.Width = 80;
+            // 
             // DocumentListWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -409,5 +416,6 @@ namespace Faktury.Windows
         private ToolStripSeparator toolStripSeparator3;
         private DateTimePicker DTPDateFilter;
         private ColumnHeader columnHeader3;
+        private ColumnHeader reverseVAT;
     }
 }

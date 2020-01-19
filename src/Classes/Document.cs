@@ -37,6 +37,11 @@ namespace Faktury.Classes
 
         public DocumentSummary DocumentSummary { get; set; } = new DocumentSummary();
 
+        /// <summary>
+        /// Odwrotne obciążeniee
+        /// </summary>
+        public bool ReverseVAT { get; set; }
+
         public static Document CreateNewDocument()
         {
             var newDocument = new Document

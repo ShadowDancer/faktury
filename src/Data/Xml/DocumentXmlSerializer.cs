@@ -74,6 +74,10 @@ namespace Faktury.Data.Xml
             yearElem.InnerText = Convert.ToString(document.Year);
             documentElement.AppendChild(yearElem);
 
+            XmlElement reverseVATElement = xmlDoc.CreateElement("ReverseVAT");
+            reverseVATElement.InnerText = Convert.ToString(document.ReverseVAT);
+            documentElement.AppendChild(reverseVATElement);
+
             XmlElement customerElement = CompanyToXmlSerializer.GetXmlElement(document.Customer, xmlDoc, "Customer");
             documentElement.AppendChild(customerElement);
 
@@ -98,12 +102,9 @@ namespace Faktury.Data.Xml
                 PaymentType = element["Paynament"].InnerText,
                 PaymentTime = element["PaynamentTime"].InnerText,
                 Number = Convert.ToInt32(element["Number"].InnerText),
-                Year = Convert.ToInt32(element["Year"].InnerText)
+                Year = Convert.ToInt32(element["Year"].InnerText),
+                ReverseVAT = false
             };
-
-
-
-
 
             newDocument.DocumentSummary = DocumentSummaryXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
 
@@ -131,7 +132,13 @@ namespace Faktury.Data.Xml
             {
                 newDocument.Issuer = settingsAccessor.GetSettings().OwnerCompany;
             }
-
+            
+            var reverseVATString = element["ReverseVAT"]?.InnerText;
+            if (!string.IsNullOrWhiteSpace(reverseVATString))
+            {
+                newDocument.ReverseVAT = Convert.ToBoolean(reverseVATString);
+            }
+            
             return newDocument;
         }
     }

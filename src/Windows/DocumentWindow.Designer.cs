@@ -51,6 +51,7 @@ namespace Faktury.Windows
             this.CBCompanyTag = new System.Windows.Forms.ComboBox();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
+            this.CxBReverseVAT = new System.Windows.Forms.CheckBox();
             this.documentProperties = new Faktury.Windows.DocumentProperties();
             ((System.ComponentModel.ISupportInitialize)(this.nUDNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDYear)).BeginInit();
@@ -220,7 +221,7 @@ namespace Faktury.Windows
             // 
             this.groupBox4.Controls.Add(this.tbCompanyInfoText);
             this.groupBox4.Controls.Add(this.CBCompanyTag);
-            this.groupBox4.Location = new System.Drawing.Point(436, 12);
+            this.groupBox4.Location = new System.Drawing.Point(625, 12);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(301, 124);
             this.groupBox4.TabIndex = 7;
@@ -248,7 +249,7 @@ namespace Faktury.Windows
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(549, 142);
+            this.Ok.Location = new System.Drawing.Point(732, 142);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(91, 49);
             this.Ok.TabIndex = 8;
@@ -258,7 +259,7 @@ namespace Faktury.Windows
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(646, 142);
+            this.Cancel.Location = new System.Drawing.Point(829, 142);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(91, 49);
             this.Cancel.TabIndex = 9;
@@ -266,19 +267,31 @@ namespace Faktury.Windows
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
+            // CxBReverseVAT
+            // 
+            this.CxBReverseVAT.AutoSize = true;
+            this.CxBReverseVAT.Location = new System.Drawing.Point(224, 77);
+            this.CxBReverseVAT.Name = "CxBReverseVAT";
+            this.CxBReverseVAT.Size = new System.Drawing.Size(126, 17);
+            this.CxBReverseVAT.TabIndex = 13;
+            this.CxBReverseVAT.Text = "Odwrotne obciążenie";
+            this.CxBReverseVAT.UseVisualStyleBackColor = true;
+            this.CxBReverseVAT.CheckedChanged += new System.EventHandler(this.cbReverseVAT_CheckedChanged);
+            // 
             // documentProperties
             // 
             this.documentProperties.Location = new System.Drawing.Point(12, 197);
             this.documentProperties.ModelStore = null;
             this.documentProperties.Name = "documentProperties";
-            this.documentProperties.Size = new System.Drawing.Size(725, 284);
+            this.documentProperties.Size = new System.Drawing.Size(908, 284);
             this.documentProperties.TabIndex = 12;
             // 
             // DocumentWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(745, 479);
+            this.ClientSize = new System.Drawing.Size(931, 479);
+            this.Controls.Add(this.CxBReverseVAT);
             this.Controls.Add(this.documentProperties);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.groupBox2);
@@ -307,6 +320,7 @@ namespace Faktury.Windows
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -330,7 +344,8 @@ namespace Faktury.Windows
         private DateTimePicker DTPIssueDate;
         private CheckBox CxBSimilarDates;
         private DateTimePicker DTPSellDate;
-        private DocumentProperties documentProperties;
         private TextBox tbCompanyInfoText;
+        private CheckBox CxBReverseVAT;
+        private DocumentProperties documentProperties;
     }
 }
