@@ -5,7 +5,7 @@ using Faktury.Classes;
 
 // ReSharper disable PossibleNullReferenceException
 
-namespace Faktury.Data.Xml
+namespace Faktury.Domain.Data.Xml
 {
     public class ServiceToXmlSerializer
     {
@@ -57,7 +57,7 @@ namespace Faktury.Data.Xml
                 pkwiuElem.InnerText = service.PKWiU;
                 serviceElement.AppendChild(pkwiuElem);
             }
-            
+
 
             name.InnerText = service.Name;
             tag.InnerText = service.Tag;
@@ -72,7 +72,7 @@ namespace Faktury.Data.Xml
             serviceElement.AppendChild(price);
             serviceElement.AppendChild(vat);
             serviceElement.AppendChild(idElem);
-            
+
 
             XmlElement creationDateElement = xmlDocument.CreateElement("CreationDate");
             {
@@ -105,7 +105,7 @@ namespace Faktury.Data.Xml
                 modificationDateElement.AppendChild(year);
             }
             serviceElement.AppendChild(modificationDateElement);
-            
+
             return serviceElement;
         }
     }

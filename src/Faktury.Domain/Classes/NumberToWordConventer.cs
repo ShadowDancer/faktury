@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Faktury.Classes
 {
-    internal class NumberToWordConventer
+    public class NumberToWordConventer
     {
         private static readonly string[] Months =
             {
@@ -101,7 +101,7 @@ namespace Faktury.Classes
         {
             if (n == 1) return 0;
 
-            n = n % 100;
+            n %= 100;
             int lastDigit = (int) n % 10;
             if ((n >= 10 && (n <= 20 || lastDigit == 0)) || (lastDigit > 4) || lastDigit <= 1)
             {
@@ -205,8 +205,8 @@ namespace Faktury.Classes
             int tenths = (value % 100);
             if (tenths > 10)
             {
-                tenths = tenths - (tenths % 10);
-                tenths = tenths / 10;
+                tenths -= (tenths % 10);
+                tenths /= 10;
             }
             else tenths = 0;
 

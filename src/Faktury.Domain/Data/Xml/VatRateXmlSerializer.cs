@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Xml;
 using Faktury.Classes;
 
-namespace Faktury.Data.Xml
+namespace Faktury.Domain.Data.Xml
 {
     public class VatRateXmlSerializer
     {
@@ -25,9 +25,14 @@ namespace Faktury.Data.Xml
 
         public static VatRate GetVatRateFromXml(XmlNode xmlElement)
         {
-            var inverseVat = xmlElement["InverseVat"];
+            //var inverseVat = xmlElement["InverseVat"];
             var symbol = xmlElement["Symbol"];
             var vatPercent = xmlElement["VatPercent"];
+
+            if (vatPercent == null || symbol == null)
+            {
+                return new VatRate(23);
+            }
 
             return new VatRate(symbol.InnerText, Convert.ToDecimal(vatPercent.InnerText));
         }

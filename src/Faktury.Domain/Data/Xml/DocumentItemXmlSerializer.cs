@@ -4,7 +4,7 @@ using Faktury.Classes;
 
 // ReSharper disable PossibleNullReferenceException
 
-namespace Faktury.Data.Xml
+namespace Faktury.Domain.Data.Xml
 {
     public class DocumentItemXmlSerializer
     {

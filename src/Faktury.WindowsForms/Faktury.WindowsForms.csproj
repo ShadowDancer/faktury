@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Faktury</RootNamespace>
     <AssemblyName>Faktury</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Paste.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -88,22 +88,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\VatRate.cs" />
-    <Compile Include="Data\Xml\VatRateXmlSerializer.cs" />
+    <Compile Include="Classes\ModelStoreLoader.cs" />
     <Compile Include="Print Framework\DocumentPrinter.cs" />
-    <Compile Include="Data\Xml\CompanyToXmlSerializer.cs" />
-    <Compile Include="Data\Xml\DocumentXmlSerializer.cs" />
-    <Compile Include="Classes\DocumentItem.cs" />
-    <Compile Include="Data\Xml\DocumentSummaryXmlSerializer.cs" />
-    <Compile Include="Data\Xml\DocumentItemXmlSerializer.cs" />
-    <Compile Include="Data\Xml\ServiceToXmlSerializer.cs" />
     <Compile Include="Data\Xml\BackupManager.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Company.cs" />
-    <Compile Include="Classes\Document.cs" />
-    <Compile Include="Classes\Service.cs" />
-    <Compile Include="Classes\DocumentSummary.cs" />
     <Compile Include="Windows\DocumentProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -123,24 +112,18 @@
     <Compile Include="Windows\DeviceBackupSettings.Designer.cs">
       <DependentUpon>DeviceBackupSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\ModelStore.cs" />
-    <Compile Include="Classes\SettingsAccessor.cs" />
-    <Compile Include="Classes\ModelStoreLoader.cs" />
-    <Compile Include="Classes\NipValidator.cs" />
     <Compile Include="Windows\ServicesListWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Windows\ServicesListWindow.Designer.cs">
       <DependentUpon>ServicesListWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\EditorSettings.cs" />
     <Compile Include="Windows\CompanyListWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Windows\CompanyListWindow.Designer.cs">
       <DependentUpon>CompanyListWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\NumberToWordConventer.cs" />
     <Compile Include="Print Framework\Normal\IPrintPrimitive.cs" />
     <Compile Include="Print Framework\Normal\Primitives\PrintRectangle.cs" />
     <Compile Include="Print Framework\Normal\Primitives\PrintHorizontalLine.cs" />
@@ -282,6 +265,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Faktury.Domain\Faktury.Domain.csproj">
+      <Project>{151f8f9a-696e-4588-a249-c57bbaae1e25}</Project>
+      <Name>Faktury.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

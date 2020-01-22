@@ -59,7 +59,7 @@ namespace Faktury.Windows
         {
             if (treeView1.SelectedNode.Tag != null)
             {
-                if(BackupManager.LoadLocalBackup((string)treeView1.SelectedNode.Tag))
+                if(BackupManager.LoadBackupFromFile((string)treeView1.SelectedNode.Tag).Result)
                     MessageBox.Show("Poprawnie wczytano kopię zapasową!", "Wczytywanie kopii zapasowej", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Archiwum jest uszkodzone lub nie istnieje!", "Wczytywanie kopii zapasowej", MessageBoxButtons.OK, MessageBoxIcon.Error);

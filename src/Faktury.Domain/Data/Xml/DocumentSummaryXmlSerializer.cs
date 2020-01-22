@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml;
 using Faktury.Classes;
+using Faktury.Domain.Data.Xml;
 
 // ReSharper disable PossibleNullReferenceException
 

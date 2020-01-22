@@ -2,7 +2,8 @@
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Faktury.Data.Xml;
+using Faktury.Domain.Data.Xml;
+using Faktury.Domain.Services;
 
 namespace Faktury.Classes
 {
@@ -52,7 +53,7 @@ namespace Faktury.Classes
         }
 
 
-        public void SaveEverythingToDirectoryWithBackup(BackupManager backupManager)
+        public void SaveEverythingToDirectoryWithBackup(IFileBackup backupManager)
         {
             try
             {
@@ -60,8 +61,7 @@ namespace Faktury.Classes
 
                 SaveDataToDirectory(_dataPath);
 
-                backupManager.SaveLocalBackup();
-                backupManager.SaveDeviceBackup();
+                backupManager.SaveBackup();
                 SaveSettingsToFile(_configPath);
             }
             catch (Exception ex)
@@ -131,7 +131,7 @@ namespace Faktury.Classes
                 // ReSharper disable once PossibleNullReferenceException
                 foreach (XmlNode currentNode in doc["Documents"])
                 {
-                    Document newDocument = new DocumentXmlSerializer(_modelStore).GetDocumentFromXml(currentNode, _modelStore, _settingsAccessor);
+                    Document newDocument = new DocumentXmlSerializer().GetDocumentFromXml(currentNode, _modelStore, _settingsAccessor);
                     _modelStore.Documents.Add(newDocument);
                 }
 
@@ -202,7 +202,7 @@ namespace Faktury.Classes
             foreach (var currentDocument in _modelStore.Documents)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                doc["Documents"].AppendChild(new DocumentXmlSerializer(_modelStore).GetXmlElement(currentDocument, doc));
+                doc["Documents"].AppendChild(new DocumentXmlSerializer().GetXmlElement(currentDocument, doc));
             }
 
             doc.Save(filePath);

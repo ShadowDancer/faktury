@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Xml;
 using Faktury.Classes;
+using Faktury.Data.Xml;
 
 // ReSharper disable PossibleNullReferenceException
 
-namespace Faktury.Data.Xml
+namespace Faktury.Domain.Data.Xml
 {
     public class DocumentXmlSerializer
     {
-        private readonly ModelStore _modelStore;
-
-        public DocumentXmlSerializer(ModelStore modelStore)
-        {
-            _modelStore = modelStore;
-        }
-
         public XmlElement GetXmlElement(Document document, XmlDocument xmlDoc)
         {
             XmlElement documentElement = xmlDoc.CreateElement("Document");
@@ -132,13 +126,13 @@ namespace Faktury.Data.Xml
             {
                 newDocument.Issuer = settingsAccessor.GetSettings().OwnerCompany;
             }
-            
+
             var reverseVATString = element["ReverseVAT"]?.InnerText;
             if (!string.IsNullOrWhiteSpace(reverseVATString))
             {
                 newDocument.ReverseVAT = Convert.ToBoolean(reverseVATString);
             }
-            
+
             return newDocument;
         }
     }
