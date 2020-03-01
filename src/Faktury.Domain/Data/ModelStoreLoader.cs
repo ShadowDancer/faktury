@@ -2,22 +2,23 @@
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
 using Faktury.Domain.Data.Xml;
+using Faktury.Domain.Domain;
 using Faktury.Domain.Services;
 
 namespace Faktury.Domain.Data
 {
     public class ModelStoreLoader
     {
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
         private readonly ModelStore _modelStore;
         private readonly string _configPath;
         private readonly string _dataPath;
 
-        public ModelStoreLoader(SettingsAccessor settingsAccessor, ModelStore modelStore, string applicationDirectory)
+        public ModelStoreLoader(SettingsRepository settingsRepository, ModelStore modelStore, string applicationDirectory)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             _modelStore = modelStore;
             _configPath = Path.Combine(applicationDirectory, "Config.xml");
             _dataPath = Path.Combine(applicationDirectory, "Data");
@@ -44,12 +45,12 @@ namespace Faktury.Domain.Data
                 using (StreamReader reader = new StreamReader(configFilePath))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(EditorSettings));
-                    _settingsAccessor.SetSettings((EditorSettings)serializer.Deserialize(reader));
+                    _settingsRepository.SetSettings((EditorSettings)serializer.Deserialize(reader));
                 }
             }
             else
             {
-                _settingsAccessor.SetSettings(new EditorSettings());
+                _settingsRepository.SetSettings(new EditorSettings());
             }
         }
 
@@ -80,7 +81,7 @@ namespace Faktury.Domain.Data
                 ns.Add("", "");
 
                 XmlSerializer serializer = new XmlSerializer(typeof(EditorSettings));
-                serializer.Serialize(writer, _settingsAccessor.GetSettings(), ns) ;
+                serializer.Serialize(writer, _settingsRepository.GetSettings(), ns) ;
             }
         }
 
@@ -130,7 +131,7 @@ namespace Faktury.Domain.Data
                 // ReSharper disable once PossibleNullReferenceException
                 foreach (XmlNode currentNode in doc["Documents"])
                 {
-                    Document newDocument = new DocumentXmlSerializer().GetDocumentFromXml(currentNode, _modelStore, _settingsAccessor);
+                    Document newDocument = new DocumentXmlSerializer().GetDocumentFromXml(currentNode, _modelStore, _settingsRepository);
                     _modelStore.DocumentRepository.Documents.Add(newDocument);
                 }
 

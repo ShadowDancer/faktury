@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Xml;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Domain;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -25,7 +25,7 @@ namespace Faktury.Domain.Data.Xml
             moneyDataElement.AppendChild(brutto);
 
             var inWords = xmlDoc.CreateElement("InWords");
-            inWords.InnerText = documentSummary.InWords;
+            inWords.InnerText = documentSummary.TotalInWords;
             moneyDataElement.AppendChild(inWords);
 
             var records = xmlDoc.CreateElement("Records");
@@ -44,7 +44,7 @@ namespace Faktury.Domain.Data.Xml
                 TotalNet = decimal.Parse(xmlElement["Netto"].InnerText, CultureInfo.InvariantCulture),
                 TotalVat = decimal.Parse(xmlElement["TotalVAT"].InnerText, CultureInfo.InvariantCulture),
                 TotalGross = decimal.Parse(xmlElement["Brutto"].InnerText, CultureInfo.InvariantCulture),
-                InWords = xmlElement["InWords"].InnerText
+                TotalInWords = xmlElement["InWords"].InnerText
             };
 
 

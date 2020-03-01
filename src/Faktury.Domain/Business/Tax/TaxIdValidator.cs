@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Business.Tax
 {
-    public class NipValidator
+    public class TaxIdValidator
     {
         private static readonly int[] Factors = {6, 5, 7, 2, 3, 4, 5, 6, 7};
 
-        public static bool IsNipValid(string x)
+        public static bool IsTaxIdValid(string x)
         {
             if (string.IsNullOrWhiteSpace(x))
             {

@@ -3,8 +3,8 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
 using Faktury.Domain.Data;
+using Faktury.Domain.Data.Repository;
 using Faktury.Domain.Services;
 using Faktury.Windows;
 
@@ -13,22 +13,22 @@ namespace Faktury.Data.Xml
     public class BackupManager : IFileBackup
     {
         public bool ExitingApplication = false;
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
         private readonly ModelStoreLoader _modelStoreLoader;
         public readonly string BackupPath;
 
-        public BackupManager(SettingsAccessor settingsAccessor, ModelStoreLoader modelStoreLoader, string backupPath)
+        public BackupManager(SettingsRepository settingsRepository, ModelStoreLoader modelStoreLoader, string backupPath)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             _modelStoreLoader = modelStoreLoader;
             BackupPath = backupPath;
         }
 
         public Task SaveBackup()
         {
-            if(_settingsAccessor.GetSettings().LocalBackup)
+            if(_settingsRepository.GetSettings().LocalBackup)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 if (editorSettings.LocalBackupOnlyOnExit && ExitingApplication || !editorSettings.LocalBackupOnlyOnExit)
                 {
                     if (!Directory.Exists(BackupPath))

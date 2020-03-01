@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -10,13 +11,13 @@ namespace Faktury.Windows
     {
         private readonly ModelStore _modelStore;
         private readonly PrintEngine _printEngine;
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
 
-        public DocumentWindow(ModelStore modelStore, PrintEngine printEngine, SettingsAccessor settingsAccessor)
+        public DocumentWindow(ModelStore modelStore, PrintEngine printEngine, SettingsRepository settingsRepository)
         {
             _modelStore = modelStore;
             _printEngine = printEngine;
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             InitializeComponent();
             CBPaynament.Items.Clear();
             CBPaynament.Items.Add("Przelew");
@@ -35,7 +36,7 @@ namespace Faktury.Windows
                 if (Document.SellDate != DTPSellDate.Value) return true;
                 if (Document.PaymentType != CBPaynament.Text) return true;
                 if (Document.PaymentTime != TBPaynamentTime.Text) return true;
-                if (Document.ReverseVAT != CxBReverseVAT.Checked) return true;
+                if (Document.ReverseVat != CxBReverseVAT.Checked) return true;
 
                 if (Document.Number != (int)nUDNumber.Value) return true;
                 if (Document.Year != (int)nUDYear.Value) return true;
@@ -82,12 +83,12 @@ namespace Faktury.Windows
         public void SaveDataFromControls(Document document)
         {
             document.Customer = _modelStore.CompanyRepository.FindCompany(((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
-            document.Issuer = _settingsAccessor.GetSettings().OwnerCompany;
+            document.Issuer = _settingsRepository.GetSettings().OwnerCompany;
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
             document.PaymentType = CBPaynament.Text;
             document.PaymentTime = TBPaynamentTime.Text;
-            document.ReverseVAT = CxBReverseVAT.Checked;
+            document.ReverseVat = CxBReverseVAT.Checked;
 
             document.Number = (int)nUDNumber.Value;
             document.Year = (int)nUDYear.Value;
@@ -173,7 +174,7 @@ namespace Faktury.Windows
             //create new document if neccessary
             if (Document == null)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 Document = Document.CreateNewDocument();
                 nUDYear.Value = DateTime.Today.Year;
                 UpdateId();
@@ -205,7 +206,7 @@ namespace Faktury.Windows
                 }
             }
 
-            CxBReverseVAT.Checked = Document.ReverseVAT;
+            CxBReverseVAT.Checked = Document.ReverseVat;
             DTPIssueDate.Value = Document.IssueDate;
             DTPSellDate.Value = Document.SellDate;
 
@@ -294,7 +295,7 @@ namespace Faktury.Windows
                 if (company != null)
                 {
                     tbCompanyInfoText.Text = string.Join(Environment.NewLine, company.Name, company.Address,
-                        company.Street, "", "NIP: " + company.Nip);
+                        company.Street, "", "NIP: " + company.TaxId);
                     return;
                 }
             }

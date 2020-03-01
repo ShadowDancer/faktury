@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Xml;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Domain;
 
 namespace Faktury.Domain.Data.Xml
 {

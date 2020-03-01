@@ -1,4 +1,4 @@
-﻿namespace Faktury.Domain.Classes
+﻿namespace Faktury.Domain.Domain
 {
     public class DocumentSummary
     {
@@ -6,6 +6,6 @@
         public decimal TotalVat { get; set; }
         public decimal TotalGross { get; set; }
 
-        public string InWords { get; set; } = "";
+        public string TotalInWords { get; set; } = "";
     }
 }

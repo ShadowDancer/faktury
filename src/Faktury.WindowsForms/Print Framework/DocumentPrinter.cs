@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Business;
+using Faktury.Domain.Domain;
 
 namespace Faktury.Print_Framework
 {
@@ -68,7 +69,7 @@ namespace Faktury.Print_Framework
 
             headerTextPosition = new RectangleF(425, 30, 400, 30);
 
-            element.AddText("NIP: " + ownerCompany.Nip, smallFont, headerTextPosition);
+            element.AddText("NIP: " + ownerCompany.TaxId, smallFont, headerTextPosition);
             if (ownerCompany.Bank)
             {
                 headerTextPosition.Y += 20;
@@ -101,7 +102,7 @@ namespace Faktury.Print_Framework
 
             // number
             element.AddText("Faktura VAT nr: " + _document.Number + "/" + _document.Year, new PointF(50, middlePartPosition + 10));
-            if (_document.ReverseVAT)
+            if (_document.ReverseVat)
             {
                 element.AddText("Odwrotne obciążenie", new PointF(50, middlePartPosition + 40));
             }
@@ -142,7 +143,7 @@ namespace Faktury.Print_Framework
             element.AddText(company.Owner, smallFont, new PointF(65, middlePartPosition + 140));
             element.AddText(company.Address, smallFont, new PointF(65, middlePartPosition + 160));
             element.AddText(company.Street, smallFont, new PointF(65, middlePartPosition + 180));
-            element.AddText("NIP:" + company.Nip, smallFont, new PointF(65, middlePartPosition + 210));
+            element.AddText("NIP:" + company.TaxId, smallFont, new PointF(65, middlePartPosition + 210));
 
             // border
             element.AddRectangle(new RectangleF(50, middlePartPosition + 250, 725, 475));
@@ -196,7 +197,7 @@ namespace Faktury.Print_Framework
                 input.Add(documentItems[i].PriceNet.ToString("0.00"));
                 input.Add(documentItems[i].SumNet.ToString("0.00"));
 
-                if (_document.ReverseVAT)
+                if (_document.ReverseVat)
                 {
                     input.Add("-");
                 }
@@ -229,7 +230,7 @@ namespace Faktury.Print_Framework
             linePos.Y += Sh; linePos.Height += Sh;
             element.AddLine(linePos);
 
-            if(!_document.ReverseVAT)
+            if(!_document.ReverseVat)
             {
 
             List<(string symbol, decimal net, decimal vat, decimal gross)> vatSummaries = _document.Items.GroupBy(n => n.VatRate.Symbol)
@@ -239,7 +240,7 @@ namespace Faktury.Print_Framework
             foreach (var (symbol, net, vat, gross) in vatSummaries)
             {
                 string s = symbol;
-                if (_document.ReverseVAT)
+                if (_document.ReverseVat)
                 {
                     s = "-";
                 }
@@ -274,15 +275,15 @@ namespace Faktury.Print_Framework
             element.AddText("Słownie:", sf, smallFont, null, new RectangleF(50, middlePartPosition + 675, 100, 50));
             format.Alignment = StringAlignment.Near;
 
-            int size = TextRenderer.MeasureText(_document.DocumentSummary.InWords, extraSmall).Width;
+            int size = TextRenderer.MeasureText(_document.DocumentSummary.TotalInWords, extraSmall).Width;
             if (size >= 570)
             {
                 Font veryVerySmall = new Font("Times New Roman", 11);
-                element.AddText(_document.DocumentSummary.InWords, format, veryVerySmall, null, new RectangleF(155, middlePartPosition + 675, 725, 50));
+                element.AddText(_document.DocumentSummary.TotalInWords, format, veryVerySmall, null, new RectangleF(155, middlePartPosition + 675, 725, 50));
             }
             else
             {
-                element.AddText(_document.DocumentSummary.InWords, format, extraSmall, null, new RectangleF(155, middlePartPosition + 675, 725, 50));
+                element.AddText(_document.DocumentSummary.TotalInWords, format, extraSmall, null, new RectangleF(155, middlePartPosition + 675, 725, 50));
             }
 
             int lineOffset = 150;
@@ -295,7 +296,7 @@ namespace Faktury.Print_Framework
             string footerText =
                 "Faktura jest wezwaniem do zapłaty\nPotwierdzenie odbioru faktury jest jednocześnie potwierdzeniem wykonania zlecenia.";
 
-            if (_document.ReverseVAT)
+            if (_document.ReverseVat)
             {
                 footerText += "\r\nUwagi: Zgodnie z art. 17 ust. 1 pkt. 8 Ustawy o VAT podatek VAT rozlicza nabywca.";
 
@@ -320,7 +321,7 @@ namespace Faktury.Print_Framework
             var linePos = new RectangleF(325 + offset, middlePartPosition + 550, 120, Sh);
             element.AddText("Razem:", sf, footerFont, null, linePos);
             linePos.Y += Sh;
-            if(!_document.ReverseVAT)
+            if(!_document.ReverseVat)
             {
                 element.AddText("w tym:", sf, footerFont, null, linePos);
             }

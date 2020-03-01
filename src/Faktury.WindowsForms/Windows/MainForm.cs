@@ -4,8 +4,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
 using Faktury.Domain.Data;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
@@ -22,8 +23,8 @@ namespace Faktury.Windows
             Instance = this;
 
             ModelStore = new ModelStore();
-            ModelStoreLoader = new ModelStoreLoader(SettingsAccessor, ModelStore, applicationDirectory);
-            BackupManager = new BackupManager(SettingsAccessor, ModelStoreLoader,
+            ModelStoreLoader = new ModelStoreLoader(SettingsRepository, ModelStore, applicationDirectory);
+            BackupManager = new BackupManager(SettingsRepository, ModelStoreLoader,
                 Path.Combine(applicationDirectory, "Backup"));
 
             if (!ModelStoreLoader.ConfigExists())
@@ -47,7 +48,7 @@ namespace Faktury.Windows
 
         private ModelStore ModelStore { get; }
 
-        private SettingsAccessor SettingsAccessor { get; } = new SettingsAccessor();
+        private SettingsRepository SettingsRepository { get; } = new SettingsRepository();
 
         private ModelStoreLoader ModelStoreLoader { get; }
 
@@ -59,7 +60,7 @@ namespace Faktury.Windows
         public void EditCompany(Company companyToEdit)
         {
             var childForm = new CompanyWindow(ModelStore);
-            var editorSettings = SettingsAccessor.GetSettings();
+            var editorSettings = SettingsRepository.GetSettings();
             if (companyToEdit == editorSettings.OwnerCompany &&
                 editorSettings.OwnerCompany != null)
             {
@@ -123,7 +124,7 @@ namespace Faktury.Windows
 
         public void AddService()
         {
-            var childForm = new ServiceWindow(ModelStore, SettingsAccessor)
+            var childForm = new ServiceWindow(ModelStore, SettingsRepository)
             {
                 MdiParent = this,
                 Text = _childFormNumber++ + ": Nowa usługa"
@@ -135,7 +136,7 @@ namespace Faktury.Windows
 
         public void EditService(Service serviceToEdit)
         {
-            var childForm = new ServiceWindow(ModelStore, SettingsAccessor)
+            var childForm = new ServiceWindow(ModelStore, SettingsRepository)
             {
                 MdiParent = this,
                 Text = _childFormNumber++ + ": Edycja " + serviceToEdit.Name,
@@ -160,7 +161,7 @@ namespace Faktury.Windows
         {
             if (document != null)
             {
-                var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor)
+                var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsRepository)
                 {
                     MdiParent = this,
                     Text = document.Number + "//" + document.Year,
@@ -305,15 +306,15 @@ namespace Faktury.Windows
                 MessageBox.Show(
                     "Dane wystawiającego są to dane osoby, na którą wystawiane będą faktury. Dane te można zmienić w menu opcje.",
                     "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader).BSetOwnerData_Click(
+                new OptionsWindow(ModelStore, BackupManager, SettingsRepository, ModelStoreLoader).BSetOwnerData_Click(
                     null, null);
 
                 //Backup
                 MessageBox.Show(
                     "Kopia zapasowa, to mechanizm, który zabezpicza Cię przed utratą danych, na wskutek awarii sprzętu lub systemu. Dostępne są dwie metody tworzenia kopii - lokalna (na dysku twardym) i na zewnętrznym nośniku/komputerze(zabezpiecza ona dane w przypadku awarii dysku).",
                     "Kreator pierwszego uruchomienia", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                new BackupSettings(SettingsAccessor).ShowDialog();
-                if (SettingsAccessor.GetSettings().DeviceBackup)
+                new BackupSettings(SettingsRepository).ShowDialog();
+                if (SettingsRepository.GetSettings().DeviceBackup)
                 {
                     MessageBox.Show(
                         "Włączono kopię na zewnętrznym nośniku - po upłynięciu wyznaczonego okresu zostanie wyświetlona proźba o włożenie nośinka.",
@@ -360,7 +361,7 @@ namespace Faktury.Windows
         {
             if (optionsToolStripMenuItem.Checked)
             {
-                _optionsWindow = new OptionsWindow(ModelStore, BackupManager, SettingsAccessor, ModelStoreLoader);
+                _optionsWindow = new OptionsWindow(ModelStore, BackupManager, SettingsRepository, ModelStoreLoader);
                 _optionsWindow.Show(MainDockPanel);
             }
             else
@@ -373,7 +374,7 @@ namespace Faktury.Windows
         {
             if (documentListToolStripMenuItem.Checked)
             {
-                _documentListWindow = new DocumentListWindow(ModelStore, PrintEngine, SettingsAccessor);
+                _documentListWindow = new DocumentListWindow(ModelStore, PrintEngine, SettingsRepository);
                 _documentListWindow.Show(MainDockPanel);
                 documentListToolStripMenuItem.Checked = true;
             }
@@ -450,7 +451,7 @@ namespace Faktury.Windows
 
         public void NewDocument(object sender, EventArgs e)
         {
-            var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsAccessor)
+            var childForm = new DocumentWindow(ModelStore, PrintEngine, SettingsRepository)
             { MdiParent = this, Text = "Nowy Dokument" };
 
 

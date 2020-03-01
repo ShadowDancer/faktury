@@ -1,4 +1,4 @@
-﻿namespace Faktury.Domain.Classes
+﻿namespace Faktury.Domain.Domain
 {
     public class DocumentItem
     {

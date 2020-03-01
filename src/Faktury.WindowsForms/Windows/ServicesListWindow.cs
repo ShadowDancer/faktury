@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows

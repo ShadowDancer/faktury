@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Domain
 {
     public class Document
     {
@@ -40,7 +40,7 @@ namespace Faktury.Domain.Classes
         /// <summary>
         /// Odwrotne obciążeniee
         /// </summary>
-        public bool ReverseVAT { get; set; }
+        public bool ReverseVat { get; set; }
 
         public static Document CreateNewDocument()
         {

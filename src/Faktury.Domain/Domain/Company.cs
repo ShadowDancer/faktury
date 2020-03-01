@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Domain
 {
     public class Company
     {
@@ -32,7 +32,7 @@ namespace Faktury.Domain.Classes
         public string Owner { get; set; } = "";
         public string Address { get; set; } = "";
         public string Street { get; set; } = "";
-        public string Nip { get; set; } = "";
+        public string TaxId { get; set; } = "";
         public bool Bank { get; set; }
         public string BankAccount { get; set; } = "";
         public string BankSection { get; set; } = "";

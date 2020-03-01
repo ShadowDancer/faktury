@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Business;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using ListViewEx;
 
 namespace Faktury.Windows
@@ -121,7 +123,7 @@ namespace Faktury.Windows
             documentSummary.TotalNet =  Convert.ToDecimal(TBTotalNetto.Text);
             documentSummary.TotalVat =  Convert.ToDecimal(TBTotalVAT.Text);
 
-            documentSummary.InWords = TBSlownie.Text;
+            documentSummary.TotalInWords = TBSlownie.Text;
 
             document.Items.Clear();
             foreach (ListViewItem currentItem in LVEServices.Items)

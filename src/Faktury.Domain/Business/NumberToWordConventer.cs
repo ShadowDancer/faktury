@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Business
 {
     public class NumberToWordConventer
     {

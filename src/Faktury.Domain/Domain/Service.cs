@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Domain
 {
     public class Service
     {

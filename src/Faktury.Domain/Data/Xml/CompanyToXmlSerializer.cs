@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Domain;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -30,7 +30,7 @@ namespace Faktury.Domain.Data.Xml
             owner.InnerText = company.Owner;
             address.InnerText = company.Address;
             address2.InnerText = company.Street;
-            nip.InnerText = company.Nip;
+            nip.InnerText = company.TaxId;
             tag.InnerText = company.ShortName;
             bank.InnerText = Convert.ToString(company.Bank);
             bankAccount.InnerText = company.BankAccount;
@@ -101,7 +101,7 @@ namespace Faktury.Domain.Data.Xml
                 BankAccount = xmlElement["BankAccount"].InnerText,
                 BankSection = xmlElement["BankSection"].InnerText,
                 MobileNumber = xmlElement["MobileNumber"].InnerText,
-                Nip = xmlElement["Nip"].InnerText,
+                TaxId = xmlElement["Nip"].InnerText,
                 Owner = xmlElement["Owner"].InnerText,
                 PhoneNumber = xmlElement["PhoneNumber"].InnerText,
                 ShortName = xmlElement["Tag"].InnerText,

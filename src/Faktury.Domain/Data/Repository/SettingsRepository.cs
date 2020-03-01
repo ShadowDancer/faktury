@@ -1,6 +1,8 @@
-﻿namespace Faktury.Domain.Classes
+﻿using Faktury.Domain.Domain;
+
+namespace Faktury.Domain.Data.Repository
 {
-    public class SettingsAccessor
+    public class SettingsRepository
     {
         private EditorSettings _settings;
 

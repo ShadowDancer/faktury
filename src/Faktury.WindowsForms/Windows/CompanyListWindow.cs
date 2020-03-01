@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
@@ -28,7 +29,7 @@ namespace Faktury.Windows
                     currentCompany.Id.ToString(),
                     currentCompany.ShortName,
                     currentCompany.Name,
-                    " " + currentCompany.Nip,
+                    " " + currentCompany.TaxId,
                     currentCompany.CreationDate.ToString(CultureInfo.CurrentCulture),
                     currentCompany.ModificationDate.ToString(CultureInfo.CurrentCulture)
                 });
@@ -40,7 +41,7 @@ namespace Faktury.Windows
                         currentCompany.Owner.ToLower().Contains(_filter) ||
                         currentCompany.Address.ToLower().Contains(_filter) ||
                         currentCompany.Street.ToLower().Contains(_filter) ||
-                        currentCompany.Nip.ToLower().Contains(_filter) ||
+                        currentCompany.TaxId.ToLower().Contains(_filter) ||
                         currentCompany.ShortName.ToLower().Contains(_filter))
                     {
                         LVCompanies.Items.Add(newItem);

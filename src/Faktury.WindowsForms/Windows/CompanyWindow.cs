@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Business.Tax;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
@@ -35,7 +37,7 @@ namespace Faktury.Windows
             TBBankSecion.Text = Company.BankSection;
             TBMobile.Text = Company.MobileNumber;
             TBName.Text = Company.Name;
-            TBNip.Text = Company.Nip;
+            TBNip.Text = Company.TaxId;
             TBOwner.Text = Company.Owner;
             TBPhone.Text = Company.PhoneNumber;
             TBTag.Text = Company.ShortName;
@@ -55,7 +57,7 @@ namespace Faktury.Windows
                 Company.BankSection = TBBankSecion.Text;
                 Company.MobileNumber = TBMobile.Text;
                 Company.Name = TBName.Text;
-                Company.Nip = TBNip.Text;
+                Company.TaxId = TBNip.Text;
                 Company.Owner = TBOwner.Text;
                 Company.PhoneNumber = TBPhone.Text;
                 Company.ShortName = TBTag.Text;
@@ -113,7 +115,7 @@ namespace Faktury.Windows
                     return;
                 }
 
-                if (!NipValidator.IsNipValid(valueToValidate))
+                if (!TaxIdValidator.IsTaxIdValid(valueToValidate))
                 {
                     NIPValidation.Visible = true;
                     NIPValidation.Text = "Nieprawidłowy NIP";

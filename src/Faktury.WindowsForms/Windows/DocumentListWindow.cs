@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -9,13 +10,13 @@ namespace Faktury.Windows
 {
     public partial class DocumentListWindow : DockContent
     {
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
         private readonly ModelStore _modelStore;
         private readonly PrintEngine _printEngine;
 
-        public DocumentListWindow(ModelStore modelStore, PrintEngine printEngine, SettingsAccessor settingsAccessor)
+        public DocumentListWindow(ModelStore modelStore, PrintEngine printEngine, SettingsRepository settingsRepository)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             _modelStore = modelStore;
             _printEngine = printEngine;
             InitializeComponent();
@@ -33,7 +34,7 @@ namespace Faktury.Windows
             newItem.SubItems.Add(document.Customer.ShortName ?? "");
             newItem.SubItems.Add(document.IssueDate.ToString("d", CultureInfo.CurrentCulture));
             newItem.SubItems.Add(document.DocumentSummary.TotalNet.ToString("C", CultureInfo.CurrentCulture));
-            newItem.SubItems.Add(document.ReverseVAT ? "TAK" : "NIE");
+            newItem.SubItems.Add(document.ReverseVat ? "TAK" : "NIE");
 
             return newItem;
         }
@@ -93,7 +94,7 @@ namespace Faktury.Windows
 
             #region InitButtons
             //main filters checkboxes
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             CxBCompanyTagFilter.Checked = editorSettings.DocumentFilterCompany;
             CxBCompanyTagFilter_CheckedChanged(null, null);
             cBYearFilter.Checked = editorSettings.DocumentFilterYear;
@@ -141,40 +142,40 @@ namespace Faktury.Windows
         #region Contol
         private void RBYoungerThan_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DocumentFilterDateYounger = RBYoungerThan.Checked;
+            _settingsRepository.GetSettings().DocumentFilterDateYounger = RBYoungerThan.Checked;
             AutoReload();
         }
 
         private void RBFromDay_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DocumentFilterDateNow = RBFromDay.Checked;
+            _settingsRepository.GetSettings().DocumentFilterDateNow = RBFromDay.Checked;
             AutoReload();
         }
 
         private void RBOlderThan_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DocumentFilterDateOlder = RBOlderThan.Checked;
+            _settingsRepository.GetSettings().DocumentFilterDateOlder = RBOlderThan.Checked;
             AutoReload();
         }
 
         private void cBYearFilter_CheckedChanged(object sender, EventArgs e)
         {
             nUDYear.Enabled = cBYearFilter.Checked;
-            _settingsAccessor.GetSettings().DocumentFilterYear = cBYearFilter.Checked;
+            _settingsRepository.GetSettings().DocumentFilterYear = cBYearFilter.Checked;
             AutoReload();
         }
 
         private void cBDate_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxDateFilter.Enabled = cBDateFilter.Checked;
-            _settingsAccessor.GetSettings().DocumentFilterDate = cBDateFilter.Checked;
+            _settingsRepository.GetSettings().DocumentFilterDate = cBDateFilter.Checked;
             AutoReload();
         }
         #endregion
         private void CxBCompanyTagFilter_CheckedChanged(object sender, EventArgs e)
         {
             CBCompanyTag.Enabled = CxBCompanyTagFilter.Checked;
-            _settingsAccessor.GetSettings().DocumentFilterCompany = CxBCompanyTagFilter.Checked;
+            _settingsRepository.GetSettings().DocumentFilterCompany = CxBCompanyTagFilter.Checked;
             AutoReload();
         }
         
@@ -184,21 +185,21 @@ namespace Faktury.Windows
 
         private void nUDYear_ValueChanged(object sender, EventArgs e)
         {
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             editorSettings.DocumentFilterYearValue = (int)nUDYear.Value;
             AutoReload();
         }
         
         private void CBCompanyTag_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             editorSettings.DocumentFilterCompanyValue = ((ComboBoxItem)CBCompanyTag.SelectedItem).Id;
             AutoReload();
         }
         
         private void DTPDateFilter_ValueChanged(object sender, EventArgs e)
         {
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             editorSettings.DocumentFilterDateTime = DTPDateFilter.Value;
             AutoReload();
         }
@@ -267,12 +268,12 @@ namespace Faktury.Windows
         private void pokażFiltryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Visible = pokażFiltryToolStripMenuItem.Checked;
-            _settingsAccessor.GetSettings().DocumentShowFilters = pokażFiltryToolStripMenuItem.Checked;
+            _settingsRepository.GetSettings().DocumentShowFilters = pokażFiltryToolStripMenuItem.Checked;
         }
 
         private void cBAutoRefreshList_Click(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DocumentAutoRefresh = cBAutoRefreshList.Checked;
+            _settingsRepository.GetSettings().DocumentAutoRefresh = cBAutoRefreshList.Checked;
             AutoReload();
         }
 

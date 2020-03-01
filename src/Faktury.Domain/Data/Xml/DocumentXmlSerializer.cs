@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Xml;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Business;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -68,7 +70,7 @@ namespace Faktury.Domain.Data.Xml
             documentElement.AppendChild(yearElem);
 
             XmlElement reverseVATElement = xmlDoc.CreateElement("ReverseVAT");
-            reverseVATElement.InnerText = Convert.ToString(document.ReverseVAT);
+            reverseVATElement.InnerText = Convert.ToString(document.ReverseVat);
             documentElement.AppendChild(reverseVATElement);
 
             XmlElement customerElement = CompanyToXmlSerializer.GetXmlElement(document.Customer, xmlDoc, "Customer");
@@ -82,7 +84,7 @@ namespace Faktury.Domain.Data.Xml
             return documentElement;
         }
 
-        public Document GetDocumentFromXml(XmlNode element, ModelStore modelStore, SettingsAccessor settingsAccessor)
+        public Document GetDocumentFromXml(XmlNode element, ModelStore modelStore, SettingsRepository settingsRepository)
         {
             Document newDocument = new Document
             {
@@ -96,7 +98,7 @@ namespace Faktury.Domain.Data.Xml
                 PaymentTime = element["PaynamentTime"].InnerText,
                 Number = Convert.ToInt32(element["Number"].InnerText),
                 Year = Convert.ToInt32(element["Year"].InnerText),
-                ReverseVAT = false
+                ReverseVat = false
             };
 
             newDocument.DocumentSummary = DocumentSummaryXmlSerializer.GetMoneyDataFromXml(newDocument, element["MoneyData"]);
@@ -123,13 +125,13 @@ namespace Faktury.Domain.Data.Xml
             }
             else
             {
-                newDocument.Issuer = settingsAccessor.GetSettings().OwnerCompany;
+                newDocument.Issuer = settingsRepository.GetSettings().OwnerCompany;
             }
 
             var reverseVATString = element["ReverseVAT"]?.InnerText;
             if (!string.IsNullOrWhiteSpace(reverseVATString))
             {
-                newDocument.ReverseVAT = Convert.ToBoolean(reverseVATString);
+                newDocument.ReverseVat = Convert.ToBoolean(reverseVATString);
             }
 
             return newDocument;

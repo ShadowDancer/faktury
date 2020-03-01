@@ -1,24 +1,24 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
 
 namespace Faktury.Windows
 {
     public partial class BackupSettings : Form
     {
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
 
-        public BackupSettings(SettingsAccessor settingsAccessor)
+        public BackupSettings(SettingsRepository settingsRepository)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             InitializeComponent();
         }
 
         private void BackupSettings_Load(object sender, EventArgs e)
         {
             //load local backup
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             GBLocalCopy.Enabled = CxBLocalBackup.Checked = editorSettings.LocalBackup;
             CxBLocalBackupOnlyWhenExit.Checked = editorSettings.LocalBackupOnlyOnExit;
 
@@ -37,7 +37,7 @@ namespace Faktury.Windows
 
         private void ComputeTimeToNextDeviceBackupUpdate()
         {
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             TimeSpan span = editorSettings.DeviceBackupLastTime.Add(new TimeSpan(editorSettings.DeviceBackupPeriod, 0, 0, 0)).Subtract(DateTime.Today);
             if (span.Days < 0) span = new TimeSpan();
             LElapsedTime.Text = $"Pozostało {span.Days} dni.";
@@ -45,28 +45,28 @@ namespace Faktury.Windows
 
         private void CxBLocalBackup_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().LocalBackup = GBLocalCopy.Enabled = CxBLocalBackup.Checked;
+            _settingsRepository.GetSettings().LocalBackup = GBLocalCopy.Enabled = CxBLocalBackup.Checked;
         }
 
         private void CxBLocalBackupOnlyWhenExit_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().LocalBackupOnlyOnExit = CxBLocalBackupOnlyWhenExit.Checked;
+            _settingsRepository.GetSettings().LocalBackupOnlyOnExit = CxBLocalBackupOnlyWhenExit.Checked;
         }
 
         private void CxBDeviceBackup_CheckedChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DeviceBackup = GBDevice.Enabled = CxBDeviceBackup.Checked;
+            _settingsRepository.GetSettings().DeviceBackup = GBDevice.Enabled = CxBDeviceBackup.Checked;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DeviceBackupPeriod = (int)NuDPeriod.Value;
+            _settingsRepository.GetSettings().DeviceBackupPeriod = (int)NuDPeriod.Value;
             ComputeTimeToNextDeviceBackupUpdate();
         }
 
         private void BReset_Click(object sender, EventArgs e)
         {
-            _settingsAccessor.GetSettings().DeviceBackupLastTime = DateTime.Today;
+            _settingsRepository.GetSettings().DeviceBackupLastTime = DateTime.Today;
             ComputeTimeToNextDeviceBackupUpdate();
         }
 
@@ -89,7 +89,7 @@ namespace Faktury.Windows
                 {
                     try
                     {
-                        var editorSettings = _settingsAccessor.GetSettings();
+                        var editorSettings = _settingsRepository.GetSettings();
                         editorSettings.DeviceBackupLabel = CBSelectDevice.Text;
                         editorSettings.DeviceRandomNumber = new Random().Next();
                         string backupFolderPath = Path.Combine(drive.RootDirectory.FullName, Path.Combine("Faktury", Path.Combine("Backup", editorSettings.DeviceRandomNumber.ToString())));

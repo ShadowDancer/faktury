@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
-using Faktury.Domain.Classes;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
     public partial class ServiceWindow : DockContent
     {
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
         private readonly ModelStore _modelStore;
 
-        public ServiceWindow(ModelStore modelStore, SettingsAccessor settingsAccessor)
+        public ServiceWindow(ModelStore modelStore, SettingsRepository settingsRepository)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             _modelStore = modelStore;
             InitializeComponent();
         }
@@ -35,7 +36,7 @@ namespace Faktury.Windows
             }
 
             //setup comboboxes
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             foreach (string value in editorSettings.Properties_Vat)
             {
                 CBVat.Items.Add(value);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Faktury.Domain.Domain;
 
-namespace Faktury.Domain.Classes
+namespace Faktury.Domain.Data.Repository
 {
     public class DocumentRepository
     {

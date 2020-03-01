@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Windows.Forms;
 using Faktury.Data.Xml;
-using Faktury.Domain.Classes;
 using Faktury.Domain.Data;
+using Faktury.Domain.Data.Repository;
+using Faktury.Domain.Domain;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows
 {
     public partial class OptionsWindow : DockContent
     {
-        private readonly SettingsAccessor _settingsAccessor;
+        private readonly SettingsRepository _settingsRepository;
         private readonly ModelStoreLoader _storeLoader;
         private ModelStore ModelStore { get; }
         private BackupManager BackupManager { get; }
 
-        public OptionsWindow(ModelStore modelStore, BackupManager backupManager, SettingsAccessor settingsAccessor, ModelStoreLoader storeLoader)
+        public OptionsWindow(ModelStore modelStore, BackupManager backupManager, SettingsRepository settingsRepository, ModelStoreLoader storeLoader)
         {
-            _settingsAccessor = settingsAccessor;
+            _settingsRepository = settingsRepository;
             _storeLoader = storeLoader;
             ModelStore = modelStore;
             BackupManager = backupManager;
@@ -66,7 +67,7 @@ namespace Faktury.Windows
         {
             LBUnit.Items.Clear();
             LBVat.Items.Clear();
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             foreach (var currentString in editorSettings.Properties_Vat)
             {
                 LBVat.Items.Add(currentString);
@@ -87,7 +88,7 @@ namespace Faktury.Windows
         {
             if (TBInput.Text.Length > 0)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 if (editorSettings.Properties_Vat.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -105,7 +106,7 @@ namespace Faktury.Windows
         {
             if (TBInput.Text.Length > 0)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 if (editorSettings.Properties_Unit.Find(n => n.Equals(TBInput.Text)) != null)
                 {
                     MessageBox.Show("Zbiór już zaweta tą wartość!", "Błąd!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -123,7 +124,7 @@ namespace Faktury.Windows
         {
             if (LBVat.SelectedItem != null)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 if (editorSettings.Properties_Vat.Find(n => n.Equals(LBVat.Text)) != null)
                 {
                     editorSettings.Properties_Vat.Remove(LBVat.Text);
@@ -141,7 +142,7 @@ namespace Faktury.Windows
         {
             if (LBUnit.SelectedItem != null)
             {
-                var editorSettings = _settingsAccessor.GetSettings();
+                var editorSettings = _settingsRepository.GetSettings();
                 if (editorSettings.Properties_Unit.Find(n => n.Equals(LBUnit.Text)) != null)
                 {
                     editorSettings.Properties_Unit.Remove(LBUnit.Text);
@@ -162,7 +163,7 @@ namespace Faktury.Windows
 
         public void BSetOwnerData_Click(object sender, EventArgs e)
         {
-            var editorSettings = _settingsAccessor.GetSettings();
+            var editorSettings = _settingsRepository.GetSettings();
             if (editorSettings.OwnerCompany == null) editorSettings.OwnerCompany = new Company();
             CompanyWindow dialog = new CompanyWindow(ModelStore);
             editorSettings.OwnerCompany.Bank = true;
@@ -174,14 +175,14 @@ namespace Faktury.Windows
 
         private void BBackupSettings_Click(object sender, EventArgs e)
         {
-            new BackupSettings(_settingsAccessor).ShowDialog();
+            new BackupSettings(_settingsRepository).ShowDialog();
         }
         
         private void OptionsReset_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Na pewno?", "Przywróć ustawienia domyślne", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                _settingsAccessor.SetSettings(new EditorSettings());
+                _settingsRepository.SetSettings(new EditorSettings());
                 MainForm.Instance.RunFirstUseWizard();
             }   
 
