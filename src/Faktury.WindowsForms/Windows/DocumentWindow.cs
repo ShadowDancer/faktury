@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
 using Faktury.Print_Framework;
 using WeifenLuo.WinFormsUI.Docking;
 

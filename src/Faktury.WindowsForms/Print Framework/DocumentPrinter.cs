@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
 
 namespace Faktury.Print_Framework
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Classes
 {
     public class CompanyRepository
     {

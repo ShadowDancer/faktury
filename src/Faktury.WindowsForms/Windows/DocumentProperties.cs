@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
 using ListViewEx;
 
 namespace Faktury.Windows

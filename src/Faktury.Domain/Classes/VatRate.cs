@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Classes
 {
     public class VatRate
     {

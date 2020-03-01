@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
 using System.Xml;
-using Faktury.Classes;
-using Faktury.Domain.Data.Xml;
+using Faktury.Domain.Classes;
 
 // ReSharper disable PossibleNullReferenceException
 
-namespace Faktury.Data.Xml
+namespace Faktury.Domain.Data.Xml
 {
     public class DocumentSummaryXmlSerializer
     {

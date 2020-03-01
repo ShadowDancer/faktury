@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Classes
 {
     public class NipValidator
     {

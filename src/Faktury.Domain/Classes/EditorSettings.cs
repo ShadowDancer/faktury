@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Classes
 {
     [Serializable]
     public class EditorSettings

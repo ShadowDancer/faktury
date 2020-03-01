@@ -3,7 +3,8 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
+using Faktury.Domain.Data;
 using Faktury.Domain.Services;
 using Faktury.Windows;
 

@@ -2,10 +2,11 @@
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Faktury.Domain.Classes;
 using Faktury.Domain.Data.Xml;
 using Faktury.Domain.Services;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Data
 {
     public class ModelStoreLoader
     {

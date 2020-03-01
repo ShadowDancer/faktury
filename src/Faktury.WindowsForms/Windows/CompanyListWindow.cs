@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Faktury.Windows

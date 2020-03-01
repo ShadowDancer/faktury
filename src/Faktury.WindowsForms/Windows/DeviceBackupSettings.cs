@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Faktury.Classes;
+using Faktury.Domain.Classes;
 
 namespace Faktury.Windows
 {

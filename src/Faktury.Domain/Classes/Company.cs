@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Faktury.Classes
+namespace Faktury.Domain.Classes
 {
     public class Company
     {
