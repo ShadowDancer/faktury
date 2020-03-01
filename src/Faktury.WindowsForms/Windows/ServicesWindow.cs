@@ -30,7 +30,7 @@ namespace Faktury.Windows
                 {
                     CreationDate = date, ModificationDate = date, Name = name,
                     Tag = name,
-                    Id = _modelStore.NewServiceId()
+                    Id = _modelStore.ServiceRepository.NewServiceId()
                 };
             }
 
@@ -80,9 +80,9 @@ namespace Faktury.Windows
                 return;
             }
 
-            if (_modelStore.FindService(Service.Id) == null)
+            if (_modelStore.ServiceRepository.FindService(Service.Id) == null)
             {
-                _modelStore.AddService(Service);
+                _modelStore.ServiceRepository.AddService(Service);
             }
 
             if (MainForm.Instance.ServicesListWindow != null && !MainForm.Instance.ServicesListWindow.IsDisposed)

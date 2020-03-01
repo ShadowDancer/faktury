@@ -104,17 +104,15 @@ namespace Faktury.Classes
                     if (currentNode.Name == "IssueCompany") continue;
 
                     Company newCompany = CompanyToXmlSerializer.GetCompanyFromXml(currentNode);
-                    if (_modelStore.FindCompany(newCompany.Id) == null)
+                    if (_modelStore.CompanyRepository.FindCompany(newCompany.Id) == null)
                     {
-                        _modelStore.AddCompany(newCompany);
+                        _modelStore.CompanyRepository.AddCompany(newCompany);
                     }
                     else
                     {
                         throw new InvalidOperationException("Kolekcja zawiera już element o ID " + newCompany.Id + "!");
                     }
                 }
-
-                _modelStore.UpdateHighestCompanyId();
             }
             catch
             {
@@ -132,10 +130,10 @@ namespace Faktury.Classes
                 foreach (XmlNode currentNode in doc["Documents"])
                 {
                     Document newDocument = new DocumentXmlSerializer().GetDocumentFromXml(currentNode, _modelStore, _settingsAccessor);
-                    _modelStore.Documents.Add(newDocument);
+                    _modelStore.DocumentRepository.Documents.Add(newDocument);
                 }
 
-                _modelStore.UpdateHighestDocumentId();
+                _modelStore.DocumentRepository.UpdateHighestDocumentId();
             }
             catch(Exception ex)
             {
@@ -153,10 +151,8 @@ namespace Faktury.Classes
                 // ReSharper disable once PossibleNullReferenceException
                 foreach (XmlNode currentNode in doc["Services"])
                 {
-                    _modelStore.AddService(ServiceToXmlSerializer.GetServiceFromXml(currentNode));
+                    _modelStore.ServiceRepository.AddService(ServiceToXmlSerializer.GetServiceFromXml(currentNode));
                 }
-
-                _modelStore.UpdateHigestServiceId();
             }
             catch
             {
@@ -180,7 +176,7 @@ namespace Faktury.Classes
             doc.InsertBefore(xmlHeader, doc.DocumentElement); 
 
 
-            foreach (var currentCompany in _modelStore.Companies)
+            foreach (var currentCompany in _modelStore.CompanyRepository.Companies)
             {
                 // ReSharper disable once PossibleNullReferenceException
                 doc["Companies"].AppendChild(CompanyToXmlSerializer.GetXmlElement(currentCompany, doc));
@@ -199,7 +195,7 @@ namespace Faktury.Classes
             doc.InsertBefore(xmlHeader, doc.DocumentElement); 
 
 
-            foreach (var currentDocument in _modelStore.Documents)
+            foreach (var currentDocument in _modelStore.DocumentRepository.Documents)
             {
                 // ReSharper disable once PossibleNullReferenceException
                 doc["Documents"].AppendChild(new DocumentXmlSerializer().GetXmlElement(currentDocument, doc));
@@ -217,7 +213,7 @@ namespace Faktury.Classes
             doc.InsertBefore(xmlHeader, doc.DocumentElement);
 
 
-            foreach (var currentService in _modelStore.Services)
+            foreach (var currentService in _modelStore.ServiceRepository.Services)
             {
                 // ReSharper disable once PossibleNullReferenceException
                 doc["Services"].AppendChild(ServiceToXmlSerializer.GetXmlElement(currentService, doc));

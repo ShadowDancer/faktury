@@ -46,7 +46,7 @@ namespace Faktury.Windows
         private void Reload()
         {
             LVDocuments.Items.Clear();
-            foreach (var currentDocument in _modelStore.Documents)
+            foreach (var currentDocument in _modelStore.DocumentRepository.Documents)
             {
                     //throw exception if something is wrong
                     if(cBYearFilter.Checked)
@@ -217,7 +217,7 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            _modelStore.Documents.Remove(_modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
+                            _modelStore.DocumentRepository.Documents.Remove(_modelStore.DocumentRepository.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -238,7 +238,7 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            MainForm.Instance.OpenDocument(_modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
+                            MainForm.Instance.OpenDocument(_modelStore.DocumentRepository.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text)));
                         }
                         catch (Exception ex)
                         {
@@ -287,7 +287,7 @@ namespace Faktury.Windows
                     {
                         try
                         {
-                            var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                            var document = _modelStore.DocumentRepository.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
                             new DocumentPrinter(document).ShowPreview(_printEngine);
                         }
                         catch (Exception ex)
@@ -307,7 +307,7 @@ namespace Faktury.Windows
                 {
                     try
                     {
-                        var document = _modelStore.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
+                        var document = _modelStore.DocumentRepository.FindDocument(Convert.ToInt32(currentItem.Text), Convert.ToInt32(currentItem.SubItems[1].Text));
                         new DocumentPrinter(document).Print(_printEngine);
                     }
                     catch (Exception ex)

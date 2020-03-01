@@ -19,7 +19,7 @@ namespace Faktury.Windows
         public void Reload()
         {
             LVServices.Items.Clear();
-            foreach (Service service in _modelStore.Services)
+            foreach (Service service in _modelStore.ServiceRepository.Services)
             {
                 LVServices.Items.Add(new ListViewItem(new[] {service.Id.ToString(), service.Name, service.Unit, service.PriceNet.ToString(CultureInfo.CurrentCulture)} ));
             }
@@ -53,7 +53,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    var serviceToEdit = _modelStore.FindService(int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.ServiceRepository.FindService(int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.EditService(serviceToEdit);
@@ -70,7 +70,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVServices.SelectedItems)
                 {
-                    var serviceToEdit = _modelStore.FindService(int.Parse(item.SubItems[0].Text));
+                    var serviceToEdit = _modelStore.ServiceRepository.FindService(int.Parse(item.SubItems[0].Text));
 
                     if (serviceToEdit != null)
                         MainForm.Instance.DeleteService(serviceToEdit);

@@ -89,7 +89,7 @@ namespace Faktury.Windows
         public void Initialize(Document document)
         {
             //load combo box
-            foreach (Service currentService in ModelStore.Services)
+            foreach (Service currentService in ModelStore.ServiceRepository.Services)
             {
                 CBService.Items.Add(new ComboBoxItem(currentService.Tag, currentService.Id));
             }
@@ -177,7 +177,7 @@ namespace Faktury.Windows
             Service service;
             try
             {
-                service = ModelStore.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
+                service = ModelStore.ServiceRepository.Services.First(n => n.Id == ((ComboBoxItem)CBService.SelectedItem).Id);
 
             }
             catch
@@ -206,7 +206,7 @@ namespace Faktury.Windows
 
         private void RecordEdit_Click(object sender, EventArgs e)
         {
-            Service service = ModelStore.FindService(((ComboBoxItem)CBService.SelectedItem).Id);
+            Service service = ModelStore.ServiceRepository.FindService(((ComboBoxItem)CBService.SelectedItem).Id);
             if (service == null)
             {
                 MessageBox.Show("Wybierz szablon usługi z listy!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -237,7 +237,7 @@ namespace Faktury.Windows
                 {
                     LVEServices.Items.Remove(currentItem);
                 }
-                ModelStore.UpdateHighestDocumentId();
+                ModelStore.DocumentRepository.UpdateHighestDocumentId();
                 Reload();
                 Changed = true;
             }
@@ -251,7 +251,7 @@ namespace Faktury.Windows
         {
             Changed = true;
             LVEServices.Items.Clear();
-            ModelStore.UpdateHighestDocumentId();
+            ModelStore.DocumentRepository.UpdateHighestDocumentId();
         }
 
         #endregion

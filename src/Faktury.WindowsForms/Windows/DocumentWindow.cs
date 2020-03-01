@@ -81,7 +81,7 @@ namespace Faktury.Windows
 
         public void SaveDataFromControls(Document document)
         {
-            document.Customer = _modelStore.FindCompany(((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
+            document.Customer = _modelStore.CompanyRepository.FindCompany(((ComboBoxItem)CBCompanyTag.SelectedItem).Id);
             document.Issuer = _settingsAccessor.GetSettings().OwnerCompany;
             document.IssueDate = DTPIssueDate.Value;
             document.SellDate = DTPSellDate.Value;
@@ -108,8 +108,8 @@ namespace Faktury.Windows
 
         private void UpdateId()
         {
-            _modelStore.UpdateHighestDocumentId();
-            nUDNumber.Value = _oldNumberValue = _modelStore.NewDocumentId((int)nUDYear.Value);
+            _modelStore.DocumentRepository.UpdateHighestDocumentId();
+            nUDNumber.Value = _oldNumberValue = _modelStore.DocumentRepository.NewDocumentId((int)nUDYear.Value);
         }
 
         private void nUDNumber_ValueChanged(object sender, EventArgs e)
@@ -121,7 +121,7 @@ namespace Faktury.Windows
 
                 while (currentNumber > 0)
                 {
-                    if (_modelStore.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
+                    if (_modelStore.DocumentRepository.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
                         nUDNumber.Value = currentNumber;
                         break;
@@ -143,7 +143,7 @@ namespace Faktury.Windows
 
                 while (true)
                 {
-                    if (_modelStore.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
+                    if (_modelStore.DocumentRepository.Documents.Find(n => (n != Document) && (n.Year == (int)nUDYear.Value && n.Number == currentNumber)) == null)
                     {
                         nUDNumber.Value = currentNumber;
                         break;
@@ -290,7 +290,7 @@ namespace Faktury.Windows
             var selectedCompanyId = ((ComboBoxItem)CBCompanyTag.SelectedItem)?.Id;
             if (selectedCompanyId != null)
             {
-                Company company = _modelStore.FindCompany(selectedCompanyId.Value);
+                Company company = _modelStore.CompanyRepository.FindCompany(selectedCompanyId.Value);
                 if (company != null)
                 {
                     tbCompanyInfoText.Text = string.Join(Environment.NewLine, company.Name, company.Address,

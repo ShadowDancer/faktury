@@ -21,7 +21,7 @@ namespace Faktury.Windows
         private void Reload()
         {
             LVCompanies.Items.Clear();
-            foreach(Company currentCompany in _modelStore.Companies)
+            foreach(Company currentCompany in _modelStore.CompanyRepository.Companies)
             {
                 ListViewItem newItem = new ListViewItem(new[]
                 {
@@ -94,7 +94,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    var companyToEdit = _modelStore.FindCompany(int.Parse(item.SubItems[0].Text));
+                    var companyToEdit = _modelStore.CompanyRepository.FindCompany(int.Parse(item.SubItems[0].Text));
 
                     if (companyToEdit != null)
                         MainForm.Instance.EditCompany(companyToEdit);
@@ -111,7 +111,7 @@ namespace Faktury.Windows
             {
                 foreach (ListViewItem item in LVCompanies.SelectedItems)
                 {
-                    var companyToEdit = _modelStore.FindCompany(int.Parse(item.SubItems[0].Text));
+                    var companyToEdit = _modelStore.CompanyRepository.FindCompany(int.Parse(item.SubItems[0].Text));
                     if (companyToEdit != null)
                         MainForm.Instance.DeleteCompany(companyToEdit);
                     else

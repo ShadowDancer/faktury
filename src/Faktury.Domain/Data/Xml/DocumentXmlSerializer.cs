@@ -113,7 +113,7 @@ namespace Faktury.Domain.Data.Xml
                 if (companyIdElement != null)
                 {
                     var companyId = int.Parse(companyIdElement.InnerText);
-                    newDocument.Customer = modelStore.FindCompany(companyId);
+                    newDocument.Customer = modelStore.CompanyRepository.FindCompany(companyId);
                 }
             }
 

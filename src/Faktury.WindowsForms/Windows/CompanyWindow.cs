@@ -24,7 +24,7 @@ namespace Faktury.Windows
             {
                 Company = new Company
                 {
-                    Name = "Nowa", Bank = false, Id = _modelStore.NewCompanyId(), CreationDate = DateTime.Now
+                    Name = "Nowa", Bank = false, Id = _modelStore.CompanyRepository.NewCompanyId(), CreationDate = DateTime.Now
                 };
                 Company.ModificationDate = Company.CreationDate;
             }
@@ -64,8 +64,8 @@ namespace Faktury.Windows
 
                 if (AddToCollection)
                 {
-                    if (_modelStore.FindCompany(Company.Id) == null)
-                        _modelStore.AddCompany(Company);
+                    if (_modelStore.CompanyRepository.FindCompany(Company.Id) == null)
+                        _modelStore.CompanyRepository.AddCompany(Company);
                 }
 
                 MainForm.Instance.ReloadCompanyComboboxesInChildWindows();

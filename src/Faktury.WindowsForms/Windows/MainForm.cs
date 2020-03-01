@@ -81,7 +81,7 @@ namespace Faktury.Windows
             if (MessageBox.Show("Na pewno?", "Usuwanie usługi...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                 DialogResult.Yes)
             {
-                ModelStore.RemoveService(serviceToRemove);
+                ModelStore.ServiceRepository.RemoveService(serviceToRemove);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Faktury.Windows
             if (MessageBox.Show("Na pewno?", "Usuwanie firmy...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                 DialogResult.Yes)
             {
-                ModelStore.RemoveCompany(companyToRemove);
+                ModelStore.CompanyRepository.RemoveCompany(companyToRemove);
                 ReloadCompanyComboboxesInChildWindows();
             }
         }
@@ -98,7 +98,7 @@ namespace Faktury.Windows
         public void ReloadCompanyCombobox(ComboBox comboBox)
         {
             comboBox.Items.Clear();
-            foreach (var currentCompany in ModelStore.Companies.OrderBy(n => n.ShortNameStripped))
+            foreach (var currentCompany in ModelStore.CompanyRepository.Companies.OrderBy(n => n.ShortNameStripped))
             {
                 comboBox.Items.Add(new ComboBoxItem(currentCompany.ShortName, currentCompany.Id));
             }
@@ -192,7 +192,7 @@ namespace Faktury.Windows
                 }
             }
 
-            ModelStore.ClearCompanies();
+            ModelStore.CompanyRepository.ClearCompanies();
         }
 
         private void CleanServices()
@@ -205,7 +205,7 @@ namespace Faktury.Windows
                 }
             }
 
-            ModelStore.ClearServices();
+            ModelStore.ServiceRepository.ClearServices();
         }
 
         private void CleanDocuments()
@@ -219,7 +219,7 @@ namespace Faktury.Windows
                 }
             }
 
-            ModelStore.Documents.Clear();
+            ModelStore.DocumentRepository.Documents.Clear();
         }
 
         public bool SaveDocument(DocumentWindow window)
@@ -228,12 +228,12 @@ namespace Faktury.Windows
 
             try
             {
-                var check = ModelStore.Documents.Find(n =>
+                var check = ModelStore.DocumentRepository.Documents.Find(n =>
                     n.Number == window.nUDNumber.Value && n.Year == window.nUDYear.Value);
                 if (check == null)
                 {
-                    if (ModelStore.Documents.Find(n => n == window.Document) == null)
-                        ModelStore.Documents.Add(document);
+                    if (ModelStore.DocumentRepository.Documents.Find(n => n == window.Document) == null)
+                        ModelStore.DocumentRepository.Documents.Add(document);
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace Faktury.Windows
 
             //save document if no problems
             window.SaveDataFromControls(document);
-            ModelStore.UpdateHighestDocumentId();
+            ModelStore.DocumentRepository.UpdateHighestDocumentId();
 
             return true;
         }

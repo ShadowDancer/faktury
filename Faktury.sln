@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktury.WindowsForms", "src\Faktury.WindowsForms\Faktury.WindowsForms.csproj", "{DCF23DC6-822F-4712-90F2-4C054E4663F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktury.Domain", "src\Faktury.Domain\Faktury.Domain.csproj", "{151F8F9A-696E-4588-A249-C57BBAAE1E25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faktury.Domain", "src\Faktury.Domain\Faktury.Domain.csproj", "{151F8F9A-696E-4588-A249-C57BBAAE1E25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

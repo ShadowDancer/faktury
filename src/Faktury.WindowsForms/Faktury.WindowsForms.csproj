@@ -88,7 +88,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\ModelStoreLoader.cs" />
     <Compile Include="Print Framework\DocumentPrinter.cs" />
     <Compile Include="Data\Xml\BackupManager.cs">
       <SubType>Code</SubType>
